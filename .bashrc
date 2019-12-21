@@ -193,7 +193,7 @@ gps() {
 		-m "$modem"
 	      ;;
     "get") mmcli --location-get -m "$modem" ;;
-    *) printf "unrecognized command: %s\n" "$cmd" ;;
+    *) printf "unrecognized command: %s\n" "$cmd" >&2 ;;
   esac
 }
 
@@ -201,7 +201,7 @@ mfa() {
   case "$1" in
     "ms") oathtool -b --totp "$(pass microsoft/mfa)" ;;
     "aws") oathtool -b --totp "$(pass amazon/mfa)" ;;
-    *) printf "unrecognized service: %s\n" "$1"
+    *) printf "unrecognized service: %s\n" "$1" >&2
   esac
 }
 
@@ -245,7 +245,7 @@ ruck-backup() {
     "srv") rsync -av --progress --delete ~/ruck/ \
 		 dwrz@srv-nyc:/home/dwrz/ruck/
 	   ;;
-    *) printf "unrecognized host: %s\n" "$1"
+    *) printf "unrecognized host: %s\n" "$1" >&2
   esac
 }
 
