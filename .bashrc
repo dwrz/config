@@ -163,7 +163,7 @@ compress-jpg() {
 compress-mp4() {
   mkdir compressed;
   for v in *.mp4; do
-    ffmpeg -i "$v" -vcodec libx264 -crf 32 n./compressed/"$v";
+    ffmpeg -i "$v" -vcodec libx264 -crf 32 ./compressed/"$v";
   done
 }
 
