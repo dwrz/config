@@ -385,7 +385,7 @@ set_prompt () {
   last_command=$?
 
   # Set the exit code.
-  PS1="$bold_white\$? "
+  PS1="$bold_white\$last_command "
 
   # Set a check mark for an exit code of 0 (success).
   # Otherwise, set an X mark.
