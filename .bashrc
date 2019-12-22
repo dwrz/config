@@ -81,6 +81,37 @@ export NVM_DIR="$HOME/.nvm"
 export VISUAL="emacsclient -t --alternate-editor mg"
 
 # FUNCTIONS
+bb() {
+  if ! [[ -x "$(command -v borg)" ]]; then
+    echo "borg not installed" >&2
+    return 1
+  fi
+  case "$1" in
+    "open")
+      sudo cryptsetup luksOpen /dev/sdb1 dwrz-archival-backup
+      sudo mount /dev/mapper/dwrz-archival-backup /mnt/dwrz-archival-backup/
+      ;;
+    "list") borg list /mnt/dwrz-archival-backup/dwrz-backup/ ;;
+    "create")
+      name="dwrz@earth-$(TZ=UTC date '+%FT%T%z')"
+      borg create -v --exclude /home/dwrz/.cache/ \
+	   /mnt/dwrz-archival-backup/dwrz-backup/::"$name" /home/dwrz/
+      ;;
+    "prune") borg prune --keep-last 1 -d 7 -w 4 -m 12 --save-space \
+		  /mnt/dwrz-archival-backup/dwrz-backup/
+      ;;
+    "mount") borg mount /mnt/dwrz-archival-backup/dwrz-backup/ \
+		  /mnt/dwrz-archival-backup/mnt
+      ;;
+    "unmount") borg umount /mnt/dwrz-archival-backup/mnt ;;
+    "close")
+      sudo umount /mnt/dwrz-archival-backup
+      sudo cryptsetup luksClose dwrz-archival-backup
+      ;;
+    *) printf "unrecognized command: %s\n" "$1" >&2 ;;
+  esac
+}
+
 change-bg-map() {
   if ! [[ -x "$(command -v feh)" ]]; then
     echo "feh not installed" >&2
