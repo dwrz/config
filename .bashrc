@@ -266,31 +266,37 @@ repeat() {
 }
 
 mobile-backup() {
-  if ! [[ "$OSTYPE" == "linux-android" ]]; then
+  if [[ "$OSTYPE" != "linux-android" ]]; then
     echo "not on mobile" >&2
     return 1
   fi
 
   dcim_dir="$HOME/storage/dcim/"
-  if [[ -d dcim_dir ]]; then
+  if [[ -d "$dcim_dir" ]]; then
+    printf "backing up %s\n" "$dcim_dir"
     rsync -av "$dcim_dir" dwrz@earth:/home/dwrz/mobile/dcim/
-    if [[ $? ]]; then
+    result=$?
+    if [[ result -eq 0 ]]; then
       rm -rf "$dcim_dir"
     fi
   fi
 
   screenshot_dir="$HOME/storage/pictures/Screenshots/"
-  if [[ -d screenshot_dir ]]; then
+  if [[ -d "$screenshot_dir" ]]; then
+    printf "backing up %s\n" "$screenshot_dir"
     rsync -av "$screenshot_dir" dwrz@earth:/home/dwrz/mobile/screenshots/
-    if [[ $? ]]; then
+    result=$?
+    if [[ result -eq 0 ]]; then
       rm -rf "$screenshot_dir"
     fi
   fi
 
-  downloads_dir="$HOME/storage/pictures/downloads/"
-  if [[ -d screenshot_dir ]]; then
+  downloads_dir="$HOME/storage/downloads/"
+  if [[ -d "$downloads_dir" ]]; then
+    printf "backing up %s\n" "$downloads_dir"
     rsync -av "$downloads_dir" dwrz@earth:/home/dwrz/mobile/downloads/
-    if [[ $? ]]; then
+    result=$?
+    if [[ result -eq 0 ]]; then
       rm -rf "$downloads_dir"
     fi
   fi
