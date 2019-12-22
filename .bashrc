@@ -234,6 +234,37 @@ repeat() {
     done
 }
 
+mobile-backup() {
+  if ! [[ "$OSTYPE" == "linux-android" ]]; then
+    echo "not on mobile" >&2
+    return 1
+  fi
+
+  dcim_dir="$HOME/storage/dcim/"
+  if [[ -d dcim_dir ]]; then
+    rsync -av "$dcim_dir" dwrz@earth:/home/dwrz/mobile/dcim/
+    if [[ $? ]]; then
+      rm -rf "$dcim_dir"
+    fi
+  fi
+
+  screenshot_dir="$HOME/storage/pictures/Screenshots/"
+  if [[ -d screenshot_dir ]]; then
+    rsync -av "$screenshot_dir" dwrz@earth:/home/dwrz/mobile/screenshots/
+    if [[ $? ]]; then
+      rm -rf "$screenshot_dir"
+    fi
+  fi
+
+  downloads_dir="$HOME/storage/pictures/downloads/"
+  if [[ -d screenshot_dir ]]; then
+    rsync -av "$downloads_dir" dwrz@earth:/home/dwrz/mobile/downloads/
+    if [[ $? ]]; then
+      rm -rf "$downloads_dir"
+    fi
+  fi
+}
+
 ruck-backup() {
   if ! [[ -d "$HOME/ruck" ]]; then
     echo "no ruck on this host" >&2
