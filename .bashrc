@@ -71,6 +71,7 @@ alias tree="tree -C"
 alias upsys="sudo reflector --verbose --latest 25 --protocol https --sort rate --save /etc/pacman.d/mirrorlist && pacman -Syu"
 alias vdir="vdir --color=auto"
 alias which="type -a"
+alias wisdom='$HOME/ruck/oo/scripts/wisdom/wisdom.sh'
 
 # EXPORTS
 export EDITOR="emacsclient -t --alternate-editor mg"
