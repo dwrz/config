@@ -302,6 +302,24 @@ panopticat() {
   esac
 }
 
+remind-calendar() {
+  local date reminder
+  date="$1"; shift;
+  reminder="$*"
+
+  systemd-run --user --on-calendar="$date" \
+	      "$HOME/ruck/oo/scripts/remind/remind.sh" "$reminder"
+}
+
+remind-timer() {
+  local delay reminder
+  delay="$1"; shift;
+  reminder="$*"
+
+  systemd-run --user --on-active="$delay" --timer-property=AccuracySec=1000ms \
+	      "$HOME/ruck/oo/scripts/remind/remind.sh" "$reminder"
+}
+
 repeat() {
     local c max
     max="$1"; shift;
