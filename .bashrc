@@ -69,7 +69,6 @@ alias t3="tree -CL 3"
 alias t="tree -C"
 alias timers="systemctl --user -all list-timers"
 alias tree="tree -C"
-alias upsys="sudo reflector --verbose --latest 25 --protocol https --sort rate --save /etc/pacman.d/mirrorlist && pacman -Syu"
 alias vdir="vdir --color=auto"
 alias which="type -a"
 alias wisdom='$HOME/ruck/oo/scripts/wisdom/wisdom.sh'
@@ -326,6 +325,15 @@ screenshot() {
   fi
   sleep 2;
   maim -s > screenshot-"$(date_iso)".jpg
+}
+
+upsys() {
+  if ! [[ -d /boot/loaders ]]; then
+    echo "boot partition not mounted" >&2
+    return 1
+  fi
+  sudo reflector --verbose --latest 25 --protocol https --sort rate \
+       --save /etc/pacman.d/mirrorlist && pacman -Syu
 }
 
 # OPTIONS
