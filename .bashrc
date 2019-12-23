@@ -237,34 +237,6 @@ mfa() {
   esac
 }
 
-panopticat() {
-  local host password port user;
-
-  password="$(pass panopticat/password)"
-  user="$(pass panopticat/user)"
-
-  case "$1" in
-    "local")
-      host="$(pass panopticat/host-local)"
-      port="$(pass panopticat/port-local)"
-      mpv "http://$user@$password@$host:$port"
-      ;;
-    *)
-      host="$(pass panopticat/host)"
-      port="$(pass panopticat/port)"
-      mpv "https://$user@$password@$host:$port"
-      ;;
-  esac
-}
-
-repeat() {
-    local c max
-    max="$1"; shift;
-    for ((c=1; c <= max ; c++)); do
-        eval "$@";
-    done
-}
-
 mobile-backup() {
   if [[ "$OSTYPE" != "linux-android" ]]; then
     echo "not on mobile" >&2
@@ -300,6 +272,34 @@ mobile-backup() {
       rm -rf "$downloads_dir"
     fi
   fi
+}
+
+panopticat() {
+  local host password port user;
+
+  password="$(pass panopticat/password)"
+  user="$(pass panopticat/user)"
+
+  case "$1" in
+    "local")
+      host="$(pass panopticat/host-local)"
+      port="$(pass panopticat/port-local)"
+      mpv "http://$user@$password@$host:$port"
+      ;;
+    *)
+      host="$(pass panopticat/host)"
+      port="$(pass panopticat/port)"
+      mpv "https://$user@$password@$host:$port"
+      ;;
+  esac
+}
+
+repeat() {
+    local c max
+    max="$1"; shift;
+    for ((c=1; c <= max ; c++)); do
+        eval "$@";
+    done
 }
 
 ruck-backup() {
