@@ -22,10 +22,6 @@ alias checkmail="~/.msmtpqueue/checkmail.sh"
 alias cm="~/.msmtpqueue/checkmail.sh"
 alias cp="cp -i"
 alias d2u="find . -type f -print0 | xargs -0 -n 1 -P 4 dos2unix"
-alias date_file="date '+%Y%m%d-%H%M%S'"
-alias date_iso="date '+%Y-%m-%dT%H:%M:%S%z'"
-alias date_mime="date '+%a, %d %b %Y %H:%M:%S %z'"
-alias date_unix="date +%s"
 alias df="df -h"
 alias dict="sdcv"
 alias diff="diff --color=auto"
@@ -165,6 +161,18 @@ compress-mp4() {
   for v in *.mp4; do
     ffmpeg -i "$v" -vcodec libx264 -crf 32 ./compressed/"$v";
   done
+}
+
+d() {
+  case "$1" in
+    "file") date '+%Y%m%d-%H%M%S' ;;
+    "iso") date '+%Y-%m-%dT%H:%M:%S%z' ;;
+    "mime") date '+%a, %d %b %Y %H:%M:%S %z' ;;
+    "unix") date +%s ;;
+    # u2h: convert Unix to human readable.
+    "u2h" ) date -d "@$2";;
+    *) date "$@"
+  esac
 }
 
 emacstest() {
