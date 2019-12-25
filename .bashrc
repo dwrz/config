@@ -385,6 +385,41 @@ upsys() {
        --save /etc/pacman.d/mirrorlist && pacman -Syu
 }
 
+weather() {
+  local location format units url;
+  url="wttr.in/"
+
+  location="$1"
+  case "$location" in
+    "nyc"|"ny") url+="NewYork" ;;
+    "上海"|"shanghai"|"sh") url+="Shanghai" ;;
+    "napoli"|"naples"|"na") url+="Napoli" ;;
+    "moon"|"m") url+="Moon?";;
+    *) url+="$location" ;;
+  esac
+
+  units="$2"
+  case "$units" in
+    "celsius"|"c") url+="?m" ;;
+    "fahrenheit"|"f") url+="?u" ;;
+    *) url+="?m";
+  esac
+
+  # Units may be set or left blank.
+  # If they were set, shift the format argument into place.
+  if ! [[ -z "$units" ]]; then
+    shift
+  fi
+
+  format="$2"
+  case "$format" in
+    "simple"|"s") url+="&format=1" ;;
+    "detail"|"d") url+="&format=v2" ;;
+  esac
+
+  curl "$url"
+}
+
 # OPTIONS
 set -o emacs
 set -o notify
