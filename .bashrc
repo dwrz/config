@@ -347,7 +347,7 @@ ruck-backup() {
 }
 
 screenshot() {
-    if ! [[ -x "$(command -v main)" ]]; then
+  if ! [[ -x "$(command -v maim)" ]]; then
     echo "maim not installed" >&2
     return 1
   fi
