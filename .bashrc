@@ -346,6 +346,27 @@ ruck-backup() {
   esac
 }
 
+search() {
+  if ! [[ -x "$(command -v firefox)" ]]; then
+    echo "firefox not installed" >&2
+    return 1
+  fi
+  if ! [[ -n "$(pgrep --exact firefox)" ]]; then
+    echo "firefox not running" >&2
+    return 2
+  fi
+
+  local engine;
+  engine="$1"; shift;
+  case "$engine" in
+    "ecosia"|"e") firefox "https://www.ecosia.org/search?q=$*" ;;
+    "google"|"g") firefox "https://www.google.com/search?q=$*" ;;
+    "maps"|"m") firefox "http://maps.google.com/maps?q=$*" ;;
+    "wikipedia"|"w") firefox "https://en.wikipedia.org/wiki/$*" ;;
+    *) printf "unrecognized engine: %s\n" "$engine" ;;
+  esac
+}
+
 screenshot() {
   if ! [[ -x "$(command -v maim)" ]]; then
     echo "maim not installed" >&2
