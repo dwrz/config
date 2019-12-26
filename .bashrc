@@ -158,10 +158,21 @@ compress-jpg() {
   done
 }
 
-compress-mp4() {
-  mkdir compressed;
-  for v in *.mp4; do
-    ffmpeg -i "$v" -vcodec libx264 -crf 32 ./compressed/"$v";
+compress-video() {
+  local filetype crf
+  filetype=$(printf "*.%s" "$1")
+  # "The range of the CRF scale is 0–51, where 0 is lossless, 23 is the default,
+  # and 51 is worst quality possible. A lower value generally leads to higher
+  #quality, and a subjectively sane range is 17–28. Consider 17 or 18 to be
+  # visually lossless or nearly so; it should look the same or nearly the same
+  # as the input but it isn't technically lossless."
+  crf="$2"
+  if [[ -z "$crf" ]]; then
+    crf=32 # Use a default CRF of 32.
+  fi
+  mkdir compressed
+  for v in $filetype; do
+    ffmpeg -i "$v" -vcodec libx264 -crf "$crf" ./compressed/"$v";
   done
 }
 
