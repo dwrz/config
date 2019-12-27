@@ -388,7 +388,7 @@ screenshot() {
 }
 
 upsys() {
-  if [[ "$HOSTNAME" == "earth" && ! -d /boot/loaders ]]; then
+  if [[ "$HOSTNAME" == "earth" && ! -d /boot/loader ]]; then
     echo "boot partition not mounted" >&2
     return 1
   fi
