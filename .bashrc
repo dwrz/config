@@ -384,7 +384,7 @@ screenshot() {
     return 1
   fi
   sleep 2;
-  maim -s > screenshot-"$(date_iso)".jpg
+  maim -s > screenshot-"$(date '+%Y-%m-%dT%H:%M:%S%z')".jpg
 }
 
 upsys() {
