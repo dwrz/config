@@ -1,7 +1,7 @@
-# Set GOPATH.
 export GOPATH="$HOME/.go"
+export npm_config_prefix=~/.node_modules
 
-# Set PATH.
+# PATH
 PATH="$GOPATH/bin:$PATH"
 PATH="$HOME/.cargo/bin:$PATH"
 PATH="$HOME/.local/bin:$PATH"
