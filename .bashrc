@@ -264,6 +264,8 @@ mobile-backup() {
     return 1
   fi
 
+  local dcim_dir screenshot_dir downloads_dir
+
   dcim_dir="$HOME/storage/dcim/"
   if [[ -d "$dcim_dir" ]]; then
     printf "backing up %s\n" "$dcim_dir"
