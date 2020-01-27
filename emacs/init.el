@@ -150,8 +150,7 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
   (require 'use-package))
 (require 'bind-key)
 
-(setq use-package-always-ensure t
-      use-package-always-pin "melpa-stable")
+(setq use-package-always-ensure t)
 
 (use-package all-the-icons)
 
@@ -246,7 +245,7 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
   (company-quickhelp-color-foreground "#DCDCCC")
   (company-quickhelp-color-background "#4F4F4F"))
 
-(use-package company-box :pin melpa :hook (company-mode . company-box-mode))
+(use-package company-box :hook (company-mode . company-box-mode))
 
 (use-package company-lsp
   :commands company-lsp
@@ -304,7 +303,6 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
   :bind (:map dired-mode-map ("." . dired-hide-dotfiles-mode)))
 
 (use-package dired-open
-  :pin melpa
   :config
   (setq dired-open-extensions
         '(("mkv" . "mpv")
@@ -405,7 +403,6 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
 (use-package flycheck :commands flycheck-mode :hook (prog-mode . flycheck-mode))
 
 (use-package flycheck-golangci-lint
-  :pin melpa
   :after go-mode
   :hook
   ((go-mode . flycheck-golangci-lint-setup)
@@ -471,7 +468,7 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
   (ibuffer-mode . (lambda ()
 		    (ibuffer-switch-to-saved-filter-groups "default"))))
 
-(use-package immortal-scratch :pin melpa :config (immortal-scratch-mode t))
+(use-package immortal-scratch :config (immortal-scratch-mode t))
 
 (use-package ivy
   :config
@@ -484,7 +481,6 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
 	'((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy))))
 
 (use-package ivy-pass
-  :pin melpa
   :bind (("C-s-p" . 'ivy-pass) ("C-x p" . 'ivy-pass)))
 
 (use-package ivy-rich
@@ -545,7 +541,6 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
 	message-sendmail-f-is-evil nil))
 
 (use-package messages-are-flowing
-  :pin melpa
   :hook
   (message-mode-hook . messages-are-flowing-use-and-mark-hard-newlines))
 
@@ -618,7 +613,7 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
 
 (use-package ob-async)
 
-(use-package ob-restclient :pin melpa)
+(use-package ob-restclient)
 
 (use-package ob-translate)
 
@@ -831,9 +826,7 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
 
 (use-package rainbow-mode :pin gnu :hook (prog-mode text-mode))
 
-(use-package rainbow-delimiters
-  :pin gnu
-  :hook (prog-mode . rainbow-delimiters-mode))
+(use-package rainbow-delimiters :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package register
   :ensure nil
@@ -847,10 +840,9 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
   (set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
   (set-register ?o '(file . "~/ruck/oo/org/dwrz.org")))
 
-(use-package restclient :pin melpa :mode ("\\.restclient\\'" . restclient-mode))
+(use-package restclient :mode ("\\.restclient\\'" . restclient-mode))
 
 (use-package rmsbolt
-  :pin melpa
   :config
   (setq rmsbolt-command
 	"gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic"))
@@ -899,7 +891,7 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
 
 (use-package smartparens :hook (emacs-lisp-mode . smartparens-mode))
 
-(use-package sort-words :pin melpa)
+(use-package sort-words)
 
 (use-package subword :config (global-subword-mode t))
 
@@ -936,7 +928,6 @@ Tab to completion; n-[b/p] for walk backward/forward early commands history."
 (use-package volatile-highlights :config (volatile-highlights-mode t))
 
 (use-package vterm
-  :pin melpa
   :bind ("s-e" . vterm)
   :config (setq vterm-max-scrollback 32767))
 
