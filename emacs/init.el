@@ -714,12 +714,7 @@
            :prepend t
            :jump-to-captured t
            :empty-lines-before 1
-           :empty-lines-after 1)
-	  ("t" "task" entry
-           (file "")
-           (file "~/ruck/oo/org/templates/task.org")
-           :prepend t
-           :jump-to-captured t))))
+           :empty-lines-after 1))))
 
 (use-package org-clock
   :ensure nil
