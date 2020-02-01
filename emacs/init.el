@@ -575,7 +575,6 @@
 
 (use-package novice :config (setq disabled-command-function nil))
 
-(use-package ob-async)
 
 (use-package ob-restclient)
 
