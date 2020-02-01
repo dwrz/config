@@ -460,8 +460,7 @@
 	ivy-re-builders-alist
 	'((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy))))
 
-(use-package ivy-pass
-  :bind (("C-s-p" . 'ivy-pass) ("C-x p" . 'ivy-pass)))
+(use-package ivy-pass :bind (("C-s-p" . 'ivy-pass) ("C-x p" . 'ivy-pass)))
 
 (use-package ivy-rich
   :after ivy
@@ -893,9 +892,7 @@
 
 (use-package volatile-highlights :config (volatile-highlights-mode t))
 
-(use-package vterm
-  :bind ("s-e" . vterm)
-  :config (setq vterm-max-scrollback 32767))
+(use-package vterm :config (setq vterm-max-scrollback 32767))
 
 (use-package web-mode
   :mode "\\.html\\'" "\\.gohtml\\'"
