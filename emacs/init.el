@@ -1056,16 +1056,15 @@ _q_ quit            _b_ balance         _-_ out
 (defhydra hydra-meta-hydra (:color blue)
   "
 ^meta^      ^^              ^^
-^───────^───^^──────────────^─────────────────────
-_q_ quit    _e_ eyebrowse   _p_ point
-^^          _h_ highlight   _r_ region
-^^          _l_ lsp         _t_ theme
+^───────^───^^──────────────^───────────
+_q_ quit    _h_ highlight   _p_ point
+^^          _l_ lsp         _r_ region
+^^          ^^              _t_ theme
 ^^          ^^              _w_ windows
 ^^          ^^              ^^
 ^^          ^^              ^^
 "
   ("q" nil)
-  ("e" hydra-eyebrowse/body)
   ("h" hydra-highlight/body)
   ("l" hydra-lsp/body)
   ("p" hydra-point/body)
