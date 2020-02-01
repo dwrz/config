@@ -20,7 +20,6 @@
       indent-tabs-mode nil
       inhibit-splash-screen t
       inhibit-startup-message t
-      initial-buffer-choice 'vterm
       initial-major-mode 'org-mode
       initial-scratch-message nil
       next-screen-context-lines 5
