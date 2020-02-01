@@ -976,23 +976,6 @@ _q_ quit            _s_ symbol          _u_ unhiglight
   ("r" highlight-regexp :color blue)
   ("u" unhighlight-regexp :color blue))
 
-(defhydra hydra-launcher (:color blue)
-  "
-^launch^   ^do^
-^──────────^──^───────────────^─^───────
-_q_ quit   _d_ digikam        _v_ vterm
-^^         _f_ firefox        _r_ run
-^^         _m_ modem-manager
-^^         _p_ pcmanfm
-"
-  ("q" nil)
-  ("d" (start-process "digikam" nil "digikam"))
-  ("f" (start-process "firefox" nil "firefox"))
-  ("m" (start-process "modem-manager-gui" nil "modem-manager-gui"))
-  ("p" (start-process "pcmanfm" nil "pcmanfm"))
-  ("r" dwrz-run-command)
-  ("v" vterm))
-
 (defhydra hydra-lsp (:exit t :hint nil)
   "
  Buffer^^               Server^^                   Symbol
@@ -1101,7 +1084,6 @@ _q_ quit    _e_ eyebrowse   _p_ point
 (global-set-key (kbd "s-b") 'bookmark-jump)
 (global-set-key (kbd "s-d") 'ispell-word)
 (global-set-key (kbd "s-h") 'hydra-highlight/body)
-(global-set-key (kbd "s-l") 'hydra-launcher/body)
 (global-set-key (kbd "s-m") 'hydra-meta-hydra/body)
 (global-set-key (kbd "s-p") 'hydra-point/body)
 (global-set-key (kbd "s-o") 'hydra-region/body)
