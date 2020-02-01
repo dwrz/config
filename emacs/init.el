@@ -63,19 +63,6 @@
    :contents-sources
    (list (cfw:org-create-source "forest green") (cfw:cal-create-source "red"))))
 
-(defun dwrz-run-command ()
-  "Run external system programs. \
-Tab to completion; n-[b/p] for walk backward/forward early commands history."
-  (interactive)
-  (start-process "run" "run" (string-trim-right (read-shell-command "run: "))))
-
-(defun dwrz-suntime ()
-  "Get sunrise, sunset, and day length for NYC."
-  (interactive)
-  (setq-local calendar-latitude 40)
-  (setq-local calendar-longitude -74)
-  (sunrise-sunset))
-
 (defun dwrz-find-file-sudo ()
   "Reopen the current file as root, preserving point position."
   (interactive)
