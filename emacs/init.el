@@ -484,19 +484,6 @@
 
 (use-package keychain-environment :config (keychain-refresh-environment))
 
-(use-package key-chord
-  :commands key-chord-mode
-  :config
-  (setq key-chord-two-keys-delay 0.015
-	key-chord-one-key-delay 0.25)
-  (key-chord-define-global "''" "(")
-  (key-chord-define-global ",," ")")
-  (key-chord-define-global "-a" "[")
-  (key-chord-define-global "-o" "]")
-  (key-chord-define-global "-e" "{")
-  (key-chord-define-global "-u" "}")
-  (key-chord-define-global "-p" "|"))
-
 (use-package ledger-mode)
 
 (use-package lsp-mode :hook (go-mode . lsp) :commands lsp)
