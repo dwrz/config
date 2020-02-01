@@ -246,8 +246,8 @@
   :after ivy
   :demand t
   :bind
-  (("<f5> V" . counsel-describe-variable)
-   ("<f5> f" . counsel-describe-function)
+  (("C-h v" . counsel-describe-variable)
+   ("C-h f" . counsel-describe-function)
    ("<f5> i" . counsel-info-lookup-symbol)
    ("<f5> l" . counsel-find-library)
    ("<f5> u" . counsel-unicode-char)
