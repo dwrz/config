@@ -265,11 +265,6 @@
 	"rg -S -M 120 --no-heading --line-number --color never %s .")
   (setq counsel-find-file-at-point t))
 
-(use-package counsel-dash
-  :commands counsel-dash
-  :bind ("C-s-d" . counsel-dash) ;; FIX: find alternative binding or hydra.
-  :config (setq counsel-dash-browser-func 'eww))
-
 (use-package counsel-tramp :commands counsel-tramp)
 
 (use-package custom
@@ -330,7 +325,6 @@
 (use-package elisp-mode
   :ensure nil
   :config
-  (setq-local counsel-dash-docsets '("Emacs Lisp"))
   (add-to-list (make-local-variable 'company-backends) 'company-elisp))
 
 (use-package eldoc :hook (emacs-lisp-mode . eldoc-mode))
@@ -424,8 +418,7 @@
   (defun lsp-go-install-save-hooks ()
     (add-hook 'before-save-hook #'lsp-format-buffer t t)
     (add-hook 'before-save-hook #'lsp-organize-imports t t))
-  (add-hook 'go-mode-hook 'lsp-go-install-save-hooks)
-  (setq-local counsel-dash-docsets '("Go")))
+  (add-hook 'go-mode-hook 'lsp-go-install-save-hooks))
 
 (use-package go-playground
   :config
@@ -482,8 +475,7 @@
   :interpreter "node"
   :hook   (js2-mode-hook . js2-imenu-extras-mode)
   :config
-  (setq js-indent-level 2)
-  (setq counsel-dash-docsets '("JavaScript" "jQuery" "NodeJS" "React")))
+  (setq js-indent-level 2))
 
 (use-package js2-refactor
   :hook (js2-mode . js2-refactor-mode)
@@ -925,8 +917,7 @@
   (setq web-mode-code-indent-offset 2
 	web-mode-css-indent-offset 2
 	web-mode-indent-style 1
-	web-mode-markup-indent-offset 2)
-  (setq counsel-dash-docsets '("JavaScript" "jQuery" "HTML" "CSS")))
+	web-mode-markup-indent-offset 2))
 
 (use-package wgrep)
 
