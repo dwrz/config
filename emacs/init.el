@@ -138,9 +138,8 @@
 
 (setq use-package-always-ensure t)
 
-(use-package all-the-icons)
-
-(use-package alert)
+(require 'alert)
+(require 'all-the-icons)
 
 (use-package anzu
   :config
@@ -197,11 +196,9 @@
         diary-file "~/ruck/oo/org/diary.org"
         holiday-bahai-holidays nil))
 
-(use-package calfw)
-
-(use-package calfw-cal :after calfw)
-
-(use-package calfw-org :after org calfw)
+(require 'calfw)
+(require 'calfw-cal)
+(require 'calfw-org)
 
 (use-package cc-vars
   :ensure nil
@@ -353,7 +350,7 @@
 (use-package eww
   :config (setq eww-search-prefix "https://www.ecosia.org/search/?q="))
 
-(use-package f)
+(require 'f)
 
 (use-package faces
   :ensure nil
@@ -426,7 +423,7 @@
 
 (use-package go-tag :config (setq go-tag-args (list "-transform" "camelcase")))
 
-(use-package google-translate)
+(require 'google-translate)
 
 (use-package gruvbox-theme :defer t)
 
@@ -482,7 +479,7 @@
 
 (use-package keychain-environment :config (keychain-refresh-environment))
 
-(use-package ledger-mode)
+(require 'ledger-mode)
 
 (use-package lsp-mode :hook (go-mode . lsp) :commands lsp)
 
@@ -571,14 +568,13 @@
   (define-key notmuch-search-mode-map "R"
     'notmuch-search-reply-to-thread-sender))
 
-(use-package nov)
+(require 'nov)
 
 (use-package novice :config (setq disabled-command-function nil))
 
+(require 'ob-restclient)
 
-(use-package ob-restclient)
-
-(use-package ob-translate)
+(require 'ob-translate)
 
 (use-package ol
   :ensure nil
@@ -805,7 +801,7 @@
   (setq rmsbolt-command
 	"gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic"))
 
-(use-package s)
+(require 's)
 
 (use-package saveplace
   :init
@@ -849,7 +845,7 @@
 
 (use-package smartparens :hook (emacs-lisp-mode . smartparens-mode))
 
-(use-package sort-words)
+(require 'sort-words)
 
 (use-package subword :config (global-subword-mode t))
 
@@ -860,7 +856,7 @@
 
 (use-package swiper :bind ("C-s" . swiper))
 
-(use-package systemd)
+(require 'systemd)
 
 (use-package term
   :config (setq-default explicit-shell-file-name (getenv "SHELL")))
@@ -896,11 +892,11 @@
 	web-mode-indent-style 1
 	web-mode-markup-indent-offset 2))
 
-(use-package wgrep)
+(require 'wgrep)
 
 (use-package which-key :config (setq which-key-mode t))
 
-(use-package yaml-mode)
+(require 'yaml-mode)
 
 (use-package yasnippet
   :demand t
