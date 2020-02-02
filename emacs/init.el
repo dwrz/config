@@ -219,7 +219,6 @@
 			     company-cmake  company-capf company-files
 			     company-gtags company-etags company-keywords)
 	  (company-abbrev company-dabbrev company-dabbrev-code))
-  company-begin-commands '(self-insert-command)
 	company-idle-delay 0
 	company-minimum-prefix-length 2
         company-show-numbers t
@@ -228,7 +227,8 @@
   (company-quickhelp-color-foreground "#DCDCCC")
   (company-quickhelp-color-background "#4F4F4F"))
 
-(use-package company-box :hook (company-mode . company-box-mode))
+(require 'company-box)
+(add-hook 'company-mode-hook 'company-box-mode)
 
 (use-package company-lsp
   :commands company-lsp
@@ -600,7 +600,6 @@
 			 (org-redisplay-inline-images))))
   (add-to-list 'org-src-lang-modes '("js" . js2))
   (add-to-list 'org-modules 'org-habit)
-  (add-to-list (make-local-variable 'company-backends) 'company-ispell)
 
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -631,6 +630,9 @@
 				      "WAITING(w)" "SOMEDAY-MAYBE(s)" "|"
 				      "DONE(d)" "DELEGATED(e)" "CANCELED(c)")
 			    (sequence "AR(a)" "GOAL(g)"))))
+(add-hook 'org-mode-hook
+          '(lambda ()
+            (set (make-local-variable 'company-backends) '((company-capf company-files company-ispell)))))
 
 (use-package org-agenda
   :ensure nil
@@ -863,10 +865,9 @@
 (use-package term
   :config (setq-default explicit-shell-file-name (getenv "SHELL")))
 
-(use-package text-mode
-  :ensure nil
-  :config
-  (add-to-list (make-local-variable 'company-backends) 'company-ispell))
+(add-hook 'text-mode-hook
+          '(lambda ()
+            (set (make-local-variable 'company-backends) '((company-capf company-files company-ispell)))))
 
 (use-package time :config (setq display-time-mode nil))
 
