@@ -303,7 +303,6 @@
 
 (use-package dockerfile-mode)
 
-(use-package docker :bind ("C-c d" . docker))
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
