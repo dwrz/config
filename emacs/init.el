@@ -301,8 +301,7 @@
 
 (use-package doc-view :config (setq doc-view-resolution 150))
 
-(use-package dockerfile-mode)
-
+(require 'dockerfile-mode)
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
@@ -751,7 +750,7 @@
   (setq org-src-preserve-indentation t
         org-src-tab-acts-natively t))
 
-(use-package pandoc-mode)
+(require 'pandoc-mode)
 
 (use-package paren :demand t :custom (show-paren-mode t))
 
@@ -773,13 +772,17 @@
              nil '(("\\<\\(FIX\\|TODO\\|BUG\\):" 1
                     font-lock-warning-face t)))))
 
-(use-package pyim :demand t :requires pyim-basedict)
+(require 'pyim)
+(require 'pyim-basedict)
+(pyim-basedict-enable)
 
-(use-package pyim-basedict :config (pyim-basedict-enable))
+(require 'rainbow-mode)
+(add-hook 'prog-mode-hook 'rainbow-mode)
+(add-hook 'text-mode-hook 'rainbow-mode)
+(add-hook 'conf-space-mode-hook 'rainbow-mode)
 
-(use-package rainbow-mode :pin gnu :hook (prog-mode text-mode))
-
-(use-package rainbow-delimiters :hook (prog-mode . rainbow-delimiters-mode))
+(require 'rainbow-delimiters)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 (use-package register
   :ensure nil
