@@ -37,6 +37,18 @@
               shell-file-name (getenv "SHELL")
               truncate-lines nil)
 
+(setq disabled-command-function nil)
+(setq display-time-mode nil)
+(setq tls-checktrust t)
+(setq password-cache-expiry 3600
+      tramp-default-method "ssh")
+(setq-default save-place t)
+(setq save-place-forget-unreadable-files nil)
+(setq eww-search-prefix "https://www.ecosia.org/search/?q=")
+(setq compilation-message-face 'default)
+(setq custom-file "/tmp/custom.el")
+
+
 ;; FUNCTIONS
 
 (defun dwrz-copy-filename ()
@@ -72,6 +84,7 @@
 (defun dwrz-lightswitch-theme ()
   "Switch from dark to light theme, and vice-versa."
   (interactive)
+  (dolist 'custom-enabled-themes #'disable-theme)
   (cond
    ((string-equal dwrz-current-theme "zenburn") (dwrz-set-light-theme))
    ((string-equal dwrz-current-theme "gruvbox-light") (dwrz-set-dark-theme))))
@@ -161,11 +174,9 @@
         auto-compile-toggle-deletes-nonlib-dest t
         auto-compile-update-autoloads t))
 
-(use-package autorevert
-  :config
-  (setq auto-revert-verbose nil
+(setq auto-revert-verbose nil
 	global-auto-revert-non-file-buffers t)
-  (global-auto-revert-mode t))
+(global-auto-revert-mode t)
 
 (use-package avy
   :bind
@@ -178,16 +189,12 @@
         avy-keys '(?a ?o ?e ?u ?h ?t ?n ?s)
         avy-style 'at-full))
 
-(use-package bookmark
-  :demand t
-  :config (setq bookmark-save-flag 1))
+(setq bookmark-save-flag 1)
 
 (use-package browse-url
   :custom
   (browse-url-browser-function 'eww-browse-url)
   (browse-url-generic-program "firefox"))
-
-(use-package calc :bind ("H-n" . calc))
 
 (use-package calendar
   :config
@@ -230,14 +237,10 @@
 (require 'company-box)
 (add-hook 'company-mode-hook 'company-box-mode)
 
-(use-package company-lsp
-  :commands company-lsp
-  :config
-  (add-to-list 'company-backends 'company-lsp))
+(require 'company-lsp)
 
-(use-package company-quickhelp :config (company-quickhelp-mode t))
-
-(use-package compile :config (setq compilation-message-face 'default))
+(require 'company-quickhelp)
+(company-quickhelp-mode t)
 
 (use-package counsel
   :after ivy
@@ -261,21 +264,13 @@
 	"rg -S -M 120 --no-heading --line-number --color never %s .")
   (setq counsel-find-file-at-point t))
 
-(use-package counsel-tramp :commands counsel-tramp)
-
-(use-package custom
-  :ensure nil
-  :config
-  (setq custom-file "/tmp/custom.el")
-  (when (file-exists-p custom-file) (load custom-file)))
+(require 'counsel-tramp)
 
 (use-package dash :config (eval-after-load "dash" '(dash-enable-font-lock)))
 
-(use-package delsel :config (delete-selection-mode nil))
+(delete-selection-mode nil)
 
-(use-package dired
-  :ensure nil
-  :config (put 'dired-find-alternate-file 'disabled nil))
+(put 'dired-find-alternate-file 'disabled nil)
 
 (use-package dired-hide-dotfiles
   :bind (:map dired-mode-map ("." . dired-hide-dotfiles-mode)))
@@ -287,25 +282,21 @@
           ("mp4" . "mpv")
           ("avi" . "mpv"))))
 
-(use-package dired-x
-  :ensure nil
-  :after dired
-  :config
-  (auto-compression-mode t)
-  (setq dired-clean-up-buffers-too t
-	dired-dwim-target t
-	dired-listing-switches "-alh"
-	dired-omit-files (concat dired-omit-files "\\|^\\..+$")
-	dired-omit-verbose nil
-	dired-recursive-copies 'always))
+(auto-compression-mode t)
+(setq dired-clean-up-buffers-too t
+      dired-dwim-target t
+      dired-listing-switches "-alh"
+      dired-omit-files (concat dired-omit-files "\\|^\\..+$")
+      dired-omit-verbose nil
+      dired-recursive-copies 'always)
 
-(use-package doc-view :config (setq doc-view-resolution 150))
+(setq doc-view-resolution 150)
 
 (require 'dockerfile-mode)
 
-(use-package doom-modeline
-  :hook (after-init . doom-modeline-mode)
-  :config (column-number-mode t))
+(require 'doom-modeline)
+(add-hook 'after-init-hook 'doom-modeline-mode)
+(column-number-mode t)
 
 (use-package dumb-jump
   :bind (("M-g o" . dumb-jump-go-other-window)
@@ -316,27 +307,23 @@
   :hook (prog-mode . dumb-jump-mode)
   :config (setq dumb-jump-force-searcher 'rg))
 
-(use-package elisp-mode
-  :ensure nil
-  :config
-  (add-to-list (make-local-variable 'company-backends) 'company-elisp))
+(add-hook 'emacs-lisp-mode-hook
+          '(lambda ()
+	     (set (make-local-variable 'company-backends)
+		  '((company-lsp 'company-elisp company-files)))))
 
-(use-package eldoc :hook (emacs-lisp-mode . eldoc-mode))
+(require 'eldoc)
+(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 
 (use-package elec-pair :hook (web-mode . electric-pair-mode))
 
 (use-package emmet-mode :hook (css-mode html-mode web-mode))
 
-(use-package emojify
-  :bind ("C-c e" . emojify-insert-emoji)
-  :config
-  (setq emojify-emoji-styles '(unicode))
-  (global-emojify-mode t))
+(require 'emojify)
+(setq emojify-emoji-styles '(unicode))
+(global-emojify-mode t)
 
-(use-package epg-config
-  :ensure nil
-  :after epg
-  :custom (epg-gpg-program "/usr/bin/gpg2"))
+(customize-set-variable epg-gpg-program "/usr/bin/gpg2")
 
 (use-package erc
   :commands (erc erc-tls)
@@ -344,9 +331,6 @@
   (setq erc-nick "dwrz")
   (add-to-list 'erc-modules 'notifications)
   (add-to-list 'erc-modules 'spelling))
-
-(use-package eww
-  :config (setq eww-search-prefix "https://www.ecosia.org/search/?q="))
 
 (require 'f)
 
@@ -362,7 +346,7 @@
    :foundry "PfEd"
    :slant 'normal
    :weight 'normal
-   :height 143
+   :height 140
    :width 'normal))
 
 (use-package files
@@ -397,9 +381,7 @@
         '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
 	   t ("-d" "en_US") nil utf-8))))
 
-(use-package git-commit
-  :after magit
-  :config (setq git-commit-summary-max-length 50))
+(setq git-commit-summary-max-length 50)
 
 (use-package gnutls :config (setq gnutls-verify-error t))
 
@@ -413,19 +395,18 @@
     (add-hook 'before-save-hook #'lsp-format-buffer t t)
     (add-hook 'before-save-hook #'lsp-organize-imports t t))
   (add-hook 'go-mode-hook 'lsp-go-install-save-hooks))
+(add-hook 'go-mode-hook
+          '(lambda ()
+	     (set (make-local-variable 'company-backends)
+		  '((company-lsp company-files)))))
 
-(use-package go-playground
-  :config
-  (setq go-playground-ask-file-name nil)
-  (setq go-playground-basedir "/home/dwrz/.go/src/playground/"))
+(require 'go-playground)
+(setq go-playground-ask-file-name nil)
+(setq go-playground-basedir "/home/dwrz/.go/src/playground/")
 
 (use-package go-tag :config (setq go-tag-args (list "-transform" "camelcase")))
 
 (require 'google-translate)
-
-(use-package gruvbox-theme :defer t)
-
-(use-package hippie-exp :bind ("C-s-h" . hippie-expand))
 
 (use-package hl-line :demand t :config (global-hl-line-mode t))
 
@@ -483,7 +464,7 @@
 
 (use-package lsp-ui :disabled t :commands lsp-ui-mode)
 
-(use-package magit :bind ("C-x g" . magit-status))
+(require 'magit)
 
 (use-package markdown-mode
   :commands (markdown-mode)
@@ -499,9 +480,8 @@
 	message-sendmail-envelope-from 'header
 	message-sendmail-f-is-evil nil))
 
-(use-package messages-are-flowing
-  :hook
-  (message-mode-hook . messages-are-flowing-use-and-mark-hard-newlines))
+(require 'messages-are-flowing)
+(add-hook 'message-mode-hook 'messages-are-flowing-use-and-mark-hard-newlines)
 
 (use-package mule
   :ensure nil
@@ -567,11 +547,7 @@
     'notmuch-search-reply-to-thread-sender))
 
 (require 'nov)
-
-(use-package novice :config (setq disabled-command-function nil))
-
 (require 'ob-restclient)
-
 (require 'ob-translate)
 
 (use-package ol
@@ -632,7 +608,7 @@
 			    (sequence "AR(a)" "GOAL(g)"))))
 (add-hook 'org-mode-hook
           '(lambda ()
-            (set (make-local-variable 'company-backends) '((company-capf company-files company-ispell)))))
+	     (set (make-local-variable 'company-backends) '((company-capf company-files company-ispell)))))
 
 (use-package org-agenda
   :ensure nil
@@ -754,13 +730,14 @@
 
 (require 'pandoc-mode)
 
-(use-package paren :demand t :custom (show-paren-mode t))
+(require 'paren)
+(show-paren-mode t)
 
-(use-package pdf-tools
-  :config (setq pdf-view-midnight-colors '("#DCDCCC" . "#383838")))
+(require 'pdf-tools)
+(setq pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
 
-(use-package plantuml-mode
-  :config (setq plantuml-jar-path "/usr/bin/plantuml"))
+(require 'plantuml-mode)
+(setq plantuml-jar-path "/usr/bin/plantuml")
 
 (use-package pos-tip
   :config
@@ -807,11 +784,6 @@
 
 (require 's)
 
-(use-package saveplace
-  :init
-  (setq-default save-place t)
-  (setq save-place-forget-unreadable-files nil))
-
 (use-package sendmail
   :config
   (setq mail-specify-envelope-from t
@@ -832,7 +804,8 @@
         shell-pop-window-position "bottom"
         shell-pop-in-after-hook 'end-of-buffer))
 
-(use-package sh-script :config (setq sh-basic-offset 2))
+(require 'sh-script)
+(setq sh-basic-offset 2)
 
 (use-package simple
   :ensure nil
@@ -851,40 +824,33 @@
 
 (require 'sort-words)
 
-(use-package subword :config (global-subword-mode t))
+(require 'subword)
+(global-subword-mode t)
 
-(use-package super-save
-  :config
-  (super-save-mode t)
-  (setq super-save-auto-save-when-idle t))
+(require 'super-save)
+(setq super-save-auto-save-when-idle t)
+(super-save-mode t)
 
-(use-package swiper :bind ("C-s" . swiper))
+(require 'swiper)
 
 (require 'systemd)
 
-(use-package term
-  :config (setq-default explicit-shell-file-name (getenv "SHELL")))
+(require 'term)
+(setq-default explicit-shell-file-name (getenv "SHELL"))
 
 (add-hook 'text-mode-hook
           '(lambda ()
             (set (make-local-variable 'company-backends) '((company-capf company-files company-ispell)))))
 
-(use-package time :config (setq display-time-mode nil))
+(require 'visual-fill-column)
+(add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
+(setq split-window-preferred-function 'visual-fill-column-split-window-sensibly)
 
-(use-package tls :config (setq tls-checktrust t))
+(require 'volatile-highlights)
+(volatile-highlights-mode t)
 
-(use-package tramp
-  :config (setq password-cache-expiry 3600 tramp-default-method "ssh"))
-
-(use-package visual-fill-column
-  :hook (visual-line-mode . visual-fill-column-mode)
-  :config
-  (setq split-window-preferred-function
-	'visual-fill-column-split-window-sensibly))
-
-(use-package volatile-highlights :config (volatile-highlights-mode t))
-
-(use-package vterm :config (setq vterm-max-scrollback 32767))
+(require 'vterm)
+(setq vterm-max-scrollback 32767)
 
 (use-package web-mode
   :mode "\\.html\\'" "\\.gohtml\\'"
@@ -897,7 +863,8 @@
 
 (require 'wgrep)
 
-(use-package which-key :config (setq which-key-mode t))
+(require 'which-key)
+(setq which-key-mode t)
 
 (require 'yaml-mode)
 
@@ -910,7 +877,8 @@
   (yas-load-directory "/home/dwrz/.emacs.d/snippets")
   (yas-global-mode t))
 
-(use-package zenburn-theme :defer t :hook (after-init . dwrz-set-dark-theme))
+(require 'zenburn-theme)
+(add-hook 'after-init-hook 'dwrz-set-dark-theme)
 
 ;; HYDRAS
 (defhydra hydra-highlight (:color blue)
@@ -1028,16 +996,25 @@ _q_ quit    _h_ highlight   _p_ point
 
 ;; KEYBINDINGS
 
+(global-set-key (kbd "C-c e") 'emojify-insert-emoji)
+(global-set-key (kbd "C-s") 'swiper)
 (global-set-key (kbd "C-s-c") 'async-shell-command)
+(global-set-key (kbd "C-s-g") 'magit-status)
+(global-set-key (kbd "C-s-h") 'hippie-expand)
 (global-set-key (kbd "C-s-l") 'display-line-numbers-mode)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "H-c") 'dwrz-open-calendar)
+(global-set-key (kbd "H-n") 'calc)
 (global-set-key (kbd "H-s") 'ispell-buffer)
 (global-set-key (kbd "s-/") 'comment-line)
 (global-set-key (kbd "s-b") 'bookmark-jump)
 (global-set-key (kbd "s-d") 'ispell-word)
 (global-set-key (kbd "s-h") 'hydra-highlight/body)
 (global-set-key (kbd "s-m") 'hydra-meta-hydra/body)
-(global-set-key (kbd "s-p") 'hydra-point/body)
 (global-set-key (kbd "s-o") 'hydra-region/body)
+(global-set-key (kbd "s-p") 'hydra-point/body)
 (global-set-key (kbd "s-w") 'hydra-windows/body)
+
+;; Load custom.el.
+(when (file-exists-p custom-file) (load custom-file))
