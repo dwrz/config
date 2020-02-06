@@ -141,7 +141,7 @@ change-bg-map() {
 	 echo "no ruck maps directory on this host" >&2
 	 return 1
        fi
-       feh --bg-fill --randomize "$mapsdir/*"
+       feh --bg-fill --randomize "$mapsdir"
        ;;
 
   esac
