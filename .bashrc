@@ -67,6 +67,7 @@ alias t3="tree -CL 3"
 alias t="tree -C"
 alias timers="systemctl --user -all list-timers"
 alias tree="tree -C"
+alias unread="notmuch search tag:unread"
 alias vdir="vdir --color=auto"
 alias which="type -a"
 alias wisdom='$HOME/ruck/oo/scripts/wisdom/wisdom.sh'
