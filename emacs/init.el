@@ -323,7 +323,7 @@
 (setq emojify-emoji-styles '(unicode))
 (global-emojify-mode t)
 
-(customize-set-variable epg-gpg-program "/usr/bin/gpg2")
+(customize-set-variable 'epg-gpg-program "/usr/bin/gpg2")
 
 (use-package erc
   :commands (erc erc-tls)
