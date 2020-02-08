@@ -390,6 +390,12 @@ screenshot() {
   maim -s > screenshot-"$(date '+%Y-%m-%dT%H:%M:%S%z')".jpg
 }
 
+ssha() {
+  ssh-add ~/.ssh/github
+  ssh-add ~/.ssh/mobile
+  ssh-add ~/.ssh/srv-nyc
+}
+
 upsys() {
   if [[ "$HOSTNAME" == "earth" && ! -d /boot/loader ]]; then
     echo "boot partition not mounted" >&2
