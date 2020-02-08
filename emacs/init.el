@@ -132,6 +132,7 @@
     (fill-region (region-beginning) (region-end) nil)))
 
 ;; PACKAGES
+(setq load-prefer-newer t)
 (package-initialize)
 
 (require 'package)
@@ -141,98 +142,71 @@
         ("melpa" . "https://melpa.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")))
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
-(require 'bind-key)
-
-(setq use-package-always-ensure t)
+(require 'auto-compile)
+(add-hook 'auto-compile-inhibit-compile-hook
+	  'auto-compile-inhibit-compile-detached-git-head)
+(auto-compile-on-load-mode)
+(auto-compile-on-save-mode)
+(setq auto-compile-display-buffer nil
+      auto-compile-mode-line-counter t
+      auto-compile-source-recreate-deletes-dest t
+      auto-compile-toggle-deletes-nonlib-dest t
+      auto-compile-update-autoloads t)
 
 (require 'alert)
 (require 'all-the-icons)
 
-(use-package anzu
-  :config
-  (global-anzu-mode t)
-  (global-set-key [remap query-replace] 'anzu-query-replace)
-  (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp))
-
-(use-package auto-compile
-  :demand t
-  :hook
-  (auto-compile-inhibit-compile-hook .
-				 auto-compile-inhibit-compile-detached-git-head)
-  :config
-  (auto-compile-on-load-mode)
-  (auto-compile-on-save-mode)
-  (setq auto-compile-display-buffer nil
-        auto-compile-mode-line-counter t
-        auto-compile-source-recreate-deletes-dest t
-        auto-compile-toggle-deletes-nonlib-dest t
-        auto-compile-update-autoloads t))
+(require 'anzu)
+(global-anzu-mode t)
+(global-set-key [remap query-replace] 'anzu-query-replace)
+(global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
 
 (setq auto-revert-verbose nil
 	global-auto-revert-non-file-buffers t)
 (global-auto-revert-mode t)
 
-(use-package avy
-  :bind
-  (("C-s-o" . avy-goto-char)
-   ("C-s-a" . avy-goto-line))
-  :config
-  (setq avy-all-windows 'all-frames
-        avy-background t
-        avy-case-fold-search nil
-        avy-keys '(?a ?o ?e ?u ?h ?t ?n ?s)
-        avy-style 'at-full))
+(require 'avy)
+(setq avy-all-windows 'all-frames
+      avy-background t
+      avy-case-fold-search nil
+      avy-keys '(?a ?o ?e ?u ?h ?t ?n ?s)
+      avy-style 'at-full)
 
 (setq bookmark-save-flag 1)
 
-(use-package browse-url
-  :custom
-  (browse-url-browser-function 'eww-browse-url)
-  (browse-url-generic-program "firefox"))
+(setq browse-url-browser-function 'eww-browse-url)
+(setq browse-url-generic-program "firefox")
 
-(use-package calendar
-  :config
-  (setq calendar-chinese-all-holidays-flag t
-        calendar-week-start-day 1
-        diary-file "~/ruck/oo/org/diary.org"
-        holiday-bahai-holidays nil))
+(setq calendar-chinese-all-holidays-flag t
+      calendar-week-start-day 1
+      diary-file "~/ruck/oo/org/diary.org"
+      holiday-bahai-holidays nil)
 
 (require 'calfw)
 (require 'calfw-cal)
 (require 'calfw-org)
 
-(use-package cc-vars
-  :ensure nil
-  :config
-  (setq-default c-basic-offset 8
+(setq-default c-basic-offset 8
 		tab-width 8
-		indent-tabs-mode t))
+		indent-tabs-mode t)
 
-(use-package company
-  :bind
-  (:map company-active-map ("<return>" . nil) ( "RET" . nil)
-	("<tab>" . company-complete-selection))
-  :commands (company-mode company-indent-or-complete-common)
-  :config
-  (global-company-mode t)
-  (setq company-backends
-	'((company-yasnippet company-semantic company-clang company-xcode
-			     company-cmake  company-capf company-files
-			     company-gtags company-etags company-keywords)
-	  (company-abbrev company-dabbrev company-dabbrev-code))
-	company-idle-delay 0
-	company-minimum-prefix-length 2
-        company-show-numbers t
-	company-tooltip-align-annotations t)
-  :custom
-  (company-quickhelp-color-foreground "#DCDCCC")
-  (company-quickhelp-color-background "#4F4F4F"))
+(require 'company)
+(with-eval-after-load 'company
+    (define-key company-active-map (kbd "<return>") nil)
+  (define-key company-active-map (kbd "RET") nil)
+  (define-key company-active-map (kbd "<tab>") 'company-complete-selection))
+(global-company-mode t)
+(setq company-backends
+      '((company-yasnippet company-semantic company-clang company-xcode
+			   company-cmake  company-capf company-files
+			   company-gtags company-etags company-keywords)
+	(company-abbrev company-dabbrev company-dabbrev-code))
+      company-idle-delay 0
+      company-minimum-prefix-length 2
+      company-show-numbers t
+      company-tooltip-align-annotations t)
+(customize-set-variable 'company-quickhelp-color-foreground "#DCDCCC")
+(customize-set-variable 'company-quickhelp-color-background "#4F4F4F")
 
 (require 'company-box)
 (add-hook 'company-mode-hook 'company-box-mode)
@@ -242,45 +216,29 @@
 (require 'company-quickhelp)
 (company-quickhelp-mode t)
 
-(use-package counsel
-  :after ivy
-  :demand t
-  :bind
-  (("C-h v" . counsel-describe-variable)
-   ("C-h f" . counsel-describe-function)
-   ("<f5> i" . counsel-info-lookup-symbol)
-   ("<f5> l" . counsel-find-library)
-   ("<f5> u" . counsel-unicode-char)
-   ("C-c g" . counsel-git)
-   ("C-c j" . counsel-git-grep)
-   ("C-c k" . counsel-ag)
-   ("C-r" . counsel-rg)
-   ("C-s-e" . counsel-M-x)
-   ("C-x C-f" . counsel-find-file)
-   ("C-x l" . counsel-locate)
-   ("M-x" . counsel-M-x))
-  :config
-  (setq counsel-rg-base-command
-	"rg -S -M 120 --no-heading --line-number --color never %s .")
-  (setq counsel-find-file-at-point t))
+(require 'counsel)
+(setq counsel-rg-base-command
+      "rg -S -M 120 --no-heading --line-number --color never %s .")
+(setq counsel-find-file-at-point t)
 
 (require 'counsel-tramp)
 
-(use-package dash :config (eval-after-load "dash" '(dash-enable-font-lock)))
+(require 'dash)
+(eval-after-load "dash" '(dash-enable-font-lock))
 
 (delete-selection-mode nil)
 
 (put 'dired-find-alternate-file 'disabled nil)
 
-(use-package dired-hide-dotfiles
-  :bind (:map dired-mode-map ("." . dired-hide-dotfiles-mode)))
+(require 'dired-hide-dotfiles)
+(with-eval-after-load 'dired-hide-dotfiles
+  (define-key dired-mode-map (kbd ".") 'dired-hide-dotfiles-mode))
 
-(use-package dired-open
-  :config
-  (setq dired-open-extensions
+(require 'dired-open)
+(setq dired-open-extensions
         '(("mkv" . "mpv")
           ("mp4" . "mpv")
-          ("avi" . "mpv"))))
+          ("avi" . "mpv")))
 
 (auto-compression-mode t)
 (setq dired-clean-up-buffers-too t
@@ -298,14 +256,9 @@
 (add-hook 'after-init-hook 'doom-modeline-mode)
 (column-number-mode t)
 
-(use-package dumb-jump
-  :bind (("M-g o" . dumb-jump-go-other-window)
-         ("M-g j" . dumb-jump-go)
-         ("M-g i" . dumb-jump-go-prompt)
-         ("M-g x" . dumb-jump-go-prefer-external)
-         ("M-g z" . dumb-jump-go-prefer-external-other-window))
-  :hook (prog-mode . dumb-jump-mode)
-  :config (setq dumb-jump-force-searcher 'rg))
+(require 'dumb-jump)
+(add-hook 'prog-mode-hook 'dumb-jump-mode)
+(setq dumb-jump-force-searcher 'rg)
 
 (add-hook 'emacs-lisp-mode-hook
           '(lambda ()
@@ -315,9 +268,11 @@
 (require 'eldoc)
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 
-(use-package elec-pair :hook (web-mode . electric-pair-mode))
+(require 'elec-pair)
+(add-hook 'web-mode-hook 'electric-pair-mode)
 
-(use-package emmet-mode :hook (css-mode html-mode web-mode))
+(require 'emmet-mode)
+(add-hook 'css-mode-hook 'html-mode 'web-mode)
 
 (require 'emojify)
 (setq emojify-emoji-styles '(unicode))
@@ -325,408 +280,342 @@
 
 (customize-set-variable 'epg-gpg-program "/usr/bin/gpg2")
 
-(use-package erc
-  :commands (erc erc-tls)
-  :config
-  (setq erc-nick "dwrz")
+(setq erc-nick "dwrz")
+(with-eval-after-load 'erc
   (add-to-list 'erc-modules 'notifications)
   (add-to-list 'erc-modules 'spelling))
 
 (require 'f)
 
-(use-package faces
-  :ensure nil
-  :defer t
-  :custom
-  (face-font-family-alternatives '(("hans" "adobe-source-han-sans-cn-font")))
-  :init
-  (set-face-attribute
+
+(customize-set-variable 'face-font-family-alternatives
+		     '(("hans" "adobe-source-han-sans-cn-font")))
+
+(set-face-attribute
    'default t
    :family "DejaVu Sans Mono"
    :foundry "PfEd"
    :slant 'normal
    :weight 'normal
    :height 140
-   :width 'normal))
+   :width 'normal)
 
-(use-package files
-  :ensure nil
-  :demand t
-  :config
-  (setq auto-save-visited-mode t)
-  (add-hook 'find-file-hook 'dwrz-highlight-logs)
-  (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
-	backup-directory-alist `((".*" .,temporary-file-directory))
-	confirm-kill-emacs 'y-or-n-p))
+(setq auto-save-visited-mode t)
+(add-hook 'find-file-hook 'dwrz-highlight-logs)
+(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
+      backup-directory-alist `((".*" .,temporary-file-directory))
+      confirm-kill-emacs 'y-or-n-p)
 
-(use-package flycheck :commands flycheck-mode :hook (prog-mode . flycheck-mode))
+(require 'flycheck)
+(add-hook 'prog-mode-hook 'flycheck-mode)
 
-(use-package flycheck-golangci-lint
-  :after go-mode
-  :hook
-  ((go-mode . flycheck-golangci-lint-setup)
-   (go-mode . lsp)))
+(require 'flycheck-golangci-lint)
+(add-hook 'go-mode-hook 'flycheck-golangci-lint-setup)
 
-(use-package flyspell
-  :hook
-  ((prog-mode . flyspell-prog-mode)
-   (text-mode . flyspell-mode)
-   (org-mode . flyspell-mode))
-  :init
-  (setq ispell-program-name "/usr/bin/aspell"
-        ispell-dictionary "en_US"
-        ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
-        ispell-list-command "--list"
-        ispell-dictionary-alist
-        '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
-	   t ("-d" "en_US") nil utf-8))))
+(require 'flyspell)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'org-mode-hook 'flyspell-mode)
+(setq ispell-program-name "/usr/bin/aspell"
+      ispell-dictionary "en_US"
+      ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
+      ispell-list-command "--list"
+      ispell-dictionary-alist
+      '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
+	 t ("-d" "en_US") nil utf-8)))
 
 (setq git-commit-summary-max-length 50)
 
-(use-package gnutls :config (setq gnutls-verify-error t))
+(setq gnutls-verify-error t)
 
-(use-package go-mode
-  :bind
-  (("C-c C-b" . pop-tag-mark)
-   ("C-c t" . go-tag-add)
-   ("C-c T" . go-tag-remove))
-  :config
-  (defun lsp-go-install-save-hooks ()
-    (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    (add-hook 'before-save-hook #'lsp-organize-imports t t))
-  (add-hook 'go-mode-hook 'lsp-go-install-save-hooks))
-(add-hook 'go-mode-hook
-          '(lambda ()
-	     (set (make-local-variable 'company-backends)
-		  '((company-lsp company-files)))))
+(require 'go-mode)
+(with-eval-after-load 'go-mode
+  (define-key go-mode-map (kbd "C-c C-b") 'pop-tag-mark)
+  (define-key go-mode-map (kbd "C-c t") 'go-tag-add)
+  (define-key go-mode-map (kbd "C-c T") 'go-tag-remove))
+
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook 'lsp-go-install-save-hooks)
+(add-hook 'go-mode-hook '(lambda ()
+			   (set (make-local-variable 'company-backends)
+				'((company-lsp company-files)))))
 
 (require 'go-playground)
 (setq go-playground-ask-file-name nil)
 (setq go-playground-basedir "/home/dwrz/.go/src/playground/")
 
-(use-package go-tag :config (setq go-tag-args (list "-transform" "camelcase")))
+(require 'go-tag)
+(setq go-tag-args (list "-transform" "camelcase"))
 
 (require 'google-translate)
 
-(use-package hl-line :demand t :config (global-hl-line-mode t))
+(global-hl-line-mode t)
 
-(use-package htmlize
-  :commands (htmlize-buffer
-             htmlize-file
-             htmlize-many-files
-             htmlize-many-files-dired
-             htmlize-region))
+(require 'htmlize)
 
-(use-package ibuffer
-  :bind ("C-x C-b" . ibuffer)
-  :hook
-  (ibuffer-mode . (lambda ()
-		    (ibuffer-switch-to-saved-filter-groups "default"))))
+(require 'ibuffer)
+(add-hook 'ibuffer-mode-hook (lambda ()
+		    (ibuffer-switch-to-saved-filter-groups "default")))
 
-(use-package immortal-scratch :config (immortal-scratch-mode t))
+(require 'immortal-scratch)
+(immortal-scratch-mode t)
 
-(use-package ivy
-  :config
-  (ivy-mode t)
-  (setq ivy-wrap t
-	ivy-use-virtual-buffers t
-	enable-recursive-minibuffers t
-	ivy-count-format "(%d/%d) "
-	ivy-re-builders-alist
-	'((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy))))
+(require 'ivy)
+(ivy-mode t)
+(setq ivy-wrap t
+      ivy-use-virtual-buffers t
+      enable-recursive-minibuffers t
+      ivy-count-format "(%d/%d) "
+      ivy-re-builders-alist
+      '((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy)))
 
-(use-package ivy-pass :bind (("C-s-p" . 'ivy-pass) ("C-x p" . 'ivy-pass)))
+(require 'ivy-pass)
 
-(use-package ivy-rich
-  :after ivy
-  :config
-  (ivy-rich-mode t)
-  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
-  (setq ivy-rich-path-style 'abbrev))
+(require 'ivy-rich)
+(ivy-rich-mode t)
+(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+(setq ivy-rich-path-style 'abbrev)
 
-(use-package js2-mode
-  :mode "\\.js\\'"
-  :interpreter "node"
-  :hook   (js2-mode-hook . js2-imenu-extras-mode)
-  :config
-  (setq js-indent-level 2))
+(require 'js2-mode)
+(add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+(setq js-indent-level 2)
 
-(use-package js2-refactor
-  :hook (js2-mode . js2-refactor-mode)
-  :bind (:map js2-mode-map ("C-k" . js2r-kill))
-  :config (js2r-add-keybindings-with-prefix "C-c C-r"))
+(require 'js2-refactor)
+(add-hook 'js2-mode 'js2-refactor-mode)
+(with-eval-after-load 'js2-refactor
+  (define-key js2-mode-map (kbd "C-k") 'js2r-kill))
+(js2r-add-keybindings-with-prefix "C-c C-r")
 
-(use-package keychain-environment :config (keychain-refresh-environment))
+(require 'keychain-environment)
+(keychain-refresh-environment)
 
 (require 'ledger-mode)
 
-(use-package lsp-mode :hook (go-mode . lsp) :commands lsp)
+(require 'lsp-mode)
+(add-hook 'go-mode-hook 'lsp)
+(add-hook 'emacs-lisp-mode-hook 'lsp)
 
-(use-package lsp-ui :disabled t :commands lsp-ui-mode)
+;; (require 'lsp-ui)
 
 (require 'magit)
 
-(use-package markdown-mode
-  :commands (markdown-mode)
-  :mode (("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "pandoc"))
+(require 'markdown-mode)
+(setq markdown-command "pandoc")
 
-(use-package message
-  :ensure nil
-  :config
-  (setq message-directory "drafts"
-	message-kill-buffer-on-exit t
-	message-sendmail-envelope-from 'header
-	message-sendmail-f-is-evil nil))
+
+(setq message-directory "drafts"
+      message-kill-buffer-on-exit t
+      message-sendmail-envelope-from 'header
+      message-sendmail-f-is-evil nil)
 
 (require 'messages-are-flowing)
 (add-hook 'message-mode-hook 'messages-are-flowing-use-and-mark-hard-newlines)
 
-(use-package mule
-  :ensure nil
-  :no-require t
-  :config
-  (setq locale-coding-system 'utf-8)
-  (prefer-coding-system 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-  (set-selection-coding-system 'utf-8)
-  (set-terminal-coding-system 'utf-8))
+(setq locale-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
 
-(use-package mwheel
-  :ensure nil
-  :custom (mouse-wheel-scroll-amount '(1 ((shift) .1))))
+(customize-set-variable 'mouse-wheel-scroll-amount '(1 ((shift) .1)))
 
-(use-package notmuch
-  :bind ("H-m" . notmuch)
-  :config
-  (setq notmuch-address-command  'internal
-	notmuch-address-internal-completion  '(sent nil)
-	notmuch-address-save-filename "~/ruck/social/notmuch-contacts"
-	notmuch-address-use-company t
-	notmuch-crypto-process-mime t
-	notmuch-fcc-dirs "sent"
-	notmuch-hello-hide-tags '("killed")
-	notmuch-search-oldest-first nil)
-  ;; Search tags
-  (setq notmuch-saved-searches
-        '((:name "inbox" :query "tag:inbox" :key "i")
-          (:name "unread" :query "tag:unread" :key "u")
-          (:name "new" :query "tag:new" :key "n")
-          (:name "sent" :query "tag:sent" :key "e")
-          (:name "drafts" :query "tag:draft" :key "d")
-          (:name "all mail" :query "*" :key "a")
-          (:name "todo" :query "tag:todo" :key "t")))
-  ;; Keybindings
-  (define-key notmuch-search-mode-map "S"
-    (lambda ()
-      "mark message as spam"
-      (interactive)
-      (notmuch-search-tag (list "-new" "-unread" "-inbox" "+spam"))
-      (forward-line)))
-  (define-key notmuch-show-mode-map "S"
-    (lambda ()
-      "mark message as spam"
-      (interactive)
-      (notmuch-show-tag (list "-new" "-unread" "-inbox" "+spam"))))
-  (define-key notmuch-search-mode-map "N"
-    (lambda ()
-      "unmark message as new and unread"
-      (interactive)
-      (notmuch-search-tag (list "-new" "-unread"))
-      (forward-line)))
-  (define-key notmuch-show-mode-map "N"
-    (lambda ()
-      "unmark message as new and unread"
-      (interactive)
-      (notmuch-show-tag (list "-new" "-unread"))))
-  (define-key notmuch-show-mode-map "r" 'notmuch-show-reply)
-  (define-key notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
-  (define-key notmuch-search-mode-map "r" 'notmuch-search-reply-to-thread)
-  (define-key notmuch-search-mode-map "R"
-    'notmuch-search-reply-to-thread-sender))
+(require 'notmuch)
+(setq notmuch-address-command  'internal
+      notmuch-address-internal-completion  '(sent nil)
+      notmuch-address-save-filename "~/ruck/social/notmuch-contacts"
+      notmuch-address-use-company t
+      notmuch-crypto-process-mime t
+      notmuch-fcc-dirs "sent"
+      notmuch-hello-hide-tags '("killed")
+      notmuch-search-oldest-first nil)
+;; Search tags
+(setq notmuch-saved-searches
+      '((:name "inbox" :query "tag:inbox" :key "i")
+	(:name "unread" :query "tag:unread" :key "u")
+	(:name "new" :query "tag:new" :key "n")
+	(:name "sent" :query "tag:sent" :key "e")
+	(:name "drafts" :query "tag:draft" :key "d")
+	(:name "all mail" :query "*" :key "a")
+	(:name "todo" :query "tag:todo" :key "t")))
+;; Keybindings
+(define-key notmuch-search-mode-map "S"
+  (lambda ()
+    "mark message as spam"
+    (interactive)
+    (notmuch-search-tag (list "-new" "-unread" "-inbox" "+spam"))
+    (forward-line)))
+(define-key notmuch-show-mode-map "S"
+  (lambda ()
+    "mark message as spam"
+    (interactive)
+    (notmuch-show-tag (list "-new" "-unread" "-inbox" "+spam"))))
+(define-key notmuch-search-mode-map "N"
+  (lambda ()
+    "unmark message as new and unread"
+    (interactive)
+    (notmuch-search-tag (list "-new" "-unread"))
+    (forward-line)))
+(define-key notmuch-show-mode-map "N"
+  (lambda ()
+    "unmark message as new and unread"
+    (interactive)
+    (notmuch-show-tag (list "-new" "-unread"))))
+(define-key notmuch-show-mode-map "r" 'notmuch-show-reply)
+(define-key notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
+(define-key notmuch-search-mode-map "r" 'notmuch-search-reply-to-thread)
+(define-key notmuch-search-mode-map "R" 'notmuch-search-reply-to-thread-sender)
 
 (require 'nov)
 (require 'ob-restclient)
 (require 'ob-translate)
 
-(use-package ol
-  :ensure nil
-  :after org
-  :config
-  (setq org-link-frame-setup
-        '((vm . vm-visit-folder-other-frame)
-          (vm-imap . vm-visit-imap-folder-other-frame)
-          (gnus . org-gnus-no-new-news)
-          (file . find-file)
-          (wl . wl-other-frame))))
+(setq org-link-frame-setup
+      '((vm . vm-visit-folder-other-frame)
+	(vm-imap . vm-visit-imap-folder-other-frame)
+	(gnus . org-gnus-no-new-news)
+	(file . find-file)
+	(wl . wl-other-frame)))
 
-(use-package org
-  :bind
-  (("C-c a" . org-agenda)
-   ("C-c b" . org-iswitchb)
-   ("C-c c" . dwrz-org-capture-at-point)
-   ("C-c l" . org-store-link)
-   ("s-j" . org-goto))
-  :mode ("\\.org\\'" . org-mode)
-  :ensure org-plus-contrib
-  :config
-  (add-hook 'org-babel-after-execute-hook
-            (lambda () (when org-inline-image-overlays
-			 (org-redisplay-inline-images))))
-  (add-to-list 'org-src-lang-modes '("js" . js2))
-  (add-to-list 'org-modules 'org-habit)
+(require 'org)
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((awk .t ) (calc . t) (C . t) (emacs-lisp . t) (gnuplot . t) (js . t)
-     (latex . t) (ledger . t) (makefile .t )(org . t) (python . t)
-     (shell . t) (sed .t) (sql . t) (sqlite . t)))
+(add-hook 'org-babel-after-execute-hook
+	  (lambda () (when org-inline-image-overlays
+		       (org-redisplay-inline-images))))
+(add-to-list 'org-src-lang-modes '("js" . js2))
+(add-to-list 'org-modules 'org-habit)
 
-  (setq org-adapt-indentation nil
-	org-export-backends '(ascii html icalendar latex md odt)
-        org-catch-invisible-edits 'show
-	org-fontify-done-headline t
-        org-default-priority 49
-        org-enforce-todo-dependencies t
-        org-hide-emphasis-markers t
-        org-highest-priority 49
-        org-html-doctype "html5"
-        org-html-html5-fancy t
-        org-html-postamble nil
-        org-image-actual-width '(800)
-	org-list-demote-modify-bullet nil
-        org-log-into-drawer t
-        org-lowest-priority 53
-        org-refile-targets '((nil :maxlevel . 8))
-        org-src-fontify-natively t
-	org-tags-column 0
-	org-todo-keywords '((sequence "QUEUED(q)"
-				      "IN-PROGRESS(i)" "RECURRING(r)"
-				      "WAITING(w)" "SOMEDAY-MAYBE(s)" "|"
-				      "DONE(d)" "DELEGATED(e)" "CANCELED(c)")
-			    (sequence "AR(a)" "GOAL(g)"))))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((awk .t ) (calc . t) (C . t) (emacs-lisp . t) (gnuplot . t) (js . t)
+   (latex . t) (ledger . t) (makefile .t )(org . t) (python . t)
+   (shell . t) (sed .t) (sql . t) (sqlite . t)))
+
+(setq org-adapt-indentation nil
+      org-export-backends '(ascii html icalendar latex md odt)
+      org-catch-invisible-edits 'show
+      org-fontify-done-headline t
+      org-default-priority 49
+      org-enforce-todo-dependencies t
+      org-hide-emphasis-markers t
+      org-highest-priority 49
+      org-html-doctype "html5"
+      org-html-html5-fancy t
+      org-html-postamble nil
+      org-image-actual-width '(800)
+      org-list-demote-modify-bullet nil
+      org-log-into-drawer t
+      org-lowest-priority 53
+      org-refile-targets '((nil :maxlevel . 8))
+      org-src-fontify-natively t
+      org-tags-column 0
+      org-todo-keywords '((sequence "QUEUED(q)"
+				    "IN-PROGRESS(i)" "RECURRING(r)"
+				    "WAITING(w)" "SOMEDAY-MAYBE(s)" "|"
+				    "DONE(d)" "DELEGATED(e)" "CANCELED(c)")
+			  (sequence "AR(a)" "GOAL(g)")))
+
 (add-hook 'org-mode-hook
           '(lambda ()
 	     (set (make-local-variable 'company-backends) '((company-capf company-files company-ispell)))))
 
-(use-package org-agenda
-  :ensure nil
-  :after org
-  :config
-  (cond ((string-equal (system-name) "earth")
-	 (setq org-agenda-files '("~/ruck/oo/org/dwrz.org")
-	       org-archive-location
-	       "/home/dwrz/ruck/oo/org/dwrz-org-archive.org::"))
-	((string-equal (system-name) "gu-dwrz")
-	 (setq org-agenda-files '("~/gu/org-dwrz/gu.org")
-	       org-archive-location
-	       "~/gu/org-dwrz/archives/gu-archive.org::")))
-  (setq org-agenda-follow-indirect nil
-	org-agenda-include-diary t
-	org-agenda-prefix-format '((agenda . " %i %?-12t% s")
-				   (timeline . "  % s")
-				   (todo . " %i")
-				   (tags . " %i")
-				   (search . " %i"))
-	org-agenda-tags-column 'auto))
+(cond ((string-equal (system-name) "earth")
+       (setq org-agenda-files '("~/ruck/oo/org/dwrz.org")
+	     org-archive-location
+	     "/home/dwrz/ruck/oo/org/dwrz-org-archive.org::"))
+      ((string-equal (system-name) "gu-dwrz")
+       (setq org-agenda-files '("~/gu/org-dwrz/gu.org")
+	     org-archive-location
+	     "~/gu/org-dwrz/archives/gu-archive.org::")))
+(setq org-agenda-follow-indirect nil
+      org-agenda-include-diary t
+      org-agenda-prefix-format '((agenda . " %i %?-12t% s")
+				 (timeline . "  % s")
+				 (todo . " %i")
+				 (tags . " %i")
+				 (search . " %i"))
+      org-agenda-tags-column 'auto)
 
-(use-package org-capture
-  :ensure nil
-  :config
-  (setq org-capture-templates
-        '(("b" "bookmark" entry
-           (file "")
-           (file "~/ruck/oo/org/templates/bookmark.org")
-           :jump-to-captured t
-           :empty-lines-before 1
-           :empty-lines-after 1)
-          ("c" "contact" entry
-           (file "")
-           (file "~/ruck/oo/org/templates/contact.org")
-           :jump-to-captured t
-           :empty-lines-before 1
-           :empty-lines-after 1)
-          ("g" "goal" entry
-           (file "")
-           (file "~/ruck/oo/org/templates/goal.org")
-           :prepend t
-           :jump-to-captured t
-           :empty-lines-before 1
-           :empty-lines-after 1)
-          ("e" "log entry" plain
-           (file "")
-           (file "~/ruck/oo/org/templates/log-entry.org")
-           :jump-to-captured t)
-          ("j" "journal" entry
-           (file "")
-           (file "~/ruck/oo/org/templates/journal.org")
-           :prepend t
-           :jump-to-captured t
-           :empty-lines-before 1
-           :empty-lines-after 1)
-          ("l" "log" entry
-           (file "")
-           (file "~/ruck/oo/org/templates/log.org")
-           :prepend t
-           :jump-to-captured t
-           :empty-lines-after 1)
-          ("n" "note" entry
-           (file "")
-           (file "~/ruck/oo/org/templates/note.org")
-           :prepend t
-           :jump-to-captured t
-           :empty-lines-before 1
-           :empty-lines-after 1)
-          ("r" "review" entry
-           (file "")
-           (file "~/ruck/oo/org/templates/review.org")
-           :prepend t
-           :jump-to-captured t
-           :empty-lines-before 1
-           :empty-lines-after 1))))
+(setq org-capture-templates
+      '(("b" "bookmark" entry
+	 (file "")
+	 (file "~/ruck/oo/org/templates/bookmark.org")
+	 :jump-to-captured t
+	 :empty-lines-before 1
+	 :empty-lines-after 1)
+	("c" "contact" entry
+	 (file "")
+	 (file "~/ruck/oo/org/templates/contact.org")
+	 :jump-to-captured t
+	 :empty-lines-before 1
+	 :empty-lines-after 1)
+	("g" "goal" entry
+	 (file "")
+	 (file "~/ruck/oo/org/templates/goal.org")
+	 :prepend t
+	 :jump-to-captured t
+	 :empty-lines-before 1
+	 :empty-lines-after 1)
+	("e" "log entry" plain
+	 (file "")
+	 (file "~/ruck/oo/org/templates/log-entry.org")
+	 :jump-to-captured t)
+	("j" "journal" entry
+	 (file "")
+	 (file "~/ruck/oo/org/templates/journal.org")
+	 :prepend t
+	 :jump-to-captured t
+	 :empty-lines-before 1
+	 :empty-lines-after 1)
+	("l" "log" entry
+	 (file "")
+	 (file "~/ruck/oo/org/templates/log.org")
+	 :prepend t
+	 :jump-to-captured t
+	 :empty-lines-after 1)
+	("n" "note" entry
+	 (file "")
+	 (file "~/ruck/oo/org/templates/note.org")
+	 :prepend t
+	 :jump-to-captured t
+	 :empty-lines-before 1
+	 :empty-lines-after 1)
+	("r" "review" entry
+	 (file "")
+	 (file "~/ruck/oo/org/templates/review.org")
+	 :prepend t
+	 :jump-to-captured t
+	 :empty-lines-before 1
+	 :empty-lines-after 1)))
 
-(use-package org-clock
-  :ensure nil
-  :after org
-  :config (setq org-clock-into-drawer "CLOCKING"))
+(setq org-clock-into-drawer "CLOCKING")
+(setq org-priority-faces
+      '((?1 . (:foreground "red" :weight 'bold))
+	(?2 . (:foreground "orange"))
+	(?3 . (:foreground "yellow"))
+	(?4 . (:foreground "green"))
+	(?5 . (:foreground "purple"))))
+(setq org-todo-keyword-faces
+      '(("QUEUED" . "red")
+	("IN-PROGRESS" . "limegreen")
+	("RECURRING" . "orange")
+	("WAITING" . "yellow")
+	("DONE" . "blue")
+	("DELEGATED" . "gray50")
+	("CANCELED" . "purple")
+	("SOMEDAY-MAYBE" . "orchid")
+	("AR" . "red")
+	("GOAL" . "springgreen")))
 
-(use-package org-faces
-  :ensure nil
-  :after org
-  :config
-  (setq org-priority-faces
-        '((?1 . (:foreground "red" :weight 'bold))
-          (?2 . (:foreground "orange"))
-          (?3 . (:foreground "yellow"))
-          (?4 . (:foreground "green"))
-          (?5 . (:foreground "purple"))))
-  (setq org-todo-keyword-faces
-	'(("QUEUED" . "red")
-	  ("IN-PROGRESS" . "limegreen")
-	  ("RECURRING" . "orange")
-	  ("WAITING" . "yellow")
-	  ("DONE" . "blue")
-	  ("DELEGATED" . "gray50")
-	  ("CANCELED" . "purple")
-	  ("SOMEDAY-MAYBE" . "orchid")
-	  ("AR" . "red")
-	  ("GOAL" . "springgreen"))))
+(setq org-goto-max-level 8)
 
-(use-package org-goto
-  :ensure nil
-  :after org :config (setq org-goto-max-level 8))
+(require 'org-eww)
 
-(use-package org-eww :ensure nil :after org eww)
+(require 'ol-notmuch)
 
-(use-package ol-notmuch :ensure nil :after org notmuch)
-
-(use-package org-src
-  :ensure nil
-  :after org
-  :config
-  (setq org-src-preserve-indentation t
-        org-src-tab-acts-natively t))
+(setq org-src-preserve-indentation t
+      org-src-tab-acts-natively t)
 
 (require 'pandoc-mode)
 
@@ -739,15 +628,11 @@
 (require 'plantuml-mode)
 (setq plantuml-jar-path "/usr/bin/plantuml")
 
-(use-package pos-tip
-  :config
-  (setq pos-tip-background-color "#36473A"
-	pos-tip-foreground-color "#FFFFC8"))
+(require 'pos-tip)
+(setq pos-tip-background-color "#36473A"
+      pos-tip-foreground-color "#FFFFC8")
 
-(use-package prog-mode
-  :ensure nil
-  :config
-  (progn (font-lock-add-keywords
+(add-hook 'prog-mode-hook (progn (font-lock-add-keywords
              nil '(("\\<\\(FIX\\|TODO\\|BUG\\):" 1
                     font-lock-warning-face t)))))
 
@@ -763,64 +648,51 @@
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
-(use-package register
-  :ensure nil
-  :bind
-  (("C-s-j" . jump-to-register)
-   ("C-x j" . jump-to-register))
-  :config
-  (set-register ?9 '(file . "~/ruck/oo/journal/2019.org"))
-  (set-register ?j '(file . "~/ruck/oo/journal/2020.org"))
-  (set-register ?g '(file . "~/ruck/oo/org/gtd.org"))
-  (set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
-  (set-register ?o '(file . "~/ruck/oo/org/dwrz.org")))
+(set-register ?9 '(file . "~/ruck/oo/journal/2019.org"))
+(set-register ?j '(file . "~/ruck/oo/journal/2020.org"))
+(set-register ?g '(file . "~/ruck/oo/org/gtd.org"))
+(set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
+(set-register ?o '(file . "~/ruck/oo/org/dwrz.org"))
 
-(use-package restclient :mode ("\\.restclient\\'" . restclient-mode))
+(require 'restclient)
 
-(use-package rmsbolt
-  :config
-  (setq rmsbolt-command
-	"gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic"))
+(require 'rmsbolt)
+
+(setq rmsbolt-command
+      "gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic")
 
 (require 's)
 
-(use-package sendmail
-  :config
-  (setq mail-specify-envelope-from t
-	mail-envelope-from 'header
-	mail-specify-envelope-from t
-	send-mail-function 'sendmail-send-it
-	sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh"))
+(require 'sendmail)
+(setq mail-specify-envelope-from t
+      mail-envelope-from 'header
+      mail-specify-envelope-from t
+      send-mail-function 'sendmail-send-it
+      sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh")
 
-(use-package shell-pop
-  :bind (("C-s-t" . shell-pop)
-         ("C-x t" . shell-pop))
-  :custom
-  (shell-pop-shell-type '("vterm" "*vterm*" (lambda nil (vterm))))
-  :config
-  (setq shell-pop-window-size 25
-        shell-pop-full-span nil
-        shell-pop-universal-key "C-s-t"
-        shell-pop-window-position "bottom"
-        shell-pop-in-after-hook 'end-of-buffer))
+(require 'shell-pop)
+(customize-set-variable 'shell-pop-shell-type '("vterm" "*vterm*" (lambda nil (vterm))))
+(setq shell-pop-window-size 25
+      shell-pop-full-span nil
+      shell-pop-universal-key "C-s-t"
+      shell-pop-window-position "bottom"
+      shell-pop-in-after-hook 'end-of-buffer)
 
 (require 'sh-script)
 (setq sh-basic-offset 2)
 
-(use-package simple
-  :ensure nil
-  :demand t
-  :hook ((prog-mode text-mode) . visual-line-mode)
-  :config
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
-  (column-number-mode)
-  (setq async-shell-command-buffer "new-buffer"
-	backward-delete-char-untabify-method nil
-	mail-user-agent 'message-user-agent
-	shift-select-mode nil)
-  (size-indication-mode))
+(add-hook 'prog-mode-hook 'visual-line-mode)
+(add-hook 'text-mode-hook 'visual-line-mode)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(column-number-mode)
+(setq async-shell-command-buffer "new-buffer"
+      backward-delete-char-untabify-method nil
+      mail-user-agent 'message-user-agent
+      shift-select-mode nil)
+(size-indication-mode)
 
-(use-package smartparens :hook (emacs-lisp-mode . smartparens-mode))
+(require 'smartparens)
+(add-hook 'emacs-lisp-mode 'smartparens-mode)
 
 (require 'sort-words)
 
@@ -835,7 +707,6 @@
 
 (require 'systemd)
 
-(require 'term)
 (setq-default explicit-shell-file-name (getenv "SHELL"))
 
 (add-hook 'text-mode-hook
@@ -852,14 +723,12 @@
 (require 'vterm)
 (setq vterm-max-scrollback 32767)
 
-(use-package web-mode
-  :mode "\\.html\\'" "\\.gohtml\\'"
-  :config
-  (add-to-list (make-local-variable 'company-backends) 'company-web-html)
-  (setq web-mode-code-indent-offset 2
-	web-mode-css-indent-offset 2
-	web-mode-indent-style 1
-	web-mode-markup-indent-offset 2))
+(require 'web-mode)
+(add-to-list (make-local-variable 'company-backends) 'company-web-html)
+(setq web-mode-code-indent-offset 2
+      web-mode-css-indent-offset 2
+      web-mode-indent-style 1
+      web-mode-markup-indent-offset 2)
 
 (require 'wgrep)
 
@@ -868,17 +737,16 @@
 
 (require 'yaml-mode)
 
-(use-package yasnippet
-  :demand t
-  :bind (("C-s-s" . yas-expand)
-	 (:map yas-keymap ("<tab>" . nil)))
-  :mode ("/\\.emacs\\.d/snippets/" . snippet-mode)
-  :config
-  (yas-load-directory "/home/dwrz/.emacs.d/snippets")
-  (yas-global-mode t))
+(require 'yasnippet)
+(with-eval-after-load 'yasnippet
+  (define-key yas-keymap (kbd "<tab>") nil))
+(yas-load-directory "/home/dwrz/.emacs.d/snippets")
+(yas-global-mode t)
 
 (require 'zenburn-theme)
 (add-hook 'after-init-hook 'dwrz-set-dark-theme)
+
+;; todo snippet mode, restclient mode -- needed?
 
 ;; HYDRAS
 (defhydra hydra-highlight (:color blue)
@@ -996,21 +864,55 @@ _q_ quit    _h_ highlight   _p_ point
 
 ;; KEYBINDINGS
 
+(global-set-key (kbd "<f5> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f5> l") 'counsel-find-library)
+(global-set-key (kbd "<f5> u") 'counsel-unicode-char)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c b") 'org-iswitchb)
+(global-set-key (kbd "C-c c") 'dwrz-org-capture-at-point)
 (global-set-key (kbd "C-c e") 'emojify-insert-emoji)
+(global-set-key (kbd "C-c g") 'counsel-git)
+(global-set-key (kbd "C-c j") 'counsel-git-grep)
+(global-set-key (kbd "C-c k") 'counsel-ag)
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-h f") 'counsel-describe-function)
+(global-set-key (kbd "C-h v") 'counsel-describe-variable)
+(global-set-key (kbd "C-r") 'counsel-rg)
 (global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "C-s-a") 'avy-goto-line)
 (global-set-key (kbd "C-s-c") 'async-shell-command)
+(global-set-key (kbd "C-s-e") 'counsel-M-x)
 (global-set-key (kbd "C-s-g") 'magit-status)
 (global-set-key (kbd "C-s-h") 'hippie-expand)
+(global-set-key (kbd "C-s-j") 'jump-to-register)
 (global-set-key (kbd "C-s-l") 'display-line-numbers-mode)
+(global-set-key (kbd "C-s-o") 'avy-goto-char)
+(global-set-key (kbd "C-s-p") 'ivy-pass)
+(global-set-key (kbd "C-s-s") 'yas-expand)
+(global-set-key (kbd "C-s-t") 'shell-pop)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x j") 'jump-to-register)
+(global-set-key (kbd "C-x l") 'counsel-locate)
+(global-set-key (kbd "C-x p") 'ivy-pass)
+(global-set-key (kbd "C-x t") 'shell-pop)
 (global-set-key (kbd "H-c") 'dwrz-open-calendar)
+(global-set-key (kbd "H-m") 'notmuch)
 (global-set-key (kbd "H-n") 'calc)
 (global-set-key (kbd "H-s") 'ispell-buffer)
+(global-set-key (kbd "M-g i") 'dumb-jump-go-prompt)
+(global-set-key (kbd "M-g j") 'dumb-jump-go)
+(global-set-key (kbd "M-g o") 'dumb-jump-go-other-window)
+(global-set-key (kbd "M-g x") 'dumb-jump-go-prefer-external)
+(global-set-key (kbd "M-g z") 'dumb-jump-go-prefer-external-other-window)
+(global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "s-/") 'comment-line)
 (global-set-key (kbd "s-b") 'bookmark-jump)
 (global-set-key (kbd "s-d") 'ispell-word)
 (global-set-key (kbd "s-h") 'hydra-highlight/body)
+(global-set-key (kbd "s-j") 'org-goto)
 (global-set-key (kbd "s-m") 'hydra-meta-hydra/body)
 (global-set-key (kbd "s-o") 'hydra-region/body)
 (global-set-key (kbd "s-p") 'hydra-point/body)
