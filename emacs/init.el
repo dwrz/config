@@ -155,17 +155,95 @@
 
 (require 'alert)
 (require 'all-the-icons)
-
 (require 'anzu)
-(global-anzu-mode t)
+(require 'avy)
+(require 'calfw)
+(require 'calfw-cal)
+(require 'calfw-org)
+(require 'company)
+(require 'company-box)
+(require 'company-lsp)
+(require 'company-quickhelp)
+(require 'counsel)
+(require 'counsel-tramp)
+(require 'dash)
+(require 'dired-hide-dotfiles)
+(require 'dired-open)
+(require 'dockerfile-mode)
+(require 'doom-modeline)
+(require 'dumb-jump)
+(require 'eldoc)
+(require 'elec-pair)
+(require 'emmet-mode)
+(require 'emojify)
+(require 'f)
+(require 'flycheck)
+(require 'flycheck-golangci-lint)
+(require 'flyspell)
+(require 'go-mode)
+(require 'go-playground)
+(require 'go-tag)
+(require 'google-translate)
+(require 'htmlize)
+(require 'ibuffer)
+(require 'immortal-scratch)
+(require 'ivy)
+(require 'ivy-pass)
+(require 'ivy-rich)
+(require 'js2-mode)
+(require 'js2-refactor)
+(require 'keychain-environment)
+(require 'ledger-mode)
+(require 'lsp-mode)
+;; (require 'lsp-ui)
+(require 'magit)
+(require 'markdown-mode)
+(require 'messages-are-flowing)
+(require 'notmuch)
+(require 'nov)
+(require 'ob-restclient)
+(require 'ob-translate)
+(require 'ol-notmuch)
+(require 'org)
+(require 'org-eww)
+(require 'pandoc-mode)
+(require 'paren)
+(require 'pdf-tools)
+(require 'plantuml-mode)
+(require 'pos-tip)
+(require 'pyim)
+(require 'pyim-basedict)
+(require 'rainbow-delimiters)
+(require 'rainbow-mode)
+(require 'restclient)
+(require 'rmsbolt)
+(require 's)
+(require 'sendmail)
+(require 'sh-script)
+(require 'shell-pop)
+(require 'smartparens)
+(require 'sort-words)
+(require 'subword)
+(require 'super-save)
+(require 'swiper)
+(require 'systemd)
+(require 'visual-fill-column)
+(require 'volatile-highlights)
+(require 'vterm)
+(require 'web-mode)
+(require 'wgrep)
+(require 'which-key)
+(require 'yaml-mode)
+(require 'yasnippet)
+(require 'zenburn-theme)
+
+;; PACKAGE CONFIGURATION
 (global-set-key [remap query-replace] 'anzu-query-replace)
 (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
 
 (setq auto-revert-verbose nil
 	global-auto-revert-non-file-buffers t)
-(global-auto-revert-mode t)
 
-(require 'avy)
 (setq avy-all-windows 'all-frames
       avy-background t
       avy-case-fold-search nil
@@ -182,20 +260,14 @@
       diary-file "~/ruck/oo/org/diary.org"
       holiday-bahai-holidays nil)
 
-(require 'calfw)
-(require 'calfw-cal)
-(require 'calfw-org)
-
 (setq-default c-basic-offset 8
 		tab-width 8
 		indent-tabs-mode t)
 
-(require 'company)
 (with-eval-after-load 'company
     (define-key company-active-map (kbd "<return>") nil)
   (define-key company-active-map (kbd "RET") nil)
   (define-key company-active-map (kbd "<tab>") 'company-complete-selection))
-(global-company-mode t)
 (setq company-backends
       '((company-yasnippet company-semantic company-clang company-xcode
 			   company-cmake  company-capf company-files
@@ -205,42 +277,23 @@
       company-minimum-prefix-length 2
       company-show-numbers t
       company-tooltip-align-annotations t)
-(customize-set-variable 'company-quickhelp-color-foreground "#DCDCCC")
-(customize-set-variable 'company-quickhelp-color-background "#4F4F4F")
 
-(require 'company-box)
-(add-hook 'company-mode-hook 'company-box-mode)
-
-(require 'company-lsp)
-
-(require 'company-quickhelp)
-(company-quickhelp-mode t)
-
-(require 'counsel)
 (setq counsel-rg-base-command
       "rg -S -M 120 --no-heading --line-number --color never %s .")
 (setq counsel-find-file-at-point t)
 
-(require 'counsel-tramp)
-
-(require 'dash)
 (eval-after-load "dash" '(dash-enable-font-lock))
-
-(delete-selection-mode nil)
 
 (put 'dired-find-alternate-file 'disabled nil)
 
-(require 'dired-hide-dotfiles)
 (with-eval-after-load 'dired-hide-dotfiles
   (define-key dired-mode-map (kbd ".") 'dired-hide-dotfiles-mode))
 
-(require 'dired-open)
 (setq dired-open-extensions
         '(("mkv" . "mpv")
           ("mp4" . "mpv")
           ("avi" . "mpv")))
 
-(auto-compression-mode t)
 (setq dired-clean-up-buffers-too t
       dired-dwim-target t
       dired-listing-switches "-alh"
@@ -249,47 +302,13 @@
       dired-recursive-copies 'always)
 
 (setq doc-view-resolution 150)
-
-(require 'dockerfile-mode)
-
-(require 'doom-modeline)
-(add-hook 'after-init-hook 'doom-modeline-mode)
-(column-number-mode t)
-
-(require 'dumb-jump)
-(add-hook 'prog-mode-hook 'dumb-jump-mode)
 (setq dumb-jump-force-searcher 'rg)
-
-(add-hook 'emacs-lisp-mode-hook
-          '(lambda ()
-	     (set (make-local-variable 'company-backends)
-		  '((company-lsp 'company-elisp company-files)))))
-
-(require 'eldoc)
-(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
-
-(require 'elec-pair)
-(add-hook 'web-mode-hook 'electric-pair-mode)
-
-(require 'emmet-mode)
-(add-hook 'css-mode-hook 'html-mode 'web-mode)
-
-(require 'emojify)
 (setq emojify-emoji-styles '(unicode))
-(global-emojify-mode t)
-
-(customize-set-variable 'epg-gpg-program "/usr/bin/gpg2")
 
 (setq erc-nick "dwrz")
 (with-eval-after-load 'erc
   (add-to-list 'erc-modules 'notifications)
   (add-to-list 'erc-modules 'spelling))
-
-(require 'f)
-
-
-(customize-set-variable 'face-font-family-alternatives
-		     '(("hans" "adobe-source-han-sans-cn-font")))
 
 (set-face-attribute
    'default t
@@ -301,21 +320,11 @@
    :width 'normal)
 
 (setq auto-save-visited-mode t)
-(add-hook 'find-file-hook 'dwrz-highlight-logs)
+
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       backup-directory-alist `((".*" .,temporary-file-directory))
       confirm-kill-emacs 'y-or-n-p)
 
-(require 'flycheck)
-(add-hook 'prog-mode-hook 'flycheck-mode)
-
-(require 'flycheck-golangci-lint)
-(add-hook 'go-mode-hook 'flycheck-golangci-lint-setup)
-
-(require 'flyspell)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'org-mode-hook 'flyspell-mode)
 (setq ispell-program-name "/usr/bin/aspell"
       ispell-dictionary "en_US"
       ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
@@ -325,10 +334,8 @@
 	 t ("-d" "en_US") nil utf-8)))
 
 (setq git-commit-summary-max-length 50)
-
 (setq gnutls-verify-error t)
 
-(require 'go-mode)
 (with-eval-after-load 'go-mode
   (define-key go-mode-map (kbd "C-c C-b") 'pop-tag-mark)
   (define-key go-mode-map (kbd "C-c t") 'go-tag-add)
@@ -337,33 +344,11 @@
 (defun lsp-go-install-save-hooks ()
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(add-hook 'go-mode-hook 'lsp-go-install-save-hooks)
-(add-hook 'go-mode-hook '(lambda ()
-			   (set (make-local-variable 'company-backends)
-				'((company-lsp company-files)))))
 
-(require 'go-playground)
 (setq go-playground-ask-file-name nil)
 (setq go-playground-basedir "/home/dwrz/.go/src/playground/")
-
-(require 'go-tag)
 (setq go-tag-args (list "-transform" "camelcase"))
 
-(require 'google-translate)
-
-(global-hl-line-mode t)
-
-(require 'htmlize)
-
-(require 'ibuffer)
-(add-hook 'ibuffer-mode-hook (lambda ()
-		    (ibuffer-switch-to-saved-filter-groups "default")))
-
-(require 'immortal-scratch)
-(immortal-scratch-mode t)
-
-(require 'ivy)
-(ivy-mode t)
 (setq ivy-wrap t
       ivy-use-virtual-buffers t
       enable-recursive-minibuffers t
@@ -371,47 +356,21 @@
       ivy-re-builders-alist
       '((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy)))
 
-(require 'ivy-pass)
-
-(require 'ivy-rich)
-(ivy-rich-mode t)
 (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
 (setq ivy-rich-path-style 'abbrev)
 
-(require 'js2-mode)
-(add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
 (setq js-indent-level 2)
 
-(require 'js2-refactor)
-(add-hook 'js2-mode 'js2-refactor-mode)
 (with-eval-after-load 'js2-refactor
   (define-key js2-mode-map (kbd "C-k") 'js2r-kill))
 (js2r-add-keybindings-with-prefix "C-c C-r")
 
-(require 'keychain-environment)
-(keychain-refresh-environment)
-
-(require 'ledger-mode)
-
-(require 'lsp-mode)
-(add-hook 'go-mode-hook 'lsp)
-(add-hook 'emacs-lisp-mode-hook 'lsp)
-
-;; (require 'lsp-ui)
-
-(require 'magit)
-
-(require 'markdown-mode)
 (setq markdown-command "pandoc")
-
 
 (setq message-directory "drafts"
       message-kill-buffer-on-exit t
       message-sendmail-envelope-from 'header
       message-sendmail-f-is-evil nil)
-
-(require 'messages-are-flowing)
-(add-hook 'message-mode-hook 'messages-are-flowing-use-and-mark-hard-newlines)
 
 (setq locale-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
@@ -419,9 +378,6 @@
 (set-selection-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 
-(customize-set-variable 'mouse-wheel-scroll-amount '(1 ((shift) .1)))
-
-(require 'notmuch)
 (setq notmuch-address-command  'internal
       notmuch-address-internal-completion  '(sent nil)
       notmuch-address-save-filename "~/ruck/social/notmuch-contacts"
@@ -467,10 +423,6 @@
 (define-key notmuch-search-mode-map "r" 'notmuch-search-reply-to-thread)
 (define-key notmuch-search-mode-map "R" 'notmuch-search-reply-to-thread-sender)
 
-(require 'nov)
-(require 'ob-restclient)
-(require 'ob-translate)
-
 (setq org-link-frame-setup
       '((vm . vm-visit-folder-other-frame)
 	(vm-imap . vm-visit-imap-folder-other-frame)
@@ -478,11 +430,6 @@
 	(file . find-file)
 	(wl . wl-other-frame)))
 
-(require 'org)
-
-(add-hook 'org-babel-after-execute-hook
-	  (lambda () (when org-inline-image-overlays
-		       (org-redisplay-inline-images))))
 (add-to-list 'org-src-lang-modes '("js" . js2))
 (add-to-list 'org-modules 'org-habit)
 
@@ -515,10 +462,6 @@
 				    "WAITING(w)" "SOMEDAY-MAYBE(s)" "|"
 				    "DONE(d)" "DELEGATED(e)" "CANCELED(c)")
 			  (sequence "AR(a)" "GOAL(g)")))
-
-(add-hook 'org-mode-hook
-          '(lambda ()
-	     (set (make-local-variable 'company-backends) '((company-capf company-files company-ispell)))))
 
 (cond ((string-equal (system-name) "earth")
        (setq org-agenda-files '("~/ruck/oo/org/dwrz.org")
@@ -610,43 +553,15 @@
 
 (setq org-goto-max-level 8)
 
-(require 'org-eww)
-
-(require 'ol-notmuch)
-
 (setq org-src-preserve-indentation t
       org-src-tab-acts-natively t)
 
-(require 'pandoc-mode)
-
-(require 'paren)
-(show-paren-mode t)
-
-(require 'pdf-tools)
 (setq pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
 
-(require 'plantuml-mode)
 (setq plantuml-jar-path "/usr/bin/plantuml")
 
-(require 'pos-tip)
 (setq pos-tip-background-color "#36473A"
       pos-tip-foreground-color "#FFFFC8")
-
-(add-hook 'prog-mode-hook (progn (font-lock-add-keywords
-             nil '(("\\<\\(FIX\\|TODO\\|BUG\\):" 1
-                    font-lock-warning-face t)))))
-
-(require 'pyim)
-(require 'pyim-basedict)
-(pyim-basedict-enable)
-
-(require 'rainbow-mode)
-(add-hook 'prog-mode-hook 'rainbow-mode)
-(add-hook 'text-mode-hook 'rainbow-mode)
-(add-hook 'conf-space-mode-hook 'rainbow-mode)
-
-(require 'rainbow-delimiters)
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 (set-register ?9 '(file . "~/ruck/oo/journal/2019.org"))
 (set-register ?j '(file . "~/ruck/oo/journal/2020.org"))
@@ -654,97 +569,133 @@
 (set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
 (set-register ?o '(file . "~/ruck/oo/org/dwrz.org"))
 
-(require 'restclient)
-
-(require 'rmsbolt)
-
 (setq rmsbolt-command
       "gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic")
 
-(require 's)
-
-(require 'sendmail)
 (setq mail-specify-envelope-from t
       mail-envelope-from 'header
       mail-specify-envelope-from t
       send-mail-function 'sendmail-send-it
       sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh")
 
-(require 'shell-pop)
-(customize-set-variable 'shell-pop-shell-type '("vterm" "*vterm*" (lambda nil (vterm))))
 (setq shell-pop-window-size 25
       shell-pop-full-span nil
       shell-pop-universal-key "C-s-t"
       shell-pop-window-position "bottom"
       shell-pop-in-after-hook 'end-of-buffer)
 
-(require 'sh-script)
 (setq sh-basic-offset 2)
 
-(add-hook 'prog-mode-hook 'visual-line-mode)
-(add-hook 'text-mode-hook 'visual-line-mode)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(column-number-mode)
 (setq async-shell-command-buffer "new-buffer"
       backward-delete-char-untabify-method nil
       mail-user-agent 'message-user-agent
       shift-select-mode nil)
-(size-indication-mode)
 
-(require 'smartparens)
-(add-hook 'emacs-lisp-mode 'smartparens-mode)
-
-(require 'sort-words)
-
-(require 'subword)
-(global-subword-mode t)
-
-(require 'super-save)
 (setq super-save-auto-save-when-idle t)
-(super-save-mode t)
-
-(require 'swiper)
-
-(require 'systemd)
 
 (setq-default explicit-shell-file-name (getenv "SHELL"))
 
-(add-hook 'text-mode-hook
-          '(lambda ()
-            (set (make-local-variable 'company-backends) '((company-capf company-files company-ispell)))))
-
-(require 'visual-fill-column)
-(add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
 (setq split-window-preferred-function 'visual-fill-column-split-window-sensibly)
 
-(require 'volatile-highlights)
-(volatile-highlights-mode t)
-
-(require 'vterm)
 (setq vterm-max-scrollback 32767)
 
-(require 'web-mode)
 (add-to-list (make-local-variable 'company-backends) 'company-web-html)
 (setq web-mode-code-indent-offset 2
       web-mode-css-indent-offset 2
       web-mode-indent-style 1
       web-mode-markup-indent-offset 2)
 
-(require 'wgrep)
-
-(require 'which-key)
 (setq which-key-mode t)
 
-(require 'yaml-mode)
-
-(require 'yasnippet)
 (with-eval-after-load 'yasnippet
   (define-key yas-keymap (kbd "<tab>") nil))
 (yas-load-directory "/home/dwrz/.emacs.d/snippets")
-(yas-global-mode t)
 
-(require 'zenburn-theme)
+;; CUSTOMIZE
+(customize-set-variable 'company-quickhelp-color-foreground "#DCDCCC")
+(customize-set-variable 'company-quickhelp-color-background "#4F4F4F")
+(customize-set-variable 'epg-gpg-program "/usr/bin/gpg2")
+(customize-set-variable 'face-font-family-alternatives
+		     '(("hans" "adobe-source-han-sans-cn-font")))
+(customize-set-variable 'mouse-wheel-scroll-amount '(1 ((shift) .1)))
+(customize-set-variable 'shell-pop-shell-type
+			'("vterm" "*vterm*" (lambda nil (vterm))))
+
+;; HOOKS
+(add-hook 'after-init-hook 'doom-modeline-mode)
 (add-hook 'after-init-hook 'dwrz-set-dark-theme)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'company-mode-hook 'company-box-mode)
+(add-hook 'conf-space-mode-hook 'rainbow-mode)
+(add-hook 'css-mode-hook 'html-mode 'web-mode)
+(add-hook 'emacs-lisp-mode 'smartparens-mode)
+(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+(add-hook 'emacs-lisp-mode-hook 'lsp)
+(add-hook 'find-file-hook 'dwrz-highlight-logs)
+(add-hook 'go-mode-hook 'flycheck-golangci-lint-setup)
+(add-hook 'go-mode-hook 'lsp)
+(add-hook 'go-mode-hook 'lsp-go-install-save-hooks)
+(add-hook 'js2-mode 'js2-refactor-mode)
+(add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+(add-hook 'message-mode-hook 'messages-are-flowing-use-and-mark-hard-newlines)
+(add-hook 'org-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'dumb-jump-mode)
+(add-hook 'prog-mode-hook 'flycheck-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'prog-mode-hook 'rainbow-mode)
+(add-hook 'prog-mode-hook 'visual-line-mode)
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'text-mode-hook 'rainbow-mode)
+(add-hook 'text-mode-hook 'visual-line-mode)
+(add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
+(add-hook 'web-mode-hook 'electric-pair-mode)
+(add-hook 'prog-mode-hook (progn (font-lock-add-keywords
+             nil '(("\\<\\(FIX\\|TODO\\|BUG\\):" 1
+                    font-lock-warning-face t)))))
+(add-hook 'emacs-lisp-mode-hook
+          '(lambda ()
+	     (set (make-local-variable 'company-backends)
+		  '((company-lsp 'company-elisp company-files)))))
+(add-hook 'go-mode-hook '(lambda ()
+			   (set (make-local-variable 'company-backends)
+				'((company-lsp company-files)))))
+(add-hook 'ibuffer-mode-hook (lambda ()
+		    (ibuffer-switch-to-saved-filter-groups "default")))
+(add-hook 'text-mode-hook
+          '(lambda ()
+            (set (make-local-variable 'company-backends) '((company-capf company-files company-ispell)))))
+(add-hook 'org-babel-after-execute-hook
+	  (lambda () (when org-inline-image-overlays
+		       (org-redisplay-inline-images))))
+(add-hook 'org-mode-hook
+          '(lambda ()
+	     (set (make-local-variable 'company-backends)
+		  '((company-capf company-files)))
+	     (set (make-local-variable 'company-minimum-prefix-length) 1)))
+
+;; PACKAGE ENABLE
+(auto-compression-mode t)
+(column-number-mode t)
+(column-number-mode)
+(company-quickhelp-mode t)
+(delete-selection-mode nil)
+(global-anzu-mode t)
+(global-auto-revert-mode t)
+(global-company-mode t)
+(global-emojify-mode t)
+(global-hl-line-mode t)
+(global-subword-mode t)
+(immortal-scratch-mode t)
+(ivy-mode t)
+(ivy-rich-mode t)
+(keychain-refresh-environment)
+(pyim-basedict-enable)
+(show-paren-mode t)
+(size-indication-mode)
+(super-save-mode t)
+(volatile-highlights-mode t)
+(yas-global-mode t)
 
 ;; todo snippet mode, restclient mode -- needed?
 
@@ -863,7 +814,6 @@ _q_ quit    _h_ highlight   _p_ point
   ("w" hydra-windows/body))
 
 ;; KEYBINDINGS
-
 (global-set-key (kbd "<f5> i") 'counsel-info-lookup-symbol)
 (global-set-key (kbd "<f5> l") 'counsel-find-library)
 (global-set-key (kbd "<f5> u") 'counsel-unicode-char)
