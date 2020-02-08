@@ -298,6 +298,10 @@ mobile-backup() {
   fi
 }
 
+paclean() {
+  sudo pacman -Rns $(pacman -Qtdq)
+}
+
 panopticat() {
   local host password port user;
 
