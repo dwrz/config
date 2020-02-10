@@ -645,9 +645,9 @@
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
 (add-hook 'web-mode-hook 'electric-pair-mode)
-(add-hook 'prog-mode-hook (progn (font-lock-add-keywords
-             nil '(("\\<\\(FIX\\|TODO\\|BUG\\):" 1
-                    font-lock-warning-face t)))))
+;; (add-hook 'prog-mode-hook '(progn (font-lock-add-keywords
+;;              nil '(("\\<\\(FIX\\|TODO\\|BUG\\):" 1
+;;                     font-lock-warning-face t)))))
 (add-hook 'emacs-lisp-mode-hook
           '(lambda ()
 	     (set (make-local-variable 'company-backends)
