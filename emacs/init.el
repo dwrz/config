@@ -271,7 +271,7 @@
 			   company-gtags company-etags company-keywords)
 	(company-abbrev company-dabbrev company-dabbrev-code))
       company-idle-delay 0
-      company-minimum-prefix-length 2
+      company-minimum-prefix-length 1
       company-show-numbers t
       company-tooltip-align-annotations t)
 
@@ -651,7 +651,7 @@
 (add-hook 'emacs-lisp-mode-hook
           '(lambda ()
 	     (set (make-local-variable 'company-backends)
-		  '((company-lsp 'company-elisp company-files)))))
+		  '((company-lsp 'company-capf company-files)))))
 (add-hook 'go-mode-hook '(lambda ()
 			   (set (make-local-variable 'company-backends)
 				'((company-lsp company-files)))))
@@ -659,15 +659,14 @@
 		    (ibuffer-switch-to-saved-filter-groups "default")))
 (add-hook 'text-mode-hook
           '(lambda ()
-            (set (make-local-variable 'company-backends) '((company-capf company-files company-ispell)))))
+            (set (make-local-variable 'company-backends) '((company-capf company-files)))))
 (add-hook 'org-babel-after-execute-hook
 	  (lambda () (when org-inline-image-overlays
 		       (org-redisplay-inline-images))))
 (add-hook 'org-mode-hook
           '(lambda ()
 	     (set (make-local-variable 'company-backends)
-		  '((company-capf company-files)))
-	     (set (make-local-variable 'company-minimum-prefix-length) 1)))
+		  '((company-capf company-yasnippet company-files)))))
 
 ;; PACKAGE ENABLE
 (auto-compression-mode t)
