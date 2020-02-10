@@ -208,7 +208,6 @@
 (require 'org-eww)
 (require 'pandoc-mode)
 (require 'paren)
-(require 'pdf-tools)
 (require 'plantuml-mode)
 (require 'pos-tip)
 (require 'pyim)
@@ -218,8 +217,6 @@
 (require 'restclient)
 (require 'rmsbolt)
 (require 's)
-(require 'sendmail)
-(require 'sh-script)
 (require 'shell-pop)
 (require 'smartparens)
 (require 'sort-words)
@@ -555,8 +552,6 @@
 
 (setq org-src-preserve-indentation t
       org-src-tab-acts-natively t)
-
-(setq pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
 
 (setq plantuml-jar-path "/usr/bin/plantuml")
 
