@@ -93,7 +93,7 @@ bb() {
     "list") borg list /mnt/dwrz-archival-backup/dwrz-backup/ ;;
     "create")
       name="dwrz@earth-$(TZ=UTC date '+%FT%T%z')"
-      borg create -v --exclude /home/dwrz/.cache/ \
+      borg create -v --progress --exclude /home/dwrz/.cache/ \
 	   /mnt/dwrz-archival-backup/dwrz-backup/::"$name" /home/dwrz/
       ;;
     "prune") borg prune --keep-last 1 -d 7 -w 4 -m 12 --save-space \
