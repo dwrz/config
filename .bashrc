@@ -32,7 +32,7 @@ alias dwrznet_publish="~/ruck/pd/dwrznet/publish.sh"
 alias e="emacsclient -t"
 alias egrep="egrep --color=auto"
 alias fgrep="fgrep --color=auto"
-alias gcc="gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic"
+alias gcc="gcc -O3 -Wall -Wextra -Wstrict-prototypes -std=c17 -pedantic"
 alias grep="grep --color=auto"
 alias home_wifi="nmcli r wifi on; nmcli c up home-nyc-wifi"
 alias hr='printf $(printf "\e[$(shuf -i 91-97 -n 1);1m%%%ds\e[0m\n" $(tput cols)) | tr " " ='
