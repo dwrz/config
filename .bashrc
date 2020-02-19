@@ -501,21 +501,11 @@ set_prompt () {
   # First, get the exit code of the last command.
   last_command=$?
 
-  # Set the exit code.
-  PS1="$bold_white\$last_command "
-
-  # Set a check mark for an exit code of 0 (success).
-  # Otherwise, set an X mark.
-  if [[ $last_command == 0 ]]; then
-    PS1+="$bold_green$icon_checkmark "
-  else
-    PS1+="$bold_red$icon_xmark "
-  fi
-
-  # Set the elapsed time and current date.
-  # Inherit the color from the preceding mark.
+  # Stop the timer.
   timer_stop
-  PS1+="($timer_show) "
+
+  # Set the current UTC time.
+  PS1="$bold_white$(date -u +"%H:%M:%S") "
 
   # Set the user; red if root, green otherwise.
   if [[ "$EUID" == 0 ]]; then
@@ -535,6 +525,21 @@ set_prompt () {
   else
     PS1+="$bold_green\\h "
   fi
+
+  # Set the exit code.
+  PS1+="$bold_white\$last_command "
+
+  # Set a check mark for an exit code of 0 (success).
+  # Otherwise, set an X mark.
+  if [[ $last_command == 0 ]]; then
+    PS1+="$bold_green$icon_checkmark "
+  else
+    PS1+="$bold_red$icon_xmark "
+  fi
+
+  # Set the elapsed time.
+  # Inherit the color from the preceding mark.
+  PS1+="($timer_show) "
 
   # Set the working directory and prompt marker.
   # Finally, reset to no color.
