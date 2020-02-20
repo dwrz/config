@@ -9,7 +9,8 @@
 (setq auto-save-interval 30
       delete-by-moving-to-trash t
       echo-keystrokes 0.1
-      exec-path '("/home/dwrz/.go/bin/"
+      exec-path '("/home/dwrz/.cargo/bin/"
+		  "/home/dwrz/.go/bin/"
 		  "/home/dwrz/.local/bin/"
 		  "/home/dwrz/.node_modules/bin/"
 		  "/usr/bin"
@@ -233,6 +234,13 @@
 (require 'yaml-mode)
 (require 'yasnippet)
 (require 'zenburn-theme)
+
+;;
+(add-to-list 'load-path "~/.emacs.d/packages/rust-mode/")
+(autoload 'rust-mode "rust-mode" nil t)
+(setq rust-format-on-save t)
+;; (add-hook 'rust-mode-hook
+;;           (lambda () (setq indent-tabs-mode nil)))
 
 ;; PACKAGE CONFIGURATION
 (global-set-key [remap query-replace] 'anzu-query-replace)
@@ -656,7 +664,11 @@
 			   (set (make-local-variable 'company-backends)
 				'((company-lsp company-files)))))
 (add-hook 'ibuffer-mode-hook (lambda ()
-		    (ibuffer-switch-to-saved-filter-groups "default")))
+			       (ibuffer-switch-to-saved-filter-groups "default")))
+(add-hook 'js2-mode-hook
+	  '(lambda ()
+	     (set (make-local-variable 'company-backends)
+		    '((company-lsp company-capf company-files)))))
 (add-hook 'text-mode-hook
           '(lambda ()
             (set (make-local-variable 'company-backends) '((company-capf company-files)))))
