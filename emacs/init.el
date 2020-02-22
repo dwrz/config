@@ -3,10 +3,18 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defvar dwrz-current-theme "zenburn")
 
+(prefer-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
 (setenv "GOPATH" "/home/dwrz/.go/")
 (setenv "SHELL" (executable-find "bash"))
 
 (setq auto-save-interval 30
+      compilation-message-face 'default
+      custom-file "/tmp/custom.el"
+      disabled-command-function nil
+      display-time-mode nil
       delete-by-moving-to-trash t
       echo-keystrokes 0.1
       exec-path '("/home/dwrz/.cargo/bin/"
@@ -18,37 +26,36 @@
 		  "/usr/bin/site_perl"
 		  "/usr/bin/vendor_perl"
 		  "/usr/local/bin")
+      eww-search-prefix "https://www.ecosia.org/search/?q="
+      gnutls-verify-error t
       indent-tabs-mode nil
       inhibit-splash-screen t
       inhibit-startup-message t
       initial-major-mode 'org-mode
       initial-scratch-message nil
       next-screen-context-lines 5
+      password-cache-expiry 3600
       ring-bell-function 'ignore
+      save-place-forget-unreadable-files nil
       scroll-conservatively 10000
       sentence-end-double-space nil
       split-height-threshold nil
       split-width-threshold 160
+      tls-checktrust t
+      tramp-default-method "ssh"
       use-dialog-box nil
-      user-mail-address "dwrz@dwrz.net"
       user-full-name "David Wen Riccardi-Zhu"
+      user-mail-address "dwrz@dwrz.net"
       x-stretch-cursor t)
 
-(setq-default fill-column 80
-              shell-file-name (getenv "SHELL")
-              truncate-lines nil)
-
-(setq disabled-command-function nil)
-(setq display-time-mode nil)
-(setq tls-checktrust t)
-(setq password-cache-expiry 3600
-      tramp-default-method "ssh")
-(setq-default save-place t)
-(setq save-place-forget-unreadable-files nil)
-(setq eww-search-prefix "https://www.ecosia.org/search/?q=")
-(setq compilation-message-face 'default)
-(setq custom-file "/tmp/custom.el")
-
+(setq-default c-basic-offset 8
+	      explicit-shell-file-name (getenv "SHELL")
+	      fill-column 80
+	      indent-tabs-mode t
+	      save-place t
+	      shell-file-name (getenv "SHELL")
+	      tab-width 8
+	      truncate-lines nil)
 
 ;; FUNCTIONS
 
@@ -141,7 +148,8 @@
       '(("org" . "https://orgmode.org/elpa/")
         ("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")))
+        ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
+	))
 
 (require 'auto-compile)
 (add-hook 'auto-compile-inhibit-compile-hook
@@ -173,26 +181,20 @@
 (require 'dockerfile-mode)
 (require 'doom-modeline)
 (require 'dumb-jump)
-(require 'eldoc)
-(require 'elec-pair)
 (require 'emmet-mode)
 (require 'emojify)
 (require 'f)
 (require 'flycheck)
-(require 'flycheck-golangci-lint)
-(require 'flyspell)
 (require 'go-mode)
 (require 'go-playground)
 (require 'go-tag)
 (require 'google-translate)
 (require 'htmlize)
 (require 'ibuffer)
-(require 'immortal-scratch)
 (require 'ivy)
 (require 'ivy-pass)
 (require 'ivy-rich)
 (require 'js2-mode)
-(require 'js2-refactor)
 (require 'keychain-environment)
 (require 'ledger-mode)
 (require 'lsp-mode)
@@ -206,7 +208,6 @@
 (require 'ob-translate)
 (require 'ol-notmuch)
 (require 'org)
-(require 'org-eww)
 (require 'pandoc-mode)
 (require 'paren)
 (require 'plantuml-mode)
@@ -218,7 +219,6 @@
 (require 'restclient)
 (require 'rmsbolt)
 (require 's)
-(require 'shell-pop)
 (require 'smartparens)
 (require 'sort-words)
 (require 'subword)
@@ -227,7 +227,6 @@
 (require 'systemd)
 (require 'visual-fill-column)
 (require 'volatile-highlights)
-(require 'vterm)
 (require 'web-mode)
 (require 'wgrep)
 (require 'which-key)
@@ -235,42 +234,75 @@
 (require 'yasnippet)
 (require 'zenburn-theme)
 
-;;
-(add-to-list 'load-path "~/.emacs.d/packages/rust-mode/")
-(autoload 'rust-mode "rust-mode" nil t)
-(setq rust-format-on-save t)
-;; (add-hook 'rust-mode-hook
-;;           (lambda () (setq indent-tabs-mode nil)))
-
 ;; PACKAGE CONFIGURATION
-(global-set-key [remap query-replace] 'anzu-query-replace)
-(global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
-
 (setq auto-revert-verbose nil
-	global-auto-revert-non-file-buffers t)
-
-(setq avy-all-windows 'all-frames
+      auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
+      auto-save-visited-mode t
+      avy-all-windows 'all-frames
       avy-background t
       avy-case-fold-search nil
       avy-keys '(?a ?o ?e ?u ?h ?t ?n ?s)
-      avy-style 'at-full)
-
-(setq bookmark-save-flag 1)
-
-(setq browse-url-browser-function 'eww-browse-url)
-(setq browse-url-generic-program "firefox")
-
-(setq calendar-chinese-all-holidays-flag t
+      avy-style 'at-full
+      backup-directory-alist `((".*" .,temporary-file-directory))
+      bookmark-save-flag 1
+      browse-url-browser-function 'eww-browse-url
+      browse-url-generic-program "firefox"
+      calendar-chinese-all-holidays-flag t
       calendar-week-start-day 1
+      confirm-kill-emacs 'y-or-n-p
       diary-file "~/ruck/oo/org/diary.org"
-      holiday-bahai-holidays nil)
-
-(setq-default c-basic-offset 8
-		tab-width 8
-		indent-tabs-mode t)
+      counsel-rg-base-command
+      "rg -S -M 120 --no-heading --line-number --color never %s ."
+      counsel-find-file-at-point t
+      dired-open-extensions
+      '(("mkv" . "mpv")
+	("mp4" . "mpv")
+	("avi" . "mpv"))
+      dired-dwim-target t
+      dired-listing-switches "-alh"
+      dired-omit-files (concat dired-omit-files "\\|^\\..+$")
+      dired-omit-verbose nil
+      dired-recursive-copies 'always
+      dired-clean-up-buffers-too t
+      doc-view-resolution 150
+      dumb-jump-force-searcher 'rg
+      emojify-emoji-styles '(unicode)
+      git-commit-summary-max-length 50
+      global-auto-revert-non-file-buffers t
+      holiday-bahai-holidays nil
+      ispell-program-name "/usr/bin/aspell"
+      ispell-dictionary "en_US"
+      ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
+      ispell-list-command "--list"
+      ispell-dictionary-alist
+      '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
+	 t ("-d" "en_US") nil utf-8))
+      ivy-rich-path-style 'abbrev
+      js-indent-level 2
+      locale-coding-system 'utf-8
+      markdown-command "pandoc"
+      message-directory "drafts"
+      message-kill-buffer-on-exit t
+      message-sendmail-envelope-from 'header
+      message-sendmail-f-is-evil nil
+      plantuml-jar-path "/usr/bin/plantuml"
+      rmsbolt-command
+      "gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic"
+      web-mode-code-indent-offset 2
+      web-mode-css-indent-offset 2
+      web-mode-indent-style 1
+      web-mode-markup-indent-offset 2
+      which-key-mode t
+      sh-basic-offset 2
+      async-shell-command-buffer "new-buffer"
+      backward-delete-char-untabify-method nil
+      mail-user-agent 'message-user-agent
+      shift-select-mode nil
+      super-save-auto-save-when-idle t
+      split-window-preferred-function 'visual-fill-column-split-window-sensibly)
 
 (with-eval-after-load 'company
-    (define-key company-active-map (kbd "<return>") nil)
+  (define-key company-active-map (kbd "<return>") nil)
   (define-key company-active-map (kbd "RET") nil)
   (define-key company-active-map (kbd "<tab>") 'company-complete-selection))
 (setq company-backends
@@ -283,10 +315,6 @@
       company-show-numbers t
       company-tooltip-align-annotations t)
 
-(setq counsel-rg-base-command
-      "rg -S -M 120 --no-heading --line-number --color never %s .")
-(setq counsel-find-file-at-point t)
-
 (eval-after-load "dash" '(dash-enable-font-lock))
 
 (put 'dired-find-alternate-file 'disabled nil)
@@ -294,24 +322,8 @@
 (with-eval-after-load 'dired-hide-dotfiles
   (define-key dired-mode-map (kbd ".") 'dired-hide-dotfiles-mode))
 
-(setq dired-open-extensions
-        '(("mkv" . "mpv")
-          ("mp4" . "mpv")
-          ("avi" . "mpv")))
-
-(setq dired-clean-up-buffers-too t
-      dired-dwim-target t
-      dired-listing-switches "-alh"
-      dired-omit-files (concat dired-omit-files "\\|^\\..+$")
-      dired-omit-verbose nil
-      dired-recursive-copies 'always)
-
-(setq doc-view-resolution 150)
-(setq dumb-jump-force-searcher 'rg)
-(setq emojify-emoji-styles '(unicode))
-
-(setq erc-nick "dwrz")
 (with-eval-after-load 'erc
+  (setq erc-nick "dwrz")
   (add-to-list 'erc-modules 'notifications)
   (add-to-list 'erc-modules 'spelling))
 
@@ -323,23 +335,6 @@
    :weight 'normal
    :height 140
    :width 'normal)
-
-(setq auto-save-visited-mode t)
-
-(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
-      backup-directory-alist `((".*" .,temporary-file-directory))
-      confirm-kill-emacs 'y-or-n-p)
-
-(setq ispell-program-name "/usr/bin/aspell"
-      ispell-dictionary "en_US"
-      ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
-      ispell-list-command "--list"
-      ispell-dictionary-alist
-      '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
-	 t ("-d" "en_US") nil utf-8)))
-
-(setq git-commit-summary-max-length 50)
-(setq gnutls-verify-error t)
 
 (with-eval-after-load 'go-mode
   (define-key go-mode-map (kbd "C-c C-b") 'pop-tag-mark)
@@ -362,26 +357,6 @@
       '((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy)))
 
 (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
-(setq ivy-rich-path-style 'abbrev)
-
-(setq js-indent-level 2)
-
-(with-eval-after-load 'js2-refactor
-  (define-key js2-mode-map (kbd "C-k") 'js2r-kill))
-(js2r-add-keybindings-with-prefix "C-c C-r")
-
-(setq markdown-command "pandoc")
-
-(setq message-directory "drafts"
-      message-kill-buffer-on-exit t
-      message-sendmail-envelope-from 'header
-      message-sendmail-f-is-evil nil)
-
-(setq locale-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
 
 (setq notmuch-address-command  'internal
       notmuch-address-internal-completion  '(sent nil)
@@ -492,12 +467,6 @@
 	 :jump-to-captured t
 	 :empty-lines-before 1
 	 :empty-lines-after 1)
-	("c" "contact" entry
-	 (file "")
-	 (file "~/ruck/oo/org/templates/contact.org")
-	 :jump-to-captured t
-	 :empty-lines-before 1
-	 :empty-lines-after 1)
 	("g" "goal" entry
 	 (file "")
 	 (file "~/ruck/oo/org/templates/goal.org")
@@ -557,11 +526,8 @@
 	("GOAL" . "springgreen")))
 
 (setq org-goto-max-level 8)
-
 (setq org-src-preserve-indentation t
       org-src-tab-acts-natively t)
-
-(setq plantuml-jar-path "/usr/bin/plantuml")
 
 (setq pos-tip-background-color "#36473A"
       pos-tip-foreground-color "#FFFFC8")
@@ -572,8 +538,13 @@
 (set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
 (set-register ?o '(file . "~/ruck/oo/org/dwrz.org"))
 
-(setq rmsbolt-command
-      "gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic")
+;; rust-mode
+
+(add-to-list 'load-path "~/.emacs.d/packages/rust-mode/")
+(autoload 'rust-mode "rust-mode" nil t)
+(with-eval-after-load 'rust-mode
+  (setq rust-format-on-save t)
+  (set (make-local-variable 'indent-tabs-mode) nil))
 
 (setq mail-specify-envelope-from t
       mail-envelope-from 'header
@@ -581,38 +552,11 @@
       send-mail-function 'sendmail-send-it
       sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh")
 
-(setq shell-pop-window-size 25
-      shell-pop-full-span nil
-      shell-pop-universal-key "C-s-t"
-      shell-pop-window-position "bottom"
-      shell-pop-in-after-hook 'end-of-buffer)
-
-(setq sh-basic-offset 2)
-
-(setq async-shell-command-buffer "new-buffer"
-      backward-delete-char-untabify-method nil
-      mail-user-agent 'message-user-agent
-      shift-select-mode nil)
-
-(setq super-save-auto-save-when-idle t)
-
-(setq-default explicit-shell-file-name (getenv "SHELL"))
-
-(setq split-window-preferred-function 'visual-fill-column-split-window-sensibly)
-
-(setq vterm-max-scrollback 32767)
 
 (add-to-list (make-local-variable 'company-backends) 'company-web-html)
-(setq web-mode-code-indent-offset 2
-      web-mode-css-indent-offset 2
-      web-mode-indent-style 1
-      web-mode-markup-indent-offset 2)
-
-(setq which-key-mode t)
 
 (with-eval-after-load 'yasnippet
   (define-key yas-keymap (kbd "<tab>") nil))
-(yas-load-directory "/home/dwrz/.emacs.d/snippets")
 
 ;; CUSTOMIZE
 (customize-set-variable 'company-quickhelp-color-foreground "#DCDCCC")
@@ -621,8 +565,6 @@
 (customize-set-variable 'face-font-family-alternatives
 		     '(("hans" "adobe-source-han-sans-cn-font")))
 (customize-set-variable 'mouse-wheel-scroll-amount '(1 ((shift) .1)))
-(customize-set-variable 'shell-pop-shell-type
-			'("vterm" "*vterm*" (lambda nil (vterm))))
 
 ;; HOOKS
 (add-hook 'after-init-hook 'doom-modeline-mode)
@@ -635,7 +577,6 @@
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 (add-hook 'emacs-lisp-mode-hook 'lsp)
 (add-hook 'find-file-hook 'dwrz-highlight-logs)
-(add-hook 'go-mode-hook 'flycheck-golangci-lint-setup)
 (add-hook 'go-mode-hook 'lsp)
 (add-hook 'go-mode-hook 'lsp-go-install-save-hooks)
 (add-hook 'js2-mode 'js2-refactor-mode)
@@ -657,28 +598,26 @@
 ;;              nil '(("\\<\\(FIX\\|TODO\\|BUG\\):" 1
 ;;                     font-lock-warning-face t)))))
 (add-hook 'emacs-lisp-mode-hook
-          '(lambda ()
-	     (set (make-local-variable 'company-backends)
-		  '((company-lsp 'company-capf company-files)))))
+          '(lambda () (set (make-local-variable 'company-backends)
+			   '((company-lsp company-capf company-files)))))
 (add-hook 'go-mode-hook '(lambda ()
 			   (set (make-local-variable 'company-backends)
 				'((company-lsp company-files)))))
-(add-hook 'ibuffer-mode-hook (lambda ()
-			       (ibuffer-switch-to-saved-filter-groups "default")))
+(add-hook 'ibuffer-mode-hook
+	  (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
 (add-hook 'js2-mode-hook
 	  '(lambda ()
 	     (set (make-local-variable 'company-backends)
-		    '((company-lsp company-capf company-files)))))
+		  '((company-lsp company-capf company-files)))))
 (add-hook 'text-mode-hook
           '(lambda ()
-            (set (make-local-variable 'company-backends) '((company-capf company-files)))))
+	     (set (make-local-variable 'company-backends) '((company-capf company-files)))))
 (add-hook 'org-babel-after-execute-hook
 	  (lambda () (when org-inline-image-overlays
 		       (org-redisplay-inline-images))))
 (add-hook 'org-mode-hook
-          '(lambda ()
-	     (set (make-local-variable 'company-backends)
-		  '((company-capf company-yasnippet company-files)))))
+          '(lambda () (set (make-local-variable 'company-backends)
+			   '((company-capf company-yasnippet company-files)))))
 
 ;; PACKAGE ENABLE
 (auto-compression-mode t)
@@ -692,7 +631,6 @@
 (global-emojify-mode t)
 (global-hl-line-mode t)
 (global-subword-mode t)
-(immortal-scratch-mode t)
 (ivy-mode t)
 (ivy-rich-mode t)
 (keychain-refresh-environment)
@@ -702,6 +640,7 @@
 (super-save-mode t)
 (volatile-highlights-mode t)
 (yas-global-mode t)
+(yas-load-directory "/home/dwrz/.emacs.d/snippets")
 
 ;; todo snippet mode, restclient mode -- needed?
 
@@ -820,6 +759,8 @@ _q_ quit    _h_ highlight   _p_ point
   ("w" hydra-windows/body))
 
 ;; KEYBINDINGS
+(global-set-key [remap query-replace] 'anzu-query-replace)
+(global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
 (global-set-key (kbd "<f5> i") 'counsel-info-lookup-symbol)
 (global-set-key (kbd "<f5> l") 'counsel-find-library)
 (global-set-key (kbd "<f5> u") 'counsel-unicode-char)
@@ -845,7 +786,6 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "C-s-o") 'avy-goto-char)
 (global-set-key (kbd "C-s-p") 'ivy-pass)
 (global-set-key (kbd "C-s-s") 'yas-expand)
-(global-set-key (kbd "C-s-t") 'shell-pop)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -853,10 +793,8 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "C-x j") 'jump-to-register)
 (global-set-key (kbd "C-x l") 'counsel-locate)
 (global-set-key (kbd "C-x p") 'ivy-pass)
-(global-set-key (kbd "C-x t") 'shell-pop)
 (global-set-key (kbd "H-c") 'dwrz-open-calendar)
 (global-set-key (kbd "H-m") 'notmuch)
-(global-set-key (kbd "H-n") 'calc)
 (global-set-key (kbd "H-s") 'ispell-buffer)
 (global-set-key (kbd "M-g i") 'dumb-jump-go-prompt)
 (global-set-key (kbd "M-g j") 'dumb-jump-go)
