@@ -8,8 +8,8 @@ PATH="$HOME/.local/bin:$PATH"
 PATH="$HOME/.node_modules/bin:$PATH"
 export PATH
 
-export HISTSIZE=1000
-export HISTFILESIZE=1000
+export HISTSIZE=10000
+export HISTFILESIZE=10000
 
 if [ "$BASH" ]; then
   if [ -f "$HOME/.bashrc" ]; then
