@@ -57,6 +57,15 @@
 	      tab-width 8
 	      truncate-lines nil)
 
+(set-face-attribute
+   'default t
+   :family "DejaVu Sans Mono"
+   :foundry "PfEd"
+   :slant 'normal
+   :weight 'normal
+   :height 140
+   :width 'normal)
+
 ;; FUNCTIONS
 
 (defun dwrz-copy-filename ()
@@ -180,7 +189,6 @@
 (require 'dumb-jump)
 (require 'emmet-mode)
 (require 'emojify)
-(require 'f)
 (require 'flycheck)
 (require 'go-mode)
 (require 'go-playground)
@@ -199,7 +207,6 @@
 (require 'markdown-mode)
 (require 'messages-are-flowing)
 (require 'notmuch)
-(require 'nov)
 (require 'ob-restclient)
 (require 'ol-notmuch)
 (require 'org)
@@ -209,12 +216,10 @@
 (require 'pos-tip)
 (require 'pyim)
 (require 'pyim-basedict)
-(require 'rainbow-delimiters)
 (require 'rainbow-mode)
 (require 'restclient)
 (require 'rmsbolt)
 (require 's)
-(require 'smartparens)
 (require 'sort-words)
 (require 'subword)
 (require 'super-save)
@@ -273,6 +278,11 @@
       '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
 	 t ("-d" "en_US") nil utf-8))
       ivy-rich-path-style 'abbrev
+      ivy-wrap t
+      ivy-use-virtual-buffers t
+      enable-recursive-minibuffers t
+      ivy-count-format "(%d/%d) "
+      ivy-re-builders-alist '((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy))
       js-indent-level 2
       locale-coding-system 'utf-8
       markdown-command "pandoc"
@@ -286,7 +296,7 @@
       web-mode-code-indent-offset 2
       web-mode-css-indent-offset 2
       web-mode-indent-style 1
-      web-mode-markup-indent-offset 2
+      web-mode-markup-indentv-offset 2
       which-key-mode t
       sh-basic-offset 2
       async-shell-command-buffer "new-buffer"
@@ -320,34 +330,16 @@
   (add-to-list 'erc-modules 'notifications)
   (add-to-list 'erc-modules 'spelling))
 
-(set-face-attribute
-   'default t
-   :family "DejaVu Sans Mono"
-   :foundry "PfEd"
-   :slant 'normal
-   :weight 'normal
-   :height 140
-   :width 'normal)
-
 (with-eval-after-load 'go-mode
   (define-key go-mode-map (kbd "C-c C-b") 'pop-tag-mark)
   (define-key go-mode-map (kbd "C-c t") 'go-tag-add)
-  (define-key go-mode-map (kbd "C-c T") 'go-tag-remove))
-
-(defun lsp-go-install-save-hooks ()
+  (define-key go-mode-map (kbd "C-c T") 'go-tag-remove)
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 
 (setq go-playground-ask-file-name nil)
 (setq go-playground-basedir "/home/dwrz/.go/src/playground/")
 (setq go-tag-args (list "-transform" "camelcase"))
-
-(setq ivy-wrap t
-      ivy-use-virtual-buffers t
-      enable-recursive-minibuffers t
-      ivy-count-format "(%d/%d) "
-      ivy-re-builders-alist
-      '((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy)))
 
 (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
 
@@ -518,8 +510,8 @@
 	("AR" . "red")
 	("GOAL" . "springgreen")))
 
-(setq org-goto-max-level 8)
-(setq org-src-preserve-indentation t
+(setq org-goto-max-level 8
+      org-src-preserve-indentation t
       org-src-tab-acts-natively t)
 
 (setq pos-tip-background-color "#36473A"
@@ -545,9 +537,6 @@
       send-mail-function 'sendmail-send-it
       sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh")
 
-
-(add-to-list (make-local-variable 'company-backends) 'company-web-html)
-
 (with-eval-after-load 'yasnippet
   (define-key yas-keymap (kbd "<tab>") nil))
 
@@ -566,20 +555,17 @@
 (add-hook 'company-mode-hook 'company-box-mode)
 (add-hook 'conf-space-mode-hook 'rainbow-mode)
 (add-hook 'css-mode-hook 'html-mode 'web-mode)
-(add-hook 'emacs-lisp-mode 'smartparens-mode)
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 (add-hook 'emacs-lisp-mode-hook 'lsp)
 (add-hook 'find-file-hook 'dwrz-highlight-logs)
 (add-hook 'go-mode-hook 'lsp)
-(add-hook 'go-mode-hook 'lsp-go-install-save-hooks)
-(add-hook 'js2-mode 'js2-refactor-mode)
 (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+(add-hook 'js2-mode-hook 'lsp)
 (add-hook 'message-mode-hook 'messages-are-flowing-use-and-mark-hard-newlines)
 (add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'dumb-jump-mode)
 (add-hook 'prog-mode-hook 'flycheck-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'prog-mode-hook 'rainbow-mode)
 (add-hook 'prog-mode-hook 'visual-line-mode)
 (add-hook 'text-mode-hook 'flyspell-mode)
@@ -611,6 +597,7 @@
 (add-hook 'org-mode-hook
           '(lambda () (set (make-local-variable 'company-backends)
 			   '((company-capf company-yasnippet company-files)))))
+(add-hook 'web-mode-hook '(lambda (set (make-local-variable 'company-backends) '((company-web-html company-capf company-yasnippet company-files)))))
 
 ;; PACKAGE ENABLE
 (auto-compression-mode t)
