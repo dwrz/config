@@ -147,9 +147,7 @@
 (setq package-archives
       '(("org" . "https://orgmode.org/elpa/")
         ("gnu" . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")
-        ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
-	))
+        ("melpa" . "https://melpa.org/packages/")))
 
 (require 'auto-compile)
 (add-hook 'auto-compile-inhibit-compile-hook
@@ -175,7 +173,6 @@
 (require 'company-quickhelp)
 (require 'counsel)
 (require 'counsel-tramp)
-(require 'dash)
 (require 'dired-hide-dotfiles)
 (require 'dired-open)
 (require 'dockerfile-mode)
@@ -188,7 +185,6 @@
 (require 'go-mode)
 (require 'go-playground)
 (require 'go-tag)
-(require 'google-translate)
 (require 'htmlize)
 (require 'ibuffer)
 (require 'ivy)
@@ -205,7 +201,6 @@
 (require 'notmuch)
 (require 'nov)
 (require 'ob-restclient)
-(require 'ob-translate)
 (require 'ol-notmuch)
 (require 'org)
 (require 'pandoc-mode)
@@ -314,8 +309,6 @@
       company-minimum-prefix-length 1
       company-show-numbers t
       company-tooltip-align-annotations t)
-
-(eval-after-load "dash" '(dash-enable-font-lock))
 
 (put 'dired-find-alternate-file 'disabled nil)
 
@@ -662,28 +655,6 @@ _q_ quit            _s_ symbol          _u_ unhiglight
   ("r" highlight-regexp :color blue)
   ("u" unhighlight-regexp :color blue))
 
-(defhydra hydra-lsp (:exit t :hint nil)
-  "
- Buffer^^               Server^^                   Symbol
--------------------------------------------------------------------------------------
- [_f_] format           [_M-r_] restart            [_d_] declaration  [_i_] implementation  [_o_] documentation
- [_m_] imenu            [_S_]   shutdown           [_D_] definition   [_t_] type            [_r_] rename
- [_x_] execute action   [_M-s_] describe session   [_R_] references   [_s_] signature"
-  ("D" lsp-ui-peek-find-definitions)
-  ("M-r" lsp-workspace-restart)
-  ("M-s" lsp-describe-session)
-  ("R" lsp-ui-peek-find-references)
-  ("S" lsp-workspace-shutdown)
-  ("d" lsp-find-declaration)
-  ("f" lsp-format-buffer)
-  ("i" lsp-ui-peek-find-implementation)
-  ("m" lsp-ui-imenu)
-  ("o" lsp-describe-thing-at-point)
-  ("r" lsp-rename)
-  ("s" lsp-signature-help)
-  ("t" lsp-find-type-definition)
-  ("x" lsp-execute-code-action))
-
 (defhydra hydra-point (:color blue)
   "
 ^point^       ^format^       ^insert^       ^act^
@@ -744,7 +715,7 @@ _q_ quit            _b_ balance         _-_ out
 ^meta^      ^^              ^^
 ^───────^───^^──────────────^───────────
 _q_ quit    _h_ highlight   _p_ point
-^^          _l_ lsp         _r_ region
+^^          ^^              _r_ region
 ^^          ^^              _t_ theme
 ^^          ^^              _w_ windows
 ^^          ^^              ^^
@@ -752,7 +723,6 @@ _q_ quit    _h_ highlight   _p_ point
 "
   ("q" nil)
   ("h" hydra-highlight/body)
-  ("l" hydra-lsp/body)
   ("p" hydra-point/body)
   ("r" hydra-region/body)
   ("t" dwrz-lightswitch-theme)
