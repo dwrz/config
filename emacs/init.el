@@ -196,7 +196,6 @@
 (require 'htmlize)
 (require 'ibuffer)
 (require 'ivy)
-(require 'ivy-pass)
 (require 'ivy-rich)
 (require 'js2-mode)
 (require 'keychain-environment)
@@ -219,7 +218,6 @@
 (require 'rainbow-mode)
 (require 'restclient)
 (require 'rmsbolt)
-(require 's)
 (require 'sort-words)
 (require 'subword)
 (require 'super-save)
@@ -277,12 +275,12 @@
       ispell-dictionary-alist
       '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
 	 t ("-d" "en_US") nil utf-8))
+      ivy-initial-inputs-alist nil
       ivy-rich-path-style 'abbrev
       ivy-wrap t
       ivy-use-virtual-buffers t
       enable-recursive-minibuffers t
       ivy-count-format "(%d/%d) "
-      ivy-re-builders-alist '((swiper . ivy--regex-plus) (t . ivy--regex-fuzzy))
       js-indent-level 2
       locale-coding-system 'utf-8
       markdown-command "pandoc"
@@ -443,7 +441,9 @@
 				 (todo . " %i")
 				 (tags . " %i")
 				 (search . " %i"))
-      org-agenda-tags-column 'auto)
+      org-agenda-span 'month
+      org-agenda-tags-column 'auto
+      org-agenda-window-setup 'other-frame)
 
 (setq org-capture-templates
       '(("b" "bookmark" entry
@@ -741,7 +741,6 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "C-s-j") 'jump-to-register)
 (global-set-key (kbd "C-s-l") 'display-line-numbers-mode)
 (global-set-key (kbd "C-s-o") 'avy-goto-char)
-(global-set-key (kbd "C-s-p") 'ivy-pass)
 (global-set-key (kbd "C-s-s") 'yas-expand)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -749,7 +748,6 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x j") 'jump-to-register)
 (global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-x p") 'ivy-pass)
 (global-set-key (kbd "H-c") 'dwrz-open-calendar)
 (global-set-key (kbd "H-m") 'notmuch)
 (global-set-key (kbd "H-s") 'ispell-buffer)
