@@ -55,10 +55,10 @@ configuration {
 /*	show-match: true;*/
 /*	theme: ;*/
 	/* bg, fg, bg-alt, hlbg, hlfg */
- 	color-normal: "#3f3f3f,#dcdccc,#383838,#4f4f4f,#ffffef";
-	color-urgent: "#8c5353,#dcdccc,#7c4343,#9c6363,#ffffef";
-	color-active: "#709080,#dcdccc,#366060,#60b48a,#ffffef";
-	color-window: "#3f3f3f,#709080";
+	color-normal: "#ffffff,#373b41,#ffffff,#81a2be,#ffffff";
+	color-urgent: "#ffffff,#cc6666,#ffffff,#cc6666,#ffffff";
+	color-active: "#b5bd68,#ffffff,#ffffff,#81a2be,#ffffff";
+	color-window: "#ffffff, #373b41";
 /*	max-history-size: 25;*/
 /*	combi-hide-mode-prefix: false;*/
 /*	matching-negate-char: '-' /* unsupported */;*/
