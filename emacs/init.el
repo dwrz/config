@@ -1,7 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 
 (defalias 'yes-or-no-p 'y-or-n-p)
-(defvar dwrz-current-theme "zenburn")
 
 (prefer-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
@@ -98,14 +97,6 @@
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))
     (goto-char p)))
 
-(defun dwrz-lightswitch-theme ()
-  "Switch from dark to light theme, and vice-versa."
-  (interactive)
-  (dolist 'custom-enabled-themes #'disable-theme)
-  (cond
-   ((string-equal dwrz-current-theme "zenburn") (dwrz-set-light-theme))
-   ((string-equal dwrz-current-theme "gruvbox-light") (dwrz-set-dark-theme))))
-
 (defun dwrz-org-capture-at-point ()
   "Insert an org capture template at point."
   (interactive)
@@ -119,23 +110,12 @@
   (when (fboundp 'tool-bar-mode)(tool-bar-mode -1))
   (when (fboundp 'window-divider-mode)(window-divider-mode -1)))
 
-(defun dwrz-set-dark-theme ()
-  "Apply the dark theme."
+(defun dwrz-set-theme ()
+  "Apply theme."
   (interactive)
-  (load-theme 'zenburn t)
-  (set-face-attribute 'fringe t :background "#3F3F3F")
-  (disable-theme 'gruvbox-light-hard)
-  (dwrz-remove-bars)
-  (setq dwrz-current-theme "zenburn"))
-
-(defun dwrz-set-light-theme ()
-  "Apply the light theme."
-  (interactive)
-  (load-theme 'gruvbox-light-hard t)
-  (set-face-attribute 'fringe t :background "#F9F5D7")
-  (disable-theme 'zenburn)
-  (dwrz-remove-bars)
-  (setq dwrz-current-theme "gruvbox-light"))
+  (load-theme 'base16-tomorrow t)
+  (set-face-attribute 'fringe t :background "#ffffff")
+  (dwrz-remove-bars))
 
 (defun dwrz-unfill-paragraph ()
   "Unfill a paragraph."
@@ -223,6 +203,7 @@
 (require 'super-save)
 (require 'swiper)
 (require 'systemd)
+(require 'toc-org)
 (require 'visual-fill-column)
 (require 'volatile-highlights)
 (require 'web-mode)
@@ -230,7 +211,6 @@
 (require 'which-key)
 (require 'yaml-mode)
 (require 'yasnippet)
-(require 'zenburn-theme)
 
 ;; PACKAGE CONFIGURATION
 (setq auto-revert-verbose nil
@@ -443,7 +423,7 @@
 				 (search . " %i"))
       org-agenda-span 'month
       org-agenda-tags-column 'auto
-      org-agenda-window-setup 'other-frame)
+      org-agenda-window-setup 'current-window)
 
 (setq org-capture-templates
       '(("b" "bookmark" entry
@@ -550,7 +530,7 @@
 
 ;; HOOKS
 (add-hook 'after-init-hook 'doom-modeline-mode)
-(add-hook 'after-init-hook 'dwrz-set-dark-theme)
+(add-hook 'after-init-hook 'dwrz-set-theme)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'company-mode-hook 'company-box-mode)
 (add-hook 'conf-space-mode-hook 'rainbow-mode)
@@ -712,7 +692,7 @@ _q_ quit    _h_ highlight   _p_ point
   ("h" hydra-highlight/body)
   ("p" hydra-point/body)
   ("r" hydra-region/body)
-  ("t" dwrz-lightswitch-theme)
+  ("t" dwrz-set-theme)
   ("w" hydra-windows/body))
 
 ;; KEYBINDINGS
