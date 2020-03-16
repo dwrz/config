@@ -85,39 +85,32 @@ unsigned int tabspaces = 8;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
-				  /* Normal colors */
-				  "#ffffff", /*  0: Base 00 - Black   */
-				  "#cc6666", /*  1: Base 08 - Red     */
-				  "#b5bd68", /*  2: Base 0B - Green   */
-				  "#f0c674", /*  3: Base 0A - Yellow  */
-				  "#81a2be", /*  4: Base 0D - Blue    */
-				  "#b294bb", /*  5: Base 0E - Magenta */
-				  "#8abeb7", /*  6: Base 0C - Cyan    */
-				  "#c5c8c6", /*  7: Base 05 - White   */
+				  // Normal Colors
+				  "#ffffff", // Black
+				  "#c82829", // Red
+				  "#718c00", // Green
+				  "#eab700", // Yellow
+				  "#4271ae", // Blue
+				  "#8959a8", // Magenta
+				  "#3e999f", // Cyan
+				  "#4d4d4c", // White
 
-				  /* Bright colors */
-				  "#969896", /*  8: Base 03 - Bright Black */
-				  "#cc6666", /*  9: Base 08 - Red          */
-				  "#b5bd68", /* 10: Base 0B - Green        */
-				  "#f0c674", /* 11: Base 0A - Yellow       */
-				  "#81a2be", /* 12: Base 0D - Blue         */
-				  "#b294bb", /* 13: Base 0E - Magenta      */
-				  "#8abeb7", /* 14: Base 0C - Cyan         */
-				  "#1d1f21", /* 15: Base 05 - Bright White */
-
-				  /* A few more colors */
-
-				  "#de935f", /* 16: Base 09 */
-				  "#a3685a", /* 17: Base 0F */
-				  "#282a2e", /* 18: Base 01 */
-				  "#373b41", /* 19: Base 02 */
-				  "#b4b7b4", /* 20: Base 04 */
-				  "#e0e0e0", /* 21: Base 06 */
+				  // Bright Colors
+				  "#ffffff", // Black
+				  "#c82829", // Red
+				  "#718c00", // Green
+				  "#eab700", // Yellow
+				  "#4271ae", // Blue
+				  "#8959a8", // Magenta
+				  "#3e999f", // Cyan
+				  "#4d4d4c", // White
 
 				  [255] = 0,
 
-				  [256] = "#373b41", /* default fg: Base 02 */
-				  [257] = "#ffffff", /* default bg: Base 07 */
+				  [256] = "#4d4d4c", // default fg
+				  [257] = "#ffffff", // default bg
+				  [258] = "#c82829", // default cursor
+				  [259] = "#ffffff", // default reverse cursor
 };
 
 
@@ -127,8 +120,8 @@ static const char *colorname[] = {
  */
 unsigned int defaultfg = 256;
 unsigned int defaultbg = 257;
-static unsigned int defaultcs = 256;
-static unsigned int defaultrcs = 257;
+static unsigned int defaultcs = 258;
+static unsigned int defaultrcs = 259;
 
 /*
  * Default shape of cursor
