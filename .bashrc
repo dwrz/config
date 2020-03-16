@@ -2,14 +2,24 @@
 [[ $- != *i* ]] && return
 
 # VARIABLES
-bold_blue="\[\e[01;34m\\]"
-bold_cyan="\[\e[01;36m\\]"
-bold_gray="\[\e[01;37m\\]"
-bold_green="\[\e[01;32m\\]"
-bold_magenta="\[\e[01;35m\\]"
-bold_red="\[\e[01;31m\\]"
+white="\[\e[0;30m\\]"
+red="\[\e[0;31m\\]"
+green="\[\e[0;32m\\]"
+yellow="\[\e[0;33m\\]"
+blue="\[\e[0;34m\\]"
+magenta="\[\e[0;35m\\]"
+cyan="\[\e[0;36m\\]"
+black="\[\e[0;37m\\]"
+
 bold_white="\[\e[01;30m\\]"
+bold_red="\[\e[01;31m\\]"
+bold_green="\[\e[01;32m\\]"
 bold_yellow="\[\e[01;33m\\]"
+bold_blue="\[\e[01;34m\\]"
+bold_magenta="\[\e[01;35m\\]"
+bold_cyan="\[\e[01;36m\\]"
+bold_black="\[\e[01;37m\\]"
+
 icon_checkmark="\342\234\223"
 icon_xmark="\342\234\227"
 no_color="\[\e[00m\\]"
@@ -513,7 +523,7 @@ set_prompt () {
   timer_stop
 
   # Set the current UTC time.
-  PS1="$bold_white$(date -u +"%H:%M:%S") "
+  PS1="$bold_black$(date -u +"%H:%M:%S") "
 
   # Set the user; red if root, green otherwise.
   if [[ "$EUID" == 0 ]]; then
@@ -535,7 +545,7 @@ set_prompt () {
   fi
 
   # Set the exit code.
-  PS1+="$bold_white\$last_command "
+  PS1+="$bold_black\$last_command "
 
   # Set a check mark for an exit code of 0 (success).
   # Otherwise, set an X mark.
