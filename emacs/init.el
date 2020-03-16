@@ -115,6 +115,7 @@
   (interactive)
   (load-theme 'base16-tomorrow t)
   (set-face-attribute 'fringe t :background "#ffffff")
+  (setq base16-distinct-fringe-background nil)
   (dwrz-remove-bars))
 
 (defun dwrz-unfill-paragraph ()
@@ -315,9 +316,9 @@
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 
-(setq go-playground-ask-file-name nil)
-(setq go-playground-basedir "/home/dwrz/.go/src/playground/")
-(setq go-tag-args (list "-transform" "camelcase"))
+(setq go-playground-ask-file-name nil
+      go-playground-basedir "/home/dwrz/.go/src/playground/"
+      go-tag-args (list "-transform" "camelcase"))
 
 (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
 
