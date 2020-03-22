@@ -2,23 +2,23 @@
 [[ $- != *i* ]] && return
 
 # VARIABLES
-white="\[\e[0;30m\\]"
+black="\[\e[0;30m\\]"
 red="\[\e[0;31m\\]"
 green="\[\e[0;32m\\]"
 yellow="\[\e[0;33m\\]"
 blue="\[\e[0;34m\\]"
 magenta="\[\e[0;35m\\]"
 cyan="\[\e[0;36m\\]"
-black="\[\e[0;37m\\]"
+white="\[\e[0;37m\\]"
 
-bold_white="\[\e[01;30m\\]"
+bold_black="\[\e[01;30m\\]"
 bold_red="\[\e[01;31m\\]"
 bold_green="\[\e[01;32m\\]"
 bold_yellow="\[\e[01;33m\\]"
 bold_blue="\[\e[01;34m\\]"
 bold_magenta="\[\e[01;35m\\]"
 bold_cyan="\[\e[01;36m\\]"
-bold_black="\[\e[01;37m\\]"
+bold_white="\[\e[01;37m\\]"
 
 icon_checkmark="\342\234\223"
 icon_xmark="\342\234\227"
