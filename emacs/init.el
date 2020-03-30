@@ -312,9 +312,7 @@
 (with-eval-after-load 'go-mode
   (define-key go-mode-map (kbd "C-c C-b") 'pop-tag-mark)
   (define-key go-mode-map (kbd "C-c t") 'go-tag-add)
-  (define-key go-mode-map (kbd "C-c T") 'go-tag-remove)
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  (define-key go-mode-map (kbd "C-c T") 'go-tag-remove))
 
 (setq go-playground-ask-file-name nil
       go-playground-basedir "/home/dwrz/.go/src/playground/"
@@ -562,7 +560,9 @@
 			   '((company-lsp company-capf company-files)))))
 (add-hook 'go-mode-hook '(lambda ()
 			   (set (make-local-variable 'company-backends)
-				'((company-lsp company-files)))))
+				'((company-lsp company-files)))
+			   (set (make-local-variable 'before-save-hook)
+				'(lsp-organize-imports lsp-format-buffer delete-trailing-whitespace))))
 (add-hook 'ibuffer-mode-hook
 	  (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
 (add-hook 'js2-mode-hook
