@@ -729,6 +729,7 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x j") 'jump-to-register)
 (global-set-key (kbd "C-x l") 'counsel-locate)
+(global-set-key (kbd "C-x w") 'make-frame-command)
 (global-set-key (kbd "H-c") 'dwrz-open-calendar)
 (global-set-key (kbd "H-m") 'notmuch)
 (global-set-key (kbd "H-s") 'ispell-buffer)
