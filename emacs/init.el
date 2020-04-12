@@ -1,5 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (prefer-coding-system 'utf-8)
@@ -458,13 +457,6 @@
 	("n" "note" entry
 	 (file "")
 	 (file "~/ruck/oo/org/templates/note.org")
-	 :prepend t
-	 :jump-to-captured t
-	 :empty-lines-before 1
-	 :empty-lines-after 1)
-	("r" "review" entry
-	 (file "")
-	 (file "~/ruck/oo/org/templates/review.org")
 	 :prepend t
 	 :jump-to-captured t
 	 :empty-lines-before 1
