@@ -114,7 +114,7 @@ bb() {
       borg create -v --progress --exclude /home/dwrz/.cache/ \
 	   /mnt/dwrz-archival-backup/dwrz-backup/::"$name" /home/dwrz/
       ;;
-    "prune") borg prune --keep-last 1 -d 7 -w 4 -m 12 --save-space \
+    "prune") borg prune --keep-last 1 -w 1 -m 12 --save-space \
 		  /mnt/dwrz-archival-backup/dwrz-backup/
       ;;
     "mount") borg mount /mnt/dwrz-archival-backup/dwrz-backup/ \
