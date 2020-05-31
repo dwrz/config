@@ -112,6 +112,7 @@
 (defun dwrz-set-theme ()
   "Apply theme."
   (interactive)
+  (setq base16-theme-256-color-source 'colors)
   (load-theme 'base16-tomorrow t)
   (set-face-attribute 'fringe t :background "#ffffff")
   (setq base16-distinct-fringe-background nil)
@@ -189,8 +190,10 @@
 (require 'ob-restclient)
 (require 'ol-notmuch)
 (require 'org)
+(require 'org-present)
 (require 'pandoc-mode)
 (require 'paren)
+(require 'pdf-tools)
 (require 'plantuml-mode)
 (require 'pos-tip)
 (require 'pyim)
@@ -319,6 +322,18 @@
 
 (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
 
+(eval-after-load "org-present"
+  '(progn
+     (add-hook 'org-present-mode-hook
+               (lambda ()
+                 (org-present-big)
+                 (org-display-inline-images)
+                 (org-present-read-only)))
+     (add-hook 'org-present-mode-quit-hook
+               (lambda ()
+                 (org-present-small)
+                 (org-present-read-write)))))
+
 (setq notmuch-address-command  'internal
       notmuch-address-internal-completion  '(sent nil)
       notmuch-address-save-filename "~/ruck/social/notmuch-contacts"
@@ -376,7 +391,7 @@
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((awk .t ) (calc . t) (C . t) (emacs-lisp . t) (gnuplot . t) (js . t)
+ '((awk .t ) (calc . t) (C . t) (emacs-lisp . t) (gnuplot . t) (js . t) (js . t)
    (latex . t) (ledger . t) (makefile .t )(org . t) (python . t)
    (shell . t) (sed .t) (sql . t) (sqlite . t)))
 
@@ -587,6 +602,7 @@
 (ivy-mode t)
 (ivy-rich-mode t)
 (keychain-refresh-environment)
+(pdf-loader-install)
 (pyim-basedict-enable)
 (show-paren-mode t)
 (size-indication-mode)
@@ -721,7 +737,6 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x j") 'jump-to-register)
 (global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "C-x w") 'make-frame-command)
 (global-set-key (kbd "H-c") 'dwrz-open-calendar)
 (global-set-key (kbd "H-m") 'notmuch)
 (global-set-key (kbd "H-s") 'ispell-buffer)
