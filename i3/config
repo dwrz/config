@@ -98,3 +98,4 @@ bar {
 }
 
 exec feh --bg-fill --randomize /home/dwrz/ruck/oo/images/maps/*
+exec parcellite
