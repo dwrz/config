@@ -163,6 +163,7 @@
 (require 'company-quickhelp)
 (require 'counsel)
 (require 'counsel-tramp)
+(require 'csv-mode)
 (require 'dired-hide-dotfiles)
 (require 'dired-open)
 (require 'dockerfile-mode)
