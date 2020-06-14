@@ -95,7 +95,7 @@ export EDITOR="emacsclient -t --alternate-editor mg"
 export GCC_COLORS="error=01;31:warning=01;35:note=01;36:caret=0$"
 export HISTCONTROL=ignoreboth:erasedups
 export NVM_DIR="$HOME/.nvm"
-export VISUAL="emacsclient -t --alternate-editor mg"
+export VISUAL="emacsclient -c --alternate-editor mg"
 
 # FUNCTIONS
 bb() {
