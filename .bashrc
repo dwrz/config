@@ -81,6 +81,7 @@ alias rm="rm -I"
 alias rt="remind-timer"
 alias s="systemctl"
 alias sp="tmux new-session -A -s scratch"
+alias tablet="ssh dwrz@tablet"
 alias t1="tree -CL 1"
 alias t2="tree -CL 2"
 alias t3="tree -CL 3"
@@ -383,6 +384,9 @@ ruck-backup() {
     "srv") rsync -av --progress --delete ~/ruck/ \
 		 dwrz@srv-nyc:/home/dwrz/ruck/
 	   ;;
+    "tablet") rsync -av --progress --delete ~/ruck/ \
+		    dwrz@tablet:/data/data/com.termux/files/home/ruck/
+	      ;;
     *) printf "unrecognized host: %s\n" "$1" >&2
   esac
 }
@@ -421,6 +425,7 @@ ssha() {
   ssh-add ~/.ssh/github
   ssh-add ~/.ssh/mobile
   ssh-add ~/.ssh/srv-nyc
+  ssh-add ~/.ssh/tablet
 }
 
 upsys() {
