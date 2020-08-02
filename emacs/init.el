@@ -278,7 +278,7 @@
       web-mode-code-indent-offset 2
       web-mode-css-indent-offset 2
       web-mode-indent-style 1
-      web-mode-markup-indentv-offset 2
+      web-mode-markup-indent-offset 2
       which-key-mode t
       sh-basic-offset 2
       async-shell-command-buffer "new-buffer"
@@ -578,7 +578,7 @@
 (add-hook 'org-mode-hook
           '(lambda () (set (make-local-variable 'company-backends)
 			   '((company-capf company-yasnippet company-files)))))
-(add-hook 'web-mode-hook '(lambda (set (make-local-variable 'company-backends) '((company-web-html company-capf company-yasnippet company-files)))))
+(add-hook 'web-mode-hook '(lambda () (set (make-local-variable 'company-backends) '((company-web-html company-capf company-yasnippet company-files)))))
 
 ;; PACKAGE ENABLE
 (auto-compression-mode t)
