@@ -510,14 +510,6 @@
 (set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
 (set-register ?o '(file . "~/ruck/oo/org/dwrz.org"))
 
-;; rust-mode
-
-(add-to-list 'load-path "~/.emacs.d/packages/rust-mode/")
-(autoload 'rust-mode "rust-mode" nil t)
-(with-eval-after-load 'rust-mode
-  (setq rust-format-on-save t)
-  (set (make-local-variable 'indent-tabs-mode) nil))
-
 (setq mail-specify-envelope-from t
       mail-envelope-from 'header
       mail-specify-envelope-from t
