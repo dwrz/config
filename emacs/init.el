@@ -74,14 +74,6 @@
     (when filename (kill-new filename)
           (message "Copied buffer file name '%s' to the clipboard." filename))))
 
-(defun dwrz-highlight-logs ()
-  "Highlight error and warning lines in log files."
-  (when (equal "log" (file-name-extension (buffer-file-name)))
-    (hi-lock-mode 1)
-    (highlight-lines-matching-regexp "ERROR:" 'hi-red-b)
-    (highlight-lines-matching-regexp "WARN:" 'hi-yellow-b)
-    (highlight-lines-matching-regexp "INFO:" 'hi-blue-b)))
-
 (defun dwrz-open-calendar ()
   "Open a calfw calendar."
   (interactive)
@@ -168,14 +160,12 @@
 (require 'dired-open)
 (require 'dockerfile-mode)
 (require 'doom-modeline)
-(require 'dumb-jump)
 (require 'emmet-mode)
 (require 'emojify)
 (require 'flycheck)
 (require 'go-mode)
 (require 'go-playground)
 (require 'go-tag)
-(require 'htmlize)
 (require 'ibuffer)
 (require 'ivy)
 (require 'ivy-rich)
@@ -210,6 +200,7 @@
 (require 'toc-org)
 (require 'visual-fill-column)
 (require 'volatile-highlights)
+(require 'vterm)
 (require 'web-mode)
 (require 'wgrep)
 (require 'which-key)
@@ -247,7 +238,6 @@
       dired-recursive-copies 'always
       dired-clean-up-buffers-too t
       doc-view-resolution 150
-      dumb-jump-force-searcher 'rg
       emojify-emoji-styles '(unicode)
       git-commit-summary-max-length 50
       global-auto-revert-non-file-buffers t
@@ -273,8 +263,7 @@
       message-sendmail-envelope-from 'header
       message-sendmail-f-is-evil nil
       plantuml-jar-path "/usr/bin/plantuml"
-      rmsbolt-command
-      "gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic"
+      rmsbolt-command "gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic"
       web-mode-code-indent-offset 2
       web-mode-css-indent-offset 2
       web-mode-indent-style 1
@@ -404,9 +393,6 @@
       org-enforce-todo-dependencies t
       org-hide-emphasis-markers t
       org-highest-priority 49
-      org-html-doctype "html5"
-      org-html-html5-fancy t
-      org-html-postamble nil
       org-image-actual-width '(800)
       org-list-demote-modify-bullet nil
       org-log-into-drawer t
@@ -501,10 +487,6 @@
       org-src-preserve-indentation t
       org-src-tab-acts-natively t)
 
-(setq pos-tip-background-color "#36473A"
-      pos-tip-foreground-color "#FFFFC8")
-
-(set-register ?9 '(file . "~/ruck/oo/journal/2019.org"))
 (set-register ?j '(file . "~/ruck/oo/journal/2020.org"))
 (set-register ?g '(file . "~/ruck/oo/org/gtd.org"))
 (set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
@@ -542,7 +524,6 @@
 (add-hook 'js2-mode-hook 'lsp)
 (add-hook 'message-mode-hook 'messages-are-flowing-use-and-mark-hard-newlines)
 (add-hook 'org-mode-hook 'flyspell-mode)
-(add-hook 'prog-mode-hook 'dumb-jump-mode)
 (add-hook 'prog-mode-hook 'flycheck-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 (add-hook 'prog-mode-hook 'rainbow-mode)
@@ -603,8 +584,6 @@
 (volatile-highlights-mode t)
 (yas-global-mode t)
 (yas-load-directory "/home/dwrz/.emacs.d/snippets")
-
-;; todo snippet mode, restclient mode -- needed?
 
 ;; HYDRAS
 (defhydra hydra-highlight (:color blue)
@@ -704,46 +683,26 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "<f5> l") 'counsel-find-library)
 (global-set-key (kbd "<f5> u") 'counsel-unicode-char)
 (global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c b") 'org-iswitchb)
 (global-set-key (kbd "C-c c") 'dwrz-org-capture-at-point)
 (global-set-key (kbd "C-c e") 'emojify-insert-emoji)
-(global-set-key (kbd "C-c g") 'counsel-git)
-(global-set-key (kbd "C-c j") 'counsel-git-grep)
-(global-set-key (kbd "C-c k") 'counsel-ag)
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-h f") 'counsel-describe-function)
 (global-set-key (kbd "C-h v") 'counsel-describe-variable)
 (global-set-key (kbd "C-r") 'counsel-rg)
 (global-set-key (kbd "C-s") 'swiper)
 (global-set-key (kbd "C-s-a") 'avy-goto-line)
-(global-set-key (kbd "C-s-c") 'async-shell-command)
 (global-set-key (kbd "C-s-e") 'counsel-M-x)
-(global-set-key (kbd "C-s-g") 'magit-status)
 (global-set-key (kbd "C-s-h") 'hippie-expand)
-(global-set-key (kbd "C-s-j") 'jump-to-register)
 (global-set-key (kbd "C-s-l") 'display-line-numbers-mode)
 (global-set-key (kbd "C-s-o") 'avy-goto-char)
 (global-set-key (kbd "C-s-s") 'yas-expand)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "C-x c") 'dwrz-open-calendar)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x j") 'jump-to-register)
-(global-set-key (kbd "C-x l") 'counsel-locate)
-(global-set-key (kbd "H-c") 'dwrz-open-calendar)
-(global-set-key (kbd "H-m") 'notmuch)
-(global-set-key (kbd "H-s") 'ispell-buffer)
-(global-set-key (kbd "M-g i") 'dumb-jump-go-prompt)
-(global-set-key (kbd "M-g j") 'dumb-jump-go)
-(global-set-key (kbd "M-g o") 'dumb-jump-go-other-window)
-(global-set-key (kbd "M-g x") 'dumb-jump-go-prefer-external)
-(global-set-key (kbd "M-g z") 'dumb-jump-go-prefer-external-other-window)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "s-/") 'comment-line)
-(global-set-key (kbd "s-b") 'bookmark-jump)
-(global-set-key (kbd "s-d") 'ispell-word)
-(global-set-key (kbd "s-h") 'hydra-highlight/body)
-(global-set-key (kbd "s-j") 'org-goto)
 (global-set-key (kbd "s-m") 'hydra-meta-hydra/body)
 (global-set-key (kbd "s-o") 'hydra-region/body)
 (global-set-key (kbd "s-p") 'hydra-point/body)
