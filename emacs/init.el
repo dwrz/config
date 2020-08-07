@@ -518,7 +518,6 @@
 (add-hook 'css-mode-hook 'html-mode 'web-mode)
 (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 (add-hook 'emacs-lisp-mode-hook 'lsp)
-(add-hook 'find-file-hook 'dwrz-highlight-logs)
 (add-hook 'go-mode-hook 'lsp)
 (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
 (add-hook 'js2-mode-hook 'lsp)
