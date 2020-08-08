@@ -90,6 +90,11 @@
   (interactive)
   (org-capture 0))
 
+(defun dwrz-terminal ()
+  "Start a terminal."
+  (interactive)
+  (start-process "terminal" nil "st"))
+
 (defun dwrz-remove-bars ()
   "Remove menu, scroll, tool, and window-divider bars."
   (interactive)
@@ -670,23 +675,27 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "C-h v") 'counsel-describe-variable)
 (global-set-key (kbd "C-r") 'counsel-rg)
 (global-set-key (kbd "C-s") 'swiper)
-(global-set-key (kbd "C-s-a") 'avy-goto-line)
-(global-set-key (kbd "C-s-e") 'counsel-M-x)
-(global-set-key (kbd "C-s-h") 'hippie-expand)
-(global-set-key (kbd "C-s-l") 'display-line-numbers-mode)
-(global-set-key (kbd "C-s-o") 'avy-goto-char)
-(global-set-key (kbd "C-s-s") 'yas-expand)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "C-x c") 'dwrz-open-calendar)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x j") 'jump-to-register)
 (global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "s-/") 'comment-line)
+;; X11
+(global-set-key (kbd "C-s-a") 'avy-goto-line)
+(global-set-key (kbd "C-s-e") 'counsel-M-x)
+(global-set-key (kbd "C-s-h") 'hippie-expand)
+(global-set-key (kbd "C-s-j") 'jump-to-register)
+(global-set-key (kbd "C-s-l") 'display-line-numbers-mode)
+(global-set-key (kbd "C-s-o") 'avy-goto-char)
+(global-set-key (kbd "C-s-s") 'yas-expand)
+(global-set-key (kbd "C-s-t") 'dwrz-terminal)
 (global-set-key (kbd "s-m") 'hydra-meta-hydra/body)
 (global-set-key (kbd "s-o") 'hydra-region/body)
 (global-set-key (kbd "s-p") 'hydra-point/body)
 (global-set-key (kbd "s-w") 'hydra-windows/body)
+(global-set-key (kbd "H-c") 'dwrz-open-calendar)
+(global-set-key (kbd "H-m") 'notmuch)
 
 ;; Load custom.el.
 (when (file-exists-p custom-file) (load custom-file))
