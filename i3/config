@@ -59,7 +59,7 @@ bindsym $mod+s focus right
 bindsym $mod+space focus mode_toggle
 bindsym $mod+t focus left
 bindsym $mod+u fullscreen toggle
-bindsym $mod+v scratchpad show
+bindsym $mod+v scratchpad show, resize set 1200 800, move position center, sticky enable
 bindsym $mod+z move scratchpad
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
