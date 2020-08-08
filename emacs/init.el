@@ -26,7 +26,6 @@
 		  "/usr/local/bin")
       eww-search-prefix "https://www.ecosia.org/search/?q="
       gnutls-verify-error t
-      indent-tabs-mode nil
       inhibit-splash-screen t
       inhibit-startup-message t
       initial-major-mode 'org-mode
@@ -34,7 +33,6 @@
       next-screen-context-lines 5
       password-cache-expiry 3600
       ring-bell-function 'ignore
-      save-place-forget-unreadable-files nil
       scroll-conservatively 10000
       sentence-end-double-space nil
       split-height-threshold nil
@@ -50,19 +48,18 @@
 	      explicit-shell-file-name (getenv "SHELL")
 	      fill-column 80
 	      indent-tabs-mode t
-	      save-place t
 	      shell-file-name (getenv "SHELL")
 	      tab-width 8
 	      truncate-lines nil)
 
 (set-face-attribute
-   'default t
-   :family "DejaVu Sans Mono"
-   :foundry "PfEd"
-   :slant 'normal
-   :weight 'normal
-   :height 140
-   :width 'normal)
+ 'default t
+ :family "DejaVu Sans Mono"
+ :foundry "PfEd"
+ :slant 'normal
+ :weight 'normal
+ :height 140
+ :width 'normal)
 
 ;; FUNCTIONS
 
@@ -100,15 +97,6 @@
   (when (fboundp 'scroll-bar-mode)(scroll-bar-mode -1))
   (when (fboundp 'tool-bar-mode)(tool-bar-mode -1))
   (when (fboundp 'window-divider-mode)(window-divider-mode -1)))
-
-(defun dwrz-set-theme ()
-  "Apply theme."
-  (interactive)
-  (setq base16-theme-256-color-source 'colors)
-  (load-theme 'base16-tomorrow t)
-  (set-face-attribute 'fringe t :background "#ffffff")
-  (setq base16-distinct-fringe-background nil)
-  (dwrz-remove-bars))
 
 (defun dwrz-unfill-paragraph ()
   "Unfill a paragraph."
@@ -185,7 +173,6 @@
 (require 'pandoc-mode)
 (require 'paren)
 (require 'pdf-tools)
-(require 'plantuml-mode)
 (require 'pos-tip)
 (require 'pyim)
 (require 'pyim-basedict)
@@ -199,7 +186,6 @@
 (require 'systemd)
 (require 'toc-org)
 (require 'visual-fill-column)
-(require 'volatile-highlights)
 (require 'vterm)
 (require 'web-mode)
 (require 'wgrep)
@@ -219,7 +205,6 @@
       backup-directory-alist `((".*" .,temporary-file-directory))
       bookmark-save-flag 1
       browse-url-browser-function 'eww-browse-url
-      browse-url-generic-program "firefox"
       calendar-chinese-all-holidays-flag t
       calendar-week-start-day 1
       confirm-kill-emacs 'y-or-n-p
@@ -262,7 +247,6 @@
       message-kill-buffer-on-exit t
       message-sendmail-envelope-from 'header
       message-sendmail-f-is-evil nil
-      plantuml-jar-path "/usr/bin/plantuml"
       rmsbolt-command "gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic"
       web-mode-code-indent-offset 2
       web-mode-css-indent-offset 2
@@ -426,13 +410,7 @@
       org-agenda-window-setup 'current-window)
 
 (setq org-capture-templates
-      '(("b" "bookmark" entry
-	 (file "")
-	 (file "~/ruck/oo/org/templates/bookmark.org")
-	 :jump-to-captured t
-	 :empty-lines-before 1
-	 :empty-lines-after 1)
-	("g" "goal" entry
+      '(("g" "goal" entry
 	 (file "")
 	 (file "~/ruck/oo/org/templates/goal.org")
 	 :prepend t
@@ -464,7 +442,6 @@
 	 :empty-lines-before 1
 	 :empty-lines-after 1)))
 
-(setq org-clock-into-drawer "CLOCKING")
 (setq org-priority-faces
       '((?1 . (:foreground "red" :weight 'bold))
 	(?2 . (:foreground "orange"))
@@ -483,8 +460,7 @@
 	("AR" . "red")
 	("GOAL" . "springgreen")))
 
-(setq org-goto-max-level 8
-      org-src-preserve-indentation t
+(setq org-src-preserve-indentation t
       org-src-tab-acts-natively t)
 
 (set-register ?j '(file . "~/ruck/oo/journal/2020.org"))
@@ -502,16 +478,20 @@
   (define-key yas-keymap (kbd "<tab>") nil))
 
 ;; CUSTOMIZE
-(customize-set-variable 'company-quickhelp-color-foreground "#DCDCCC")
-(customize-set-variable 'company-quickhelp-color-background "#4F4F4F")
 (customize-set-variable 'epg-gpg-program "/usr/bin/gpg2")
 (customize-set-variable 'face-font-family-alternatives
-		     '(("hans" "adobe-source-han-sans-cn-font")))
+			'(("hans" "adobe-source-han-sans-cn-font")))
 (customize-set-variable 'mouse-wheel-scroll-amount '(1 ((shift) .1)))
 
 ;; HOOKS
 (add-hook 'after-init-hook 'doom-modeline-mode)
-(add-hook 'after-init-hook 'dwrz-set-theme)
+(add-hook 'after-init-hook '(lambda ()
+			      (setq base16-theme-256-color-source 'colors)
+			      (load-theme 'base16-tomorrow t)
+			      (set-face-attribute
+			       'fringe t :background "#ffffff")
+			      (setq base16-distinct-fringe-background nil)
+			      (dwrz-remove-bars)))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'company-mode-hook 'company-box-mode)
 (add-hook 'conf-space-mode-hook 'rainbow-mode)
@@ -532,9 +512,6 @@
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
 (add-hook 'web-mode-hook 'electric-pair-mode)
-;; (add-hook 'prog-mode-hook '(progn (font-lock-add-keywords
-;;              nil '(("\\<\\(FIX\\|TODO\\|BUG\\):" 1
-;;                     font-lock-warning-face t)))))
 (add-hook 'emacs-lisp-mode-hook
           '(lambda () (set (make-local-variable 'company-backends)
 			   '((company-lsp company-capf company-files)))))
@@ -542,7 +519,9 @@
 			   (set (make-local-variable 'company-backends)
 				'((company-lsp company-files)))
 			   (set (make-local-variable 'before-save-hook)
-				'(lsp-organize-imports lsp-format-buffer delete-trailing-whitespace))))
+				'(lsp-organize-imports
+				  lsp-format-buffer
+				  delete-trailing-whitespace))))
 (add-hook 'ibuffer-mode-hook
 	  (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
 (add-hook 'js2-mode-hook
@@ -559,6 +538,11 @@
           '(lambda () (set (make-local-variable 'company-backends)
 			   '((company-capf company-yasnippet company-files)))))
 (add-hook 'web-mode-hook '(lambda () (set (make-local-variable 'company-backends) '((company-web-html company-capf company-yasnippet company-files)))))
+
+(font-lock-add-keywords 'prog-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
+				      font-lock-warning-face t)))
+(font-lock-add-keywords 'go-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
+				    font-lock-warning-face t)))
 
 ;; PACKAGE ENABLE
 (auto-compression-mode t)
@@ -580,7 +564,6 @@
 (show-paren-mode t)
 (size-indication-mode)
 (super-save-mode t)
-(volatile-highlights-mode t)
 (yas-global-mode t)
 (yas-load-directory "/home/dwrz/.emacs.d/snippets")
 
@@ -663,7 +646,6 @@ _q_ quit            _b_ balance         _-_ out
 ^───────^───^^──────────────^───────────
 _q_ quit    _h_ highlight   _p_ point
 ^^          ^^              _r_ region
-^^          ^^              _t_ theme
 ^^          ^^              _w_ windows
 ^^          ^^              ^^
 ^^          ^^              ^^
@@ -672,7 +654,6 @@ _q_ quit    _h_ highlight   _p_ point
   ("h" hydra-highlight/body)
   ("p" hydra-point/body)
   ("r" hydra-region/body)
-  ("t" dwrz-set-theme)
   ("w" hydra-windows/body))
 
 ;; KEYBINDINGS
