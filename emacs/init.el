@@ -167,6 +167,7 @@
 (require 'ledger-mode)
 (require 'lsp-mode)
 ;; (require 'lsp-ui)
+(require 'lsp-ivy)
 (require 'magit)
 (require 'markdown-mode)
 (require 'messages-are-flowing)
@@ -271,9 +272,9 @@
   (define-key company-active-map (kbd "RET") nil)
   (define-key company-active-map (kbd "<tab>") 'company-complete-selection))
 (setq company-backends
-      '((company-yasnippet company-semantic company-clang company-xcode
-			   company-cmake  company-capf company-files
-			   company-gtags company-etags company-keywords)
+      '((company-yasnippet company-semantic company-clang company-cmake
+			   company-capf company-files company-gtags
+			   company-etags company-keywords)
 	(company-abbrev company-dabbrev company-dabbrev-code))
       company-idle-delay 0
       company-minimum-prefix-length 1
