@@ -42,6 +42,8 @@
       use-dialog-box nil
       user-full-name "David Wen Riccardi-Zhu"
       user-mail-address "dwrz@dwrz.net"
+      select-enable-primary t
+      select-enable-clipboard t
       x-stretch-cursor t)
 
 (setq-default c-basic-offset 8
@@ -470,6 +472,7 @@
       org-src-tab-acts-natively t)
 
 (set-register ?j '(file . "~/ruck/oo/journal/2020.org"))
+(set-register ?i '(file . "~/ruck/oo/config/emacs/init.el"))
 (set-register ?g '(file . "~/ruck/oo/org/gtd.org"))
 (set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
 (set-register ?o '(file . "~/ruck/oo/org/dwrz.org"))
@@ -521,13 +524,14 @@
 (add-hook 'emacs-lisp-mode-hook
           '(lambda () (set (make-local-variable 'company-backends)
 			   '((company-lsp company-capf company-files)))))
-(add-hook 'go-mode-hook '(lambda ()
-			   (set (make-local-variable 'company-backends)
-				'((company-lsp company-files)))
-			   (set (make-local-variable 'before-save-hook)
-				'(lsp-organize-imports
-				  lsp-format-buffer
-				  delete-trailing-whitespace))))
+(add-hook 'go-mode-hook
+	  '(lambda ()
+	     (set (make-local-variable 'company-backends)
+		  '((company-lsp company-files)))
+	     (set (make-local-variable 'before-save-hook)
+		  '(lsp-organize-imports
+		    lsp-format-buffer
+		    delete-trailing-whitespace))))
 (add-hook 'ibuffer-mode-hook
 	  (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
 (add-hook 'js2-mode-hook
@@ -548,6 +552,8 @@
 (font-lock-add-keywords 'prog-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
 				      font-lock-warning-face t)))
 (font-lock-add-keywords 'go-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
+				    font-lock-warning-face t)))
+(font-lock-add-keywords 'emacs-lisp-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
 				    font-lock-warning-face t)))
 
 ;; PACKAGE ENABLE
@@ -595,12 +601,13 @@ _q_ quit            _s_ symbol          _u_ unhiglight
   "
 ^point^       ^format^       ^insert^       ^act^
 ^───────^─────^──────^───────^──────^───────^────^───────────
-_q_ quit        ^^             _t_ timestamp  _k_ delete word
-^^              ^^             _d_ date       _s_ spell
-^^              ^^             ^^             ^^
+_q_ quit        ^^             _t_ timestamp  _h_ hippie-x
+^^              ^^             _d_ date       _k_ delete word
+^^              ^^             ^^             _s_ spell
 ^^              ^^             ^^             ^^
 "
   ("d" (insert (format-time-string "%Y%m%d")))
+  ("h" hippie-expand :color red)
   ("k" kill-word)
   ("q" nil)
   ("s" ispell-word)
@@ -662,41 +669,56 @@ _q_ quit    _h_ highlight   _p_ point
   ("r" hydra-region/body)
   ("w" hydra-windows/body))
 
+;; TODO: Hydra
+;; Help
+;; Execute (calendar, mail, terminal)
+;; Display (line numbers)
+;; Navigation (goto char, gotoline)
+
 ;; KEYBINDINGS
 (global-set-key [remap query-replace] 'anzu-query-replace)
 (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
-(global-set-key (kbd "<f5> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f5> l") 'counsel-find-library)
-(global-set-key (kbd "<f5> u") 'counsel-unicode-char)
 (global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c b") 'ivy-switch-buffer)
+(global-set-key (kbd "C-c b") nil)
 (global-set-key (kbd "C-c c") 'dwrz-org-capture-at-point)
-(global-set-key (kbd "C-c e") 'emojify-insert-emoji)
+(global-set-key (kbd "C-c d") nil)
+(global-set-key (kbd "C-c e") 'counsel-M-x)
+(global-set-key (kbd "C-c f") 'counsel-find-file)
+(global-set-key (kbd "C-c g") 'avy-goto-line)
+(global-set-key (kbd "C-c h") nil)
+(global-set-key (kbd "C-c i") nil)
+(global-set-key (kbd "C-c j") 'jump-to-register)
+(global-set-key (kbd "C-c k") nil)
 (global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c m") 'emojify-insert-emoji)
+(global-set-key (kbd "C-c n") 'hydra-meta-hydra/body)
+(global-set-key (kbd "C-c o") 'avy-goto-char)
+(global-set-key (kbd "C-c p") 'hydra-point/body)
+(global-set-key (kbd "C-c q") nil)
+(global-set-key (kbd "C-c r") nil)
+(global-set-key (kbd "C-c s") nil)
+(global-set-key (kbd "C-c t") nil)
+(global-set-key (kbd "C-c u") nil)
+(global-set-key (kbd "C-c v") nil)
+(global-set-key (kbd "C-c w") 'hydra-windows/body)
+(global-set-key (kbd "C-c x") 'yas-expand)
+(global-set-key (kbd "C-c y") nil)
+(global-set-key (kbd "C-c z") nil)
+(global-set-key (kbd "C-c #") 'display-line-numbers-mode)
 (global-set-key (kbd "C-h f") 'counsel-describe-function)
 (global-set-key (kbd "C-h v") 'counsel-describe-variable)
 (global-set-key (kbd "C-r") 'counsel-rg)
 (global-set-key (kbd "C-s") 'swiper)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "C-x b") 'ibuffer)
 (global-set-key (kbd "C-x c") 'dwrz-open-calendar)
 (global-set-key (kbd "C-x g") 'magit-status)
-(global-set-key (kbd "C-x j") 'jump-to-register)
+(global-set-key (kbd "C-x m") 'notmuch)
+(global-set-key (kbd "C-x t") 'dwrz-terminal)
 (global-set-key (kbd "M-x") 'counsel-M-x)
-;; X11
-(global-set-key (kbd "C-s-a") 'avy-goto-line)
-(global-set-key (kbd "C-s-e") 'counsel-M-x)
-(global-set-key (kbd "C-s-h") 'hippie-expand)
-(global-set-key (kbd "C-s-j") 'jump-to-register)
-(global-set-key (kbd "C-s-l") 'display-line-numbers-mode)
-(global-set-key (kbd "C-s-o") 'avy-goto-char)
-(global-set-key (kbd "C-s-s") 'yas-expand)
-(global-set-key (kbd "C-s-t") 'dwrz-terminal)
-(global-set-key (kbd "s-m") 'hydra-meta-hydra/body)
-(global-set-key (kbd "s-o") 'hydra-region/body)
-(global-set-key (kbd "s-p") 'hydra-point/body)
-(global-set-key (kbd "s-w") 'hydra-windows/body)
-(global-set-key (kbd "H-c") 'dwrz-open-calendar)
-(global-set-key (kbd "H-m") 'notmuch)
+(global-set-key (kbd "M-n") 'hydra-meta-hydra/body)
+(global-set-key (kbd "M-p") 'hydra-region/body)
 
 ;; Load custom.el.
 (when (file-exists-p custom-file) (load custom-file))
