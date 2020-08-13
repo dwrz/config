@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=emacsclient
-Exec=emacsclient -n %F
+Exec=emacsclient --create-frame --alternate-editor mg %F
 Icon=emacs-icon
 Type=Application
 Terminal=false
-MimeType=application/pdf;
+MimeType=application/pdf;application/x-php;application/x-shellscript;text/csv;text/plain;text-go;text/x-makefile;x-scheme-handler/mailto;
