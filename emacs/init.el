@@ -118,7 +118,6 @@
 
 ;; PACKAGES
 (setq load-prefer-newer t)
-(package-initialize)
 
 (require 'package)
 (setq package-archives
@@ -194,7 +193,6 @@
 (require 'systemd)
 (require 'toc-org)
 (require 'visual-fill-column)
-(require 'vterm)
 (require 'web-mode)
 (require 'wgrep)
 (require 'which-key)
@@ -305,16 +303,15 @@
 (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
 
 (eval-after-load "org-present"
-  '(progn
-     (add-hook 'org-present-mode-hook
-               (lambda ()
-                 (org-present-big)
-                 (org-display-inline-images)
-                 (org-present-read-only)))
-     (add-hook 'org-present-mode-quit-hook
-               (lambda ()
-                 (org-present-small)
-                 (org-present-read-write)))))
+  '(progn (add-hook 'org-present-mode-hook
+		    (lambda ()
+		      (org-present-big)
+		      (org-display-inline-images)
+		      (org-present-read-only)))
+	  (add-hook 'org-present-mode-quit-hook
+		    (lambda ()
+		      (org-present-small)
+		      (org-present-read-write)))))
 
 (setq notmuch-address-command  'internal
       notmuch-address-internal-completion  '(sent nil)
@@ -483,8 +480,7 @@
       send-mail-function 'sendmail-send-it
       sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh")
 
-(with-eval-after-load 'yasnippet
-  (define-key yas-keymap (kbd "<tab>") nil))
+(with-eval-after-load 'yasnippet (define-key yas-keymap (kbd "<tab>") nil))
 
 ;; CUSTOMIZE
 (customize-set-variable 'epg-gpg-program "/usr/bin/gpg2")
@@ -554,7 +550,7 @@
 (font-lock-add-keywords 'go-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
 				    font-lock-warning-face t)))
 (font-lock-add-keywords 'emacs-lisp-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
-				    font-lock-warning-face t)))
+					    font-lock-warning-face t)))
 
 ;; PACKAGE ENABLE
 (auto-compression-mode t)
@@ -680,7 +676,6 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c b") 'ivy-switch-buffer)
-(global-set-key (kbd "C-c b") nil)
 (global-set-key (kbd "C-c c") 'dwrz-org-capture-at-point)
 (global-set-key (kbd "C-c d") nil)
 (global-set-key (kbd "C-c e") 'counsel-M-x)
