@@ -37,7 +37,6 @@
       sentence-end-double-space nil
       split-height-threshold nil
       split-width-threshold 160
-      tls-checktrust t
       tramp-default-method "ssh"
       use-dialog-box nil
       user-full-name "David Wen Riccardi-Zhu"
@@ -216,7 +215,7 @@
       confirm-kill-emacs 'y-or-n-p
       diary-file "~/ruck/oo/org/diary.org"
       counsel-rg-base-command
-      "rg -S -M 120 --no-heading --line-number --color never %s ."
+      "rg -S -M 80 --no-heading --line-number --color never %s ."
       counsel-find-file-at-point t
       dired-open-extensions
       '(("mkv" . "mpv")
@@ -272,7 +271,7 @@
   (define-key company-active-map (kbd "RET") nil)
   (define-key company-active-map (kbd "<tab>") 'company-complete-selection))
 (setq company-backends
-      '((company-yasnippet company-semantic company-clang company-cmake
+      '((company-yasnippet company-clang company-cmake
 			   company-capf company-files company-gtags
 			   company-etags company-keywords)
 	(company-abbrev company-dabbrev company-dabbrev-code))
@@ -519,7 +518,7 @@
 (add-hook 'web-mode-hook 'electric-pair-mode)
 (add-hook 'emacs-lisp-mode-hook
           '(lambda () (set (make-local-variable 'company-backends)
-			   '((company-lsp company-capf company-files)))))
+			   '((company-capf company-files)))))
 (add-hook 'go-mode-hook
 	  '(lambda ()
 	     (set (make-local-variable 'company-backends)
@@ -554,7 +553,6 @@
 
 ;; PACKAGE ENABLE
 (auto-compression-mode t)
-(column-number-mode t)
 (column-number-mode)
 (company-quickhelp-mode t)
 (delete-selection-mode nil)
@@ -573,7 +571,7 @@
 (size-indication-mode)
 (super-save-mode t)
 (yas-global-mode t)
-(yas-load-directory "/home/dwrz/.emacs.d/snippets")
+(yas-load-directory "/home/dwrz/.config/emacs/snippets")
 
 ;; HYDRAS
 (defhydra hydra-highlight (:color blue)
