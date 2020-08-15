@@ -184,7 +184,6 @@
 (require 'pyim-basedict)
 (require 'rainbow-mode)
 (require 'restclient)
-(require 'rmsbolt)
 (require 'sort-words)
 (require 'subword)
 (require 'super-save)
@@ -252,7 +251,6 @@
       message-kill-buffer-on-exit t
       message-sendmail-envelope-from 'header
       message-sendmail-f-is-evil nil
-      rmsbolt-command "gcc -O3 -Wall -Wstrict-prototypes -std=c17 -pedantic"
       web-mode-code-indent-offset 2
       web-mode-css-indent-offset 2
       web-mode-indent-style 1
