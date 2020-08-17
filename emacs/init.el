@@ -255,7 +255,6 @@
       web-mode-css-indent-offset 2
       web-mode-indent-style 1
       web-mode-markup-indent-offset 2
-      which-key-mode t
       sh-basic-offset 2
       async-shell-command-buffer "new-buffer"
       backward-delete-char-untabify-method nil
@@ -568,6 +567,7 @@
 (show-paren-mode t)
 (size-indication-mode)
 (super-save-mode t)
+(which-key-mode)
 (yas-global-mode t)
 (yas-load-directory "/home/dwrz/.config/emacs/snippets")
 
