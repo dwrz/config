@@ -275,10 +275,11 @@ gps() {
 
 mfa() {
   case "$1" in
-    "aws") oathtool -b --totp "$(pass amazon/mfa)" ;;
-    "g") oathtool -b --totp "$(pass google/mfa/dwrz@dwrz.net)" ;;
-    "gmail") oathtool -b --totp "$(pass google/mfa/dwriccardizhu@gmail.com)" ;;
-    "ms") oathtool -b --totp "$(pass microsoft/mfa)" ;;
+    "aws") oathtool -b --totp "$(pass amazon/mfa)" | xclip ;;
+    "g") oathtool -b --totp "$(pass google/mfa/dwrz@dwrz.net)" | xclip ;;
+    "gmail") oathtool -b --totp "$(pass google/mfa/dwriccardizhu@gmail.com)" \
+	       | xclip ;;
+    "ms") oathtool -b --totp "$(pass microsoft/mfa)" | xclip ;;
     *) printf "unrecognized service: %s\n" "$1" >&2
   esac
 }
