@@ -687,7 +687,7 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "C-c o") 'avy-goto-char)
 (global-set-key (kbd "C-c p") 'hydra-point/body)
 (global-set-key (kbd "C-c q") nil)
-(global-set-key (kbd "C-c r") nil)
+(global-set-key (kbd "C-c r") 'hydra-region/body)
 (global-set-key (kbd "C-c s") nil)
 (global-set-key (kbd "C-c t") nil)
 (global-set-key (kbd "C-c u") nil)
@@ -710,7 +710,6 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "C-x t") 'dwrz-terminal)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "M-n") 'hydra-meta-hydra/body)
-(global-set-key (kbd "M-p") 'hydra-region/body)
 
 ;; Load custom.el.
 (when (file-exists-p custom-file) (load custom-file))
