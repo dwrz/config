@@ -135,67 +135,11 @@
       auto-compile-toggle-deletes-nonlib-dest t
       auto-compile-update-autoloads t)
 
-(require 'alert)
-(require 'all-the-icons)
-(require 'anzu)
-(require 'avy)
 (require 'calfw)
 (require 'calfw-cal)
 (require 'calfw-org)
-(require 'company)
-(require 'company-box)
-(require 'company-lsp)
-(require 'company-quickhelp)
-(require 'counsel)
-(require 'counsel-tramp)
-(require 'csv-mode)
-(require 'dired-hide-dotfiles)
 (require 'dired-open)
-(require 'dockerfile-mode)
-(require 'doom-modeline)
-(require 'emmet-mode)
-(require 'emojify)
-(require 'flycheck)
-(require 'go-mode)
-(require 'go-playground)
-(require 'go-tag)
-(require 'ibuffer)
-(require 'ivy)
-(require 'ivy-rich)
-(require 'js2-mode)
-(require 'keychain-environment)
-(require 'ledger-mode)
-(require 'lsp-mode)
-;; (require 'lsp-ui)
-(require 'lsp-ivy)
-(require 'magit)
-(require 'markdown-mode)
-(require 'messages-are-flowing)
-(require 'notmuch)
-(require 'ob-restclient)
-(require 'ol-notmuch)
 (require 'org)
-(require 'org-present)
-(require 'pandoc-mode)
-(require 'paren)
-(require 'pdf-tools)
-(require 'pos-tip)
-(require 'pyim)
-(require 'pyim-basedict)
-(require 'rainbow-mode)
-(require 'restclient)
-(require 'sort-words)
-(require 'subword)
-(require 'super-save)
-(require 'swiper)
-(require 'systemd)
-(require 'toc-org)
-(require 'visual-fill-column)
-(require 'web-mode)
-(require 'wgrep)
-(require 'which-key)
-(require 'yaml-mode)
-(require 'yasnippet)
 
 ;; PACKAGE CONFIGURATION
 (setq auto-revert-verbose nil
@@ -244,6 +188,9 @@
   (define-key company-active-map (kbd "RET") nil)
   (define-key company-active-map (kbd "<tab>") 'company-complete-selection))
 
+(with-eval-after-load 'company-quickhelp
+  (setq company-quickhelp-delay 0.25))
+
 (with-eval-after-load 'conf-mode
   (add-hook 'conf-space-mode-hook 'rainbow-mode))
 
@@ -278,7 +225,7 @@
   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
   (add-hook 'emacs-lisp-mode-hook
             '(lambda () (set (make-local-variable 'company-backends)
-			     '((company-elisp company-capf company-files)))))
+			     '((company-capf company-files)))))
   (font-lock-add-keywords 'emacs-lisp-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
 					      font-lock-warning-face t))))
 
@@ -293,7 +240,7 @@
   (add-hook 'go-mode-hook
 	    '(lambda ()
 	       (set (make-local-variable 'company-backends)
-		    '((company-lsp company-files)))
+		    '((company-capf company-files)))
 	       (set (make-local-variable 'before-save-hook)
 		    '(lsp-organize-imports
 		      lsp-format-buffer
@@ -316,7 +263,7 @@
   (add-hook 'js2-mode-hook 'lsp)
   (add-hook 'js2-mode-hook
 	    '(lambda () (set (make-local-variable 'company-backends)
-			     '((company-lsp company-capf company-files))))))
+			     '((company-capf company-files))))))
 
 (with-eval-after-load 'ivy
   (setq ivy-initial-inputs-alist nil
@@ -511,14 +458,15 @@
 (setq org-src-preserve-indentation t
       org-src-tab-acts-natively t)
 
-(setq mail-specify-envelope-from t
-      mail-envelope-from 'header
-      mail-specify-envelope-from t
-      send-mail-function 'sendmail-send-it
-      sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh")
+(with-eval-after-load 'prog-mode
+  (add-hook 'prog-mode-hook 'flycheck-mode)
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  (add-hook 'prog-mode-hook 'rainbow-mode)
+  (add-hook 'prog-mode-hook 'visual-line-mode)
+  (font-lock-add-keywords 'prog-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
+					font-lock-warning-face t))))
 
-(with-eval-after-load 'pyim
-  (pyim-basedict-enable))
+(with-eval-after-load 'pyim (pyim-basedict-enable))
 
 (with-eval-after-load 'register
   (set-register ?j '(file . "~/ruck/oo/journal/2020.org"))
@@ -527,8 +475,22 @@
   (set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
   (set-register ?o '(file . "~/ruck/oo/org/dwrz.org")))
 
-(with-eval-after-load 'super-save
-  (setq super-save-auto-save-when-idle t))
+(with-eval-after-load 'sendmail
+  (setq mail-specify-envelope-from t
+	mail-envelope-from 'header
+	mail-specify-envelope-from t
+	send-mail-function 'sendmail-send-it
+	sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh"))
+
+(with-eval-after-load 'super-save (setq super-save-auto-save-when-idle t))
+
+(with-eval-after-load 'text-mode
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  (add-hook 'text-mode-hook 'rainbow-mode)
+  (add-hook 'text-mode-hook 'visual-line-mode)
+  (add-hook 'text-mode-hook
+	    '(lambda () (set (make-local-variable 'company-backends)
+			     '((company-capf company-files))))))
 
 (with-eval-after-load 'web-mode
   (setq  web-mode-code-indent-offset 2
@@ -562,29 +524,15 @@
 	     (dwrz-remove-bars)))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'org-mode-hook 'flyspell-mode)
-(add-hook 'prog-mode-hook 'flycheck-mode)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-(add-hook 'prog-mode-hook 'rainbow-mode)
-(add-hook 'prog-mode-hook 'visual-line-mode)
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'text-mode-hook 'rainbow-mode)
-(add-hook 'text-mode-hook 'visual-line-mode)
+
 (add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
 
-(add-hook 'ibuffer-mode-hook
-	  (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
-(add-hook 'text-mode-hook
-	  '(lambda () (set (make-local-variable 'company-backends)
-			   '((company-capf company-files)))))
 (add-hook 'org-babel-after-execute-hook
 	  (lambda () (when org-inline-image-overlays
 		       (org-redisplay-inline-images))))
 (add-hook 'org-mode-hook
           '(lambda () (set (make-local-variable 'company-backends)
 			   '((company-capf company-yasnippet company-files)))))
-
-(font-lock-add-keywords 'prog-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
-				      font-lock-warning-face t)))
 
 ;; PACKAGE ENABLE
 (auto-compression-mode t)
