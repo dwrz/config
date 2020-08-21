@@ -17,14 +17,14 @@
       delete-by-moving-to-trash t
       echo-keystrokes 0.1
       exec-path '("/home/dwrz/.cargo/bin/"
-		  "/home/dwrz/.go/bin/"
-		  "/home/dwrz/.local/bin/"
-		  "/home/dwrz/.node_modules/bin/"
-		  "/usr/bin"
-		  "/usr/bin/core_perl"
-		  "/usr/bin/site_perl"
-		  "/usr/bin/vendor_perl"
-		  "/usr/local/bin")
+                  "/home/dwrz/.go/bin/"
+                  "/home/dwrz/.local/bin/"
+                  "/home/dwrz/.node_modules/bin/"
+                  "/usr/bin"
+                  "/usr/bin/core_perl"
+                  "/usr/bin/site_perl"
+                  "/usr/bin/vendor_perl"
+                  "/usr/local/bin")
       eww-search-prefix "https://www.ecosia.org/search/?q="
       gnutls-verify-error t
       inhibit-splash-screen t
@@ -46,12 +46,12 @@
       x-stretch-cursor t)
 
 (setq-default c-basic-offset 8
-	      explicit-shell-file-name (getenv "SHELL")
-	      fill-column 80
-	      indent-tabs-mode t
-	      shell-file-name (getenv "SHELL")
-	      tab-width 8
-	      truncate-lines nil)
+              explicit-shell-file-name (getenv "SHELL")
+              fill-column 80
+              indent-tabs-mode t
+              shell-file-name (getenv "SHELL")
+              tab-width 8
+              truncate-lines nil)
 
 (set-face-attribute
  'default t
@@ -68,7 +68,7 @@
   "Copy the current buffer file name to the clipboard."
   (interactive)
   (let ((filename (if (equal major-mode 'dired-mode)
-		      default-directory (buffer-file-name))))
+                      default-directory (buffer-file-name))))
     (when filename (kill-new filename)
           (message "Copied buffer file name '%s' to the clipboard." filename))))
 
@@ -126,7 +126,7 @@
 
 (require 'auto-compile)
 (add-hook 'auto-compile-inhibit-compile-hook
-	  'auto-compile-inhibit-compile-detached-git-head)
+          'auto-compile-inhibit-compile-detached-git-head)
 (auto-compile-on-load-mode)
 (auto-compile-on-save-mode)
 (setq auto-compile-display-buffer nil
@@ -166,21 +166,21 @@
 
 (with-eval-after-load 'avy
   (setq avy-all-windows 'all-frames
-	avy-background t
-	avy-case-fold-search nil
-	avy-keys '(?a ?o ?e ?u ?h ?t ?n ?s)
-	avy-style 'at-full))
+        avy-background t
+        avy-case-fold-search nil
+        avy-keys '(?a ?o ?e ?u ?h ?t ?n ?s)
+        avy-style 'at-full))
 
 (with-eval-after-load 'company
   (setq company-backends
-	'((company-yasnippet company-clang company-cmake
-			     company-capf company-files company-gtags
-			     company-etags company-keywords)
-	  (company-abbrev company-dabbrev company-dabbrev-code))
-	company-idle-delay 0
-	company-minimum-prefix-length 1
-	company-show-numbers t
-	company-tooltip-align-annotations t)
+        '((company-yasnippet company-clang company-cmake
+                             company-capf company-files company-gtags
+                             company-etags company-keywords)
+          (company-abbrev company-dabbrev company-dabbrev-code))
+        company-idle-delay 0
+        company-minimum-prefix-length 1
+        company-show-numbers t
+        company-tooltip-align-annotations t)
   (add-hook 'company-mode-hook 'company-box-mode)
   (define-key company-active-map (kbd "<return>") nil)
   (define-key company-active-map (kbd "RET") nil)
@@ -194,8 +194,8 @@
 
 (with-eval-after-load 'counsel
   (setq counsel-rg-base-command
-	"rg -S -M 80 --no-heading --line-number --color never %s ."
-	counsel-find-file-at-point t))
+        "rg -S -M 80 --no-heading --line-number --color never %s ."
+        counsel-find-file-at-point t))
 
 (with-eval-after-load 'css-mode
   (add-hook 'css-mode-hook 'web-mode))
@@ -205,8 +205,8 @@
 
 (with-eval-after-load 'dired
   (setq dired-dwim-target t
-	dired-listing-switches "-alh"
-	dired-recursive-copies 'always)
+        dired-listing-switches "-alh"
+        dired-recursive-copies 'always)
   (put 'dired-find-alternate-file 'disabled nil))
 
 (with-eval-after-load 'dired-hide-dotfiles
@@ -214,22 +214,24 @@
 
 (with-eval-after-load 'dired-open
   (setq dired-open-extensions
-	'(("mkv" . "mpv")
-	  ("mp4" . "mpv")
-	  ("avi" . "mpv"))))
+        '(("mkv" . "mpv")
+          ("mp4" . "mpv")
+          ("avi" . "mpv"))))
 
 (with-eval-after-load 'dired-x
   (setq dired-omit-verbose nil
-	dired-omit-files (concat dired-omit-files "\\|^\\..+$")
-	dired-clean-up-buffers-too t))
+        dired-omit-files (concat dired-omit-files "\\|^\\..+$")
+        dired-clean-up-buffers-too t))
 
 (with-eval-after-load 'emacs-lisp-mode
   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
   (add-hook 'emacs-lisp-mode-hook
             '(lambda () (set (make-local-variable 'company-backends)
-			     '((company-capf company-files)))))
+                             '((company-capf company-files)))))
+  (add-hook 'emacs-lisp-mode-hook
+            '(lambda () (setq indent-tabs-mode nil)))
   (font-lock-add-keywords 'emacs-lisp-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
-					      font-lock-warning-face t))))
+                                              font-lock-warning-face t))))
 
 (with-eval-after-load 'erc
   (setq erc-nick "dwrz")
@@ -240,76 +242,76 @@
   (setq go-tag-args (list "-transform" "camelcase"))
   (add-hook 'go-mode-hook 'lsp)
   (add-hook 'go-mode-hook
-	    '(lambda ()
-	       (set (make-local-variable 'company-backends)
-		    '((company-capf company-files)))
-	       (set (make-local-variable 'before-save-hook)
-		    '(lsp-organize-imports
-		      lsp-format-buffer
-		      delete-trailing-whitespace))))
+            '(lambda ()
+               (set (make-local-variable 'company-backends)
+                    '((company-capf company-files)))
+               (set (make-local-variable 'before-save-hook)
+                    '(lsp-organize-imports
+                      lsp-format-buffer
+                      delete-trailing-whitespace))))
   (define-key go-mode-map (kbd "C-c C-b") 'pop-tag-mark)
   (define-key go-mode-map (kbd "C-c t") 'go-tag-add)
   (define-key go-mode-map (kbd "C-c T") 'go-tag-remove)
   (font-lock-add-keywords 'go-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
-				      font-lock-warning-face t))))
+                                      font-lock-warning-face t))))
 
 (with-eval-after-load 'go-playground
   (setq go-playground-ask-file-name nil
-	go-playground-basedir "/home/dwrz/.go/src/playground/"
-	go-playground-go-command "GO111MODULE=on"
-	go-playground-init-command "go mod init"))
+        go-playground-basedir "/home/dwrz/.go/src/playground/"
+        go-playground-go-command "GO111MODULE=on"
+        go-playground-init-command "go mod init"))
 
 (with-eval-after-load 'js2-mode
   (setq js-indent-level 2)
   (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
   (add-hook 'js2-mode-hook 'lsp)
   (add-hook 'js2-mode-hook
-	    '(lambda () (set (make-local-variable 'company-backends)
-			     '((company-capf company-files))))))
+            '(lambda () (set (make-local-variable 'company-backends)
+                             '((company-capf company-files))))))
 
 (with-eval-after-load 'ivy
   (setq ivy-initial-inputs-alist nil
-	ivy-rich-path-style 'abbrev
-	ivy-wrap t
-	ivy-use-virtual-buffers t
-	ivy-count-format "(%d/%d) ")
+        ivy-rich-path-style 'abbrev
+        ivy-wrap t
+        ivy-use-virtual-buffers t
+        ivy-count-format "(%d/%d) ")
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 
 (with-eval-after-load 'ispell
   (setq ispell-program-name "/usr/bin/aspell"
-	ispell-dictionary "en_US"
-	ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
-	ispell-list-command "--list"
-	ispell-dictionary-alist
-	'(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
-	   t ("-d" "en_US") nil utf-8))))
+        ispell-dictionary "en_US"
+        ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
+        ispell-list-command "--list"
+        ispell-dictionary-alist
+        '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
+           t ("-d" "en_US") nil utf-8))))
 
 (with-eval-after-load 'message
   (setq message-directory "drafts"
-	message-kill-buffer-on-exit t
-	message-sendmail-envelope-from 'header
-	message-sendmail-f-is-evil nil)
+        message-kill-buffer-on-exit t
+        message-sendmail-envelope-from 'header
+        message-sendmail-f-is-evil nil)
   (add-hook 'message-mode-hook
-	    'messages-are-flowing-use-and-mark-hard-newlines))
+            'messages-are-flowing-use-and-mark-hard-newlines))
 
 (with-eval-after-load 'notmuch
   (setq notmuch-address-command 'internal
-	notmuch-address-internal-completion '(sent nil)
-	notmuch-address-save-filename "~/ruck/social/notmuch-contacts"
-	notmuch-address-use-company t
-	notmuch-crypto-process-mime t
-	notmuch-fcc-dirs "sent"
-	notmuch-hello-hide-tags '("killed")
-	notmuch-search-oldest-first nil)
+        notmuch-address-internal-completion '(sent nil)
+        notmuch-address-save-filename "~/ruck/social/notmuch-contacts"
+        notmuch-address-use-company t
+        notmuch-crypto-process-mime t
+        notmuch-fcc-dirs "sent"
+        notmuch-hello-hide-tags '("killed")
+        notmuch-search-oldest-first nil)
   ;; Search tags
   (setq notmuch-saved-searches
-	'((:name "inbox" :query "tag:inbox" :key "i")
-	  (:name "unread" :query "tag:unread" :key "u")
-	  (:name "new" :query "tag:new" :key "n")
-	  (:name "sent" :query "tag:sent" :key "e")
-	  (:name "drafts" :query "tag:draft" :key "d")
-	  (:name "all mail" :query "*" :key "a")
-	  (:name "todo" :query "tag:todo" :key "t")))
+        '((:name "inbox" :query "tag:inbox" :key "i")
+          (:name "unread" :query "tag:unread" :key "u")
+          (:name "new" :query "tag:new" :key "n")
+          (:name "sent" :query "tag:sent" :key "e")
+          (:name "drafts" :query "tag:draft" :key "d")
+          (:name "all mail" :query "*" :key "a")
+          (:name "todo" :query "tag:todo" :key "t")))
   ;; Keybindings
   (define-key notmuch-search-mode-map "S"
     (lambda ()
@@ -341,53 +343,53 @@
 
 (with-eval-after-load 'ol
   (setq org-link-frame-setup
-	'((vm . vm-visit-folder-other-frame)
-	  (vm-imap . vm-visit-imap-folder-other-frame)
-	  (gnus . org-gnus-no-new-news)
-	  (file . find-file)
-	  (wl . wl-other-frame))))
+        '((vm . vm-visit-folder-other-frame)
+          (vm-imap . vm-visit-imap-folder-other-frame)
+          (gnus . org-gnus-no-new-news)
+          (file . find-file)
+          (wl . wl-other-frame))))
 
 (with-eval-after-load 'org-present
   (add-hook 'org-present-mode-hook
-	    (lambda ()
-	      (org-present-big)
-	      (org-display-inline-images)
-	      (org-present-read-only)))
+            (lambda ()
+              (org-present-big)
+              (org-display-inline-images)
+              (org-present-read-only)))
   (add-hook 'org-present-mode-quit-hook
-	    (lambda ()
-	      (org-present-small)
-	      (org-present-read-write))))
+            (lambda ()
+              (org-present-small)
+              (org-present-read-write))))
 
 (with-eval-after-load 'org
   (setq org-adapt-indentation nil
-	org-export-backends '(ascii html icalendar latex md odt)
-	org-catch-invisible-edits 'show
-	org-fontify-done-headline t
-	org-default-priority 49
-	org-enforce-todo-dependencies t
-	org-hide-emphasis-markers t
-	org-highest-priority 49
-	org-image-actual-width '(800)
-	org-list-demote-modify-bullet nil
-	org-log-into-drawer t
-	org-lowest-priority 53
-	org-refile-targets '((nil :maxlevel . 8))
-	org-src-fontify-natively t
-	org-tags-column 0
-	org-todo-keywords '((sequence "QUEUED(q)"
-				      "IN-PROGRESS(i)" "RECURRING(r)"
-				      "WAITING(w)" "SOMEDAY-MAYBE(s)" "|"
-				      "DONE(d)" "DELEGATED(e)" "CANCELED(c)")
-			    (sequence "AR(a)" "GOAL(g)")))
-
+        org-export-backends '(ascii html icalendar latex md odt)
+        org-catch-invisible-edits 'show
+        org-fontify-done-headline t
+        org-default-priority ?1
+        org-enforce-todo-dependencies t
+        org-hide-emphasis-markers t
+        org-highest-priority ?1
+        org-image-actual-width '(800)
+        org-list-demote-modify-bullet nil
+        org-log-into-drawer t
+        org-lowest-priority ?5
+        org-refile-targets '((nil :maxlevel . 8))
+        org-src-fontify-natively t
+        org-tags-column 0
+        org-todo-keywords '((sequence "QUEUED(q)"
+                                      "IN-PROGRESS(i)" "RECURRING(r)"
+                                      "WAITING(w)" "SOMEDAY-MAYBE(s)" "|"
+                                      "DONE(d)" "DELEGATED(e)" "CANCELED(c)")
+                            (sequence "AR(a)" "GOAL(g)")))
   (add-to-list 'org-modules 'org-habit)
   (add-hook 'org-babel-after-execute-hook
-	    (lambda () (when org-inline-image-overlays
-			 (org-redisplay-inline-images))))
+            (lambda () (when org-inline-image-overlays
+                         (org-redisplay-inline-images))))
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'org-mode-hook
             '(lambda () (set (make-local-variable 'company-backends)
-			     '((company-capf company-yasnippet company-files)))))
+                             '((company-capf company-yasnippet
+                                             company-files)))))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((awk .t ) (calc . t) (C . t) (emacs-lisp . t) (gnuplot . t) (js . t)
@@ -396,80 +398,80 @@
 
 (with-eval-after-load 'org-agenda
   (setq org-agenda-follow-indirect nil
-	org-agenda-include-diary t
-	org-agenda-prefix-format '((agenda . " %i %?-12t% s")
-				   (timeline . "  % s")
-				   (todo . " %i")
-				   (tags . " %i")
-				   (search . " %i"))
-	org-agenda-span 'month
-	org-agenda-tags-column 'auto
-	org-agenda-window-setup 'current-window)
+        org-agenda-include-diary t
+        org-agenda-prefix-format '((agenda . " %i %?-12t% s")
+                                   (timeline . "  % s")
+                                   (todo . " %i")
+                                   (tags . " %i")
+                                   (search . " %i"))
+        org-agenda-span 'month
+        org-agenda-tags-column 'auto
+        org-agenda-window-setup 'current-window)
   (cond ((string-equal (system-name) "earth")
-	 (setq org-agenda-files '("~/ruck/oo/org/dwrz.org")
-	       org-archive-location
-	       "/home/dwrz/ruck/oo/org/dwrz-org-archive.org::"))
-	((string-equal (system-name) "gu-dwrz")
-	 (setq org-agenda-files '("~/gu/org-dwrz/gu.org")
-	       org-archive-location
-	       "~/gu/org-dwrz/archives/gu-archive.org::"))))
+         (setq org-agenda-files '("~/ruck/oo/org/dwrz.org")
+               org-archive-location
+               "/home/dwrz/ruck/oo/org/dwrz-org-archive.org::"))
+        ((string-equal (system-name) "gu-dwrz")
+         (setq org-agenda-files '("~/gu/org-dwrz/gu.org")
+               org-archive-location
+               "~/gu/org-dwrz/archives/gu-archive.org::"))))
 
 (with-eval-after-load 'org-capture
   (setq org-capture-templates
-	'(("g" "goal" entry
-	   (file "")
-	   (file "~/ruck/oo/org/templates/goal.org")
-	   :prepend t
-	   :jump-to-captured t
-	   :empty-lines-before 1
-	   :empty-lines-after 1)
-	  ("e" "log entry" plain
-	   (file "")
-	   (file "~/ruck/oo/org/templates/log-entry.org")
-	   :jump-to-captured t)
-	  ("j" "journal" entry
-	   (file "")
-	   (file "~/ruck/oo/org/templates/journal.org")
-	   :prepend t
-	   :jump-to-captured t
-	   :empty-lines-before 1
-	   :empty-lines-after 1)
-	  ("l" "log" entry
-	   (file "")
-	   (file "~/ruck/oo/org/templates/log.org")
-	   :prepend t
-	   :jump-to-captured t
-	   :empty-lines-after 1)
-	  ("n" "note" entry
-	   (file "")
-	   (file "~/ruck/oo/org/templates/note.org")
-	   :prepend t
-	   :jump-to-captured t
-	   :empty-lines-before 1
-	   :empty-lines-after 1))))
+        '(("g" "goal" entry
+           (file "")
+           (file "~/ruck/oo/org/templates/goal.org")
+           :prepend t
+           :jump-to-captured t
+           :empty-lines-before 1
+           :empty-lines-after 1)
+          ("e" "log entry" plain
+           (file "")
+           (file "~/ruck/oo/org/templates/log-entry.org")
+           :jump-to-captured t)
+          ("j" "journal" entry
+           (file "")
+           (file "~/ruck/oo/org/templates/journal.org")
+           :prepend t
+           :jump-to-captured t
+           :empty-lines-before 1
+           :empty-lines-after 1)
+          ("l" "log" entry
+           (file "")
+           (file "~/ruck/oo/org/templates/log.org")
+           :prepend t
+           :jump-to-captured t
+           :empty-lines-after 1)
+          ("n" "note" entry
+           (file "")
+           (file "~/ruck/oo/org/templates/note.org")
+           :prepend t
+           :jump-to-captured t
+           :empty-lines-before 1
+           :empty-lines-after 1))))
 
 (with-eval-after-load 'org-faces
   (setq org-priority-faces
-	'((?1 . (:foreground "red" :weight 'bold))
-	  (?2 . (:foreground "orange"))
-	  (?3 . (:foreground "yellow"))
-	  (?4 . (:foreground "green"))
-	  (?5 . (:foreground "purple"))))
+        '((?1 . (:foreground "red" :weight 'bold))
+          (?2 . (:foreground "orange"))
+          (?3 . (:foreground "yellow"))
+          (?4 . (:foreground "green"))
+          (?5 . (:foreground "purple"))))
   (setq org-todo-keyword-faces
-	'(("QUEUED" . "red")
-	  ("IN-PROGRESS" . "limegreen")
-	  ("RECURRING" . "orange")
-	  ("WAITING" . "yellow")
-	  ("DONE" . "blue")
-	  ("DELEGATED" . "gray50")
-	  ("CANCELED" . "purple")
-	  ("SOMEDAY-MAYBE" . "orchid")
-	  ("AR" . "red")
-	  ("GOAL" . "springgreen"))))
+        '(("QUEUED" . "red")
+          ("IN-PROGRESS" . "limegreen")
+          ("RECURRING" . "orange")
+          ("WAITING" . "yellow")
+          ("DONE" . "blue")
+          ("DELEGATED" . "gray50")
+          ("CANCELED" . "purple")
+          ("SOMEDAY-MAYBE" . "orchid")
+          ("AR" . "red")
+          ("GOAL" . "springgreen"))))
 
 (with-eval-after-load 'org-src
   (setq org-src-preserve-indentation t
-	org-src-tab-acts-natively t))
+        org-src-tab-acts-natively t))
 
 (with-eval-after-load 'prog-mode
   (add-hook 'prog-mode-hook 'flycheck-mode)
@@ -477,7 +479,7 @@
   (add-hook 'prog-mode-hook 'rainbow-mode)
   (add-hook 'prog-mode-hook 'visual-line-mode)
   (font-lock-add-keywords 'prog-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
-					font-lock-warning-face t))))
+                                        font-lock-warning-face t))))
 
 
 (with-eval-after-load 'pyim (pyim-basedict-enable))
@@ -491,10 +493,10 @@
 
 (with-eval-after-load 'sendmail
   (setq mail-specify-envelope-from t
-	mail-envelope-from 'header
-	mail-specify-envelope-from t
-	send-mail-function 'sendmail-send-it
-	sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh"))
+        mail-envelope-from 'header
+        mail-specify-envelope-from t
+        send-mail-function 'sendmail-send-it
+        sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh"))
 
 (with-eval-after-load 'super-save (setq super-save-auto-save-when-idle t))
 
@@ -503,8 +505,8 @@
   (add-hook 'text-mode-hook 'rainbow-mode)
   (add-hook 'text-mode-hook 'visual-line-mode)
   (add-hook 'text-mode-hook
-	    '(lambda () (set (make-local-variable 'company-backends)
-			     '((company-capf company-files))))))
+            '(lambda () (set (make-local-variable 'company-backends)
+                             '((company-capf company-files))))))
 
 (with-eval-after-load 'tramp
   (setq tramp-default-method "ssh"))
@@ -514,16 +516,16 @@
 
 (with-eval-after-load 'web-mode
   (setq  web-mode-code-indent-offset 2
-	 web-mode-css-indent-offset 2
-	 web-mode-indent-style 1
-	 web-mode-markup-indent-offset 2)
+         web-mode-css-indent-offset 2
+         web-mode-indent-style 1
+         web-mode-markup-indent-offset 2)
   (add-hook 'web-mode-hook 'electric-pair-mode)
   (add-hook 'web-mode-hook
-	    '(lambda () (set (make-local-variable 'company-backends)
-			     '((company-web-html
-				company-capf
-				company-yasnippet
-				company-files)))))
+            '(lambda () (set (make-local-variable 'company-backends)
+                             '((company-web-html
+                                company-capf
+                                company-yasnippet
+                                company-files)))))
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
 (with-eval-after-load 'yasnippet (define-key yas-keymap (kbd "<tab>") nil))
@@ -531,18 +533,18 @@
 ;; CUSTOMIZE
 (customize-set-variable 'epg-gpg-program "/usr/bin/gpg2")
 (customize-set-variable 'face-font-family-alternatives
-			'(("hans" "adobe-source-han-sans-cn-font")))
+                        '(("hans" "adobe-source-han-sans-cn-font")))
 (customize-set-variable 'mouse-wheel-scroll-amount '(1 ((shift) .1)))
 
 ;; HOOKS
 (add-hook 'after-init-hook 'doom-modeline-mode)
 (add-hook 'after-init-hook
-	  '(lambda ()
-	     (setq base16-theme-256-color-source 'colors)
-	     (load-theme 'base16-tomorrow t)
-	     (set-face-attribute 'fringe t :background "#ffffff")
-	     (setq base16-distinct-fringe-background nil)
-	     (dwrz-remove-bars)))
+          '(lambda ()
+             (setq base16-theme-256-color-source 'colors)
+             (load-theme 'base16-tomorrow t)
+             (set-face-attribute 'fringe t :background "#ffffff")
+             (setq base16-distinct-fringe-background nil)
+             (dwrz-remove-bars)))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; PACKAGE ENABLE
