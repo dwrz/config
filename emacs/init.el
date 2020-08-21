@@ -1,5 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(defalias 'yes-or-no-p 'y-or-n-p)
 
 (prefer-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
@@ -7,6 +6,8 @@
 (set-terminal-coding-system 'utf-8)
 (setenv "GOPATH" "/home/dwrz/.go/")
 (setenv "SHELL" (executable-find "bash"))
+
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 (setq auto-save-interval 30
       compilation-message-face 'default
@@ -37,7 +38,6 @@
       sentence-end-double-space nil
       split-height-threshold nil
       split-width-threshold 160
-      tramp-default-method "ssh"
       use-dialog-box nil
       user-full-name "David Wen Riccardi-Zhu"
       user-mail-address "dwrz@dwrz.net"
@@ -138,8 +138,6 @@
 (require 'calfw)
 (require 'calfw-cal)
 (require 'calfw-org)
-(require 'dired-open)
-(require 'org)
 
 ;; PACKAGE CONFIGURATION
 (setq auto-revert-verbose nil
@@ -206,20 +204,24 @@
   (setq doc-view-resolution 150))
 
 (with-eval-after-load 'dired
-  (setq dired-open-extensions
-	'(("mkv" . "mpv")
-	  ("mp4" . "mpv")
-	  ("avi" . "mpv"))
-	dired-dwim-target t
+  (setq dired-dwim-target t
 	dired-listing-switches "-alh"
-	dired-omit-files (concat dired-omit-files "\\|^\\..+$")
-	dired-omit-verbose nil
-	dired-recursive-copies 'always
-	dired-clean-up-buffers-too t)
+	dired-recursive-copies 'always)
   (put 'dired-find-alternate-file 'disabled nil))
 
 (with-eval-after-load 'dired-hide-dotfiles
   (define-key dired-mode-map (kbd ".") 'dired-hide-dotfiles-mode))
+
+(with-eval-after-load 'dired-open
+  (setq dired-open-extensions
+	'(("mkv" . "mpv")
+	  ("mp4" . "mpv")
+	  ("avi" . "mpv"))))
+
+(with-eval-after-load 'dired-x
+  (setq dired-omit-verbose nil
+	dired-omit-files (concat dired-omit-files "\\|^\\..+$")
+	dired-clean-up-buffers-too t))
 
 (with-eval-after-load 'emacs-lisp-mode
   (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
@@ -337,7 +339,15 @@
   (define-key notmuch-search-mode-map "R"
     'notmuch-search-reply-to-thread-sender))
 
-(with-eval-after-load "org-present"
+(with-eval-after-load 'ol
+  (setq org-link-frame-setup
+	'((vm . vm-visit-folder-other-frame)
+	  (vm-imap . vm-visit-imap-folder-other-frame)
+	  (gnus . org-gnus-no-new-news)
+	  (file . find-file)
+	  (wl . wl-other-frame))))
+
+(with-eval-after-load 'org-present
   (add-hook 'org-present-mode-hook
 	    (lambda ()
 	      (org-present-big)
@@ -348,115 +358,118 @@
 	      (org-present-small)
 	      (org-present-read-write))))
 
-(setq org-link-frame-setup
-      '((vm . vm-visit-folder-other-frame)
-	(vm-imap . vm-visit-imap-folder-other-frame)
-	(gnus . org-gnus-no-new-news)
-	(file . find-file)
-	(wl . wl-other-frame)))
+(with-eval-after-load 'org
+  (setq org-adapt-indentation nil
+	org-export-backends '(ascii html icalendar latex md odt)
+	org-catch-invisible-edits 'show
+	org-fontify-done-headline t
+	org-default-priority 49
+	org-enforce-todo-dependencies t
+	org-hide-emphasis-markers t
+	org-highest-priority 49
+	org-image-actual-width '(800)
+	org-list-demote-modify-bullet nil
+	org-log-into-drawer t
+	org-lowest-priority 53
+	org-refile-targets '((nil :maxlevel . 8))
+	org-src-fontify-natively t
+	org-tags-column 0
+	org-todo-keywords '((sequence "QUEUED(q)"
+				      "IN-PROGRESS(i)" "RECURRING(r)"
+				      "WAITING(w)" "SOMEDAY-MAYBE(s)" "|"
+				      "DONE(d)" "DELEGATED(e)" "CANCELED(c)")
+			    (sequence "AR(a)" "GOAL(g)")))
 
-(add-to-list 'org-src-lang-modes '("js" . js2))
-(add-to-list 'org-modules 'org-habit)
+  (add-to-list 'org-modules 'org-habit)
+  (add-hook 'org-babel-after-execute-hook
+	    (lambda () (when org-inline-image-overlays
+			 (org-redisplay-inline-images))))
+  (add-hook 'org-mode-hook 'flyspell-mode)
+  (add-hook 'org-mode-hook
+            '(lambda () (set (make-local-variable 'company-backends)
+			     '((company-capf company-yasnippet company-files)))))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((awk .t ) (calc . t) (C . t) (emacs-lisp . t) (gnuplot . t) (js . t)
+     (latex . t) (ledger . t) (makefile .t )(org . t) (python . t)
+     (shell . t) (sed .t) (sql . t) (sqlite . t))))
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((awk .t ) (calc . t) (C . t) (emacs-lisp . t) (gnuplot . t) (js . t) (js . t)
-   (latex . t) (ledger . t) (makefile .t )(org . t) (python . t)
-   (shell . t) (sed .t) (sql . t) (sqlite . t)))
+(with-eval-after-load 'org-agenda
+  (setq org-agenda-follow-indirect nil
+	org-agenda-include-diary t
+	org-agenda-prefix-format '((agenda . " %i %?-12t% s")
+				   (timeline . "  % s")
+				   (todo . " %i")
+				   (tags . " %i")
+				   (search . " %i"))
+	org-agenda-span 'month
+	org-agenda-tags-column 'auto
+	org-agenda-window-setup 'current-window)
+  (cond ((string-equal (system-name) "earth")
+	 (setq org-agenda-files '("~/ruck/oo/org/dwrz.org")
+	       org-archive-location
+	       "/home/dwrz/ruck/oo/org/dwrz-org-archive.org::"))
+	((string-equal (system-name) "gu-dwrz")
+	 (setq org-agenda-files '("~/gu/org-dwrz/gu.org")
+	       org-archive-location
+	       "~/gu/org-dwrz/archives/gu-archive.org::"))))
 
-(setq org-adapt-indentation nil
-      org-export-backends '(ascii html icalendar latex md odt)
-      org-catch-invisible-edits 'show
-      org-fontify-done-headline t
-      org-default-priority 49
-      org-enforce-todo-dependencies t
-      org-hide-emphasis-markers t
-      org-highest-priority 49
-      org-image-actual-width '(800)
-      org-list-demote-modify-bullet nil
-      org-log-into-drawer t
-      org-lowest-priority 53
-      org-refile-targets '((nil :maxlevel . 8))
-      org-src-fontify-natively t
-      org-tags-column 0
-      org-todo-keywords '((sequence "QUEUED(q)"
-				    "IN-PROGRESS(i)" "RECURRING(r)"
-				    "WAITING(w)" "SOMEDAY-MAYBE(s)" "|"
-				    "DONE(d)" "DELEGATED(e)" "CANCELED(c)")
-			  (sequence "AR(a)" "GOAL(g)")))
+(with-eval-after-load 'org-capture
+  (setq org-capture-templates
+	'(("g" "goal" entry
+	   (file "")
+	   (file "~/ruck/oo/org/templates/goal.org")
+	   :prepend t
+	   :jump-to-captured t
+	   :empty-lines-before 1
+	   :empty-lines-after 1)
+	  ("e" "log entry" plain
+	   (file "")
+	   (file "~/ruck/oo/org/templates/log-entry.org")
+	   :jump-to-captured t)
+	  ("j" "journal" entry
+	   (file "")
+	   (file "~/ruck/oo/org/templates/journal.org")
+	   :prepend t
+	   :jump-to-captured t
+	   :empty-lines-before 1
+	   :empty-lines-after 1)
+	  ("l" "log" entry
+	   (file "")
+	   (file "~/ruck/oo/org/templates/log.org")
+	   :prepend t
+	   :jump-to-captured t
+	   :empty-lines-after 1)
+	  ("n" "note" entry
+	   (file "")
+	   (file "~/ruck/oo/org/templates/note.org")
+	   :prepend t
+	   :jump-to-captured t
+	   :empty-lines-before 1
+	   :empty-lines-after 1))))
 
-(cond ((string-equal (system-name) "earth")
-       (setq org-agenda-files '("~/ruck/oo/org/dwrz.org")
-	     org-archive-location
-	     "/home/dwrz/ruck/oo/org/dwrz-org-archive.org::"))
-      ((string-equal (system-name) "gu-dwrz")
-       (setq org-agenda-files '("~/gu/org-dwrz/gu.org")
-	     org-archive-location
-	     "~/gu/org-dwrz/archives/gu-archive.org::")))
-(setq org-agenda-follow-indirect nil
-      org-agenda-include-diary t
-      org-agenda-prefix-format '((agenda . " %i %?-12t% s")
-				 (timeline . "  % s")
-				 (todo . " %i")
-				 (tags . " %i")
-				 (search . " %i"))
-      org-agenda-span 'month
-      org-agenda-tags-column 'auto
-      org-agenda-window-setup 'current-window)
+(with-eval-after-load 'org-faces
+  (setq org-priority-faces
+	'((?1 . (:foreground "red" :weight 'bold))
+	  (?2 . (:foreground "orange"))
+	  (?3 . (:foreground "yellow"))
+	  (?4 . (:foreground "green"))
+	  (?5 . (:foreground "purple"))))
+  (setq org-todo-keyword-faces
+	'(("QUEUED" . "red")
+	  ("IN-PROGRESS" . "limegreen")
+	  ("RECURRING" . "orange")
+	  ("WAITING" . "yellow")
+	  ("DONE" . "blue")
+	  ("DELEGATED" . "gray50")
+	  ("CANCELED" . "purple")
+	  ("SOMEDAY-MAYBE" . "orchid")
+	  ("AR" . "red")
+	  ("GOAL" . "springgreen"))))
 
-(setq org-capture-templates
-      '(("g" "goal" entry
-	 (file "")
-	 (file "~/ruck/oo/org/templates/goal.org")
-	 :prepend t
-	 :jump-to-captured t
-	 :empty-lines-before 1
-	 :empty-lines-after 1)
-	("e" "log entry" plain
-	 (file "")
-	 (file "~/ruck/oo/org/templates/log-entry.org")
-	 :jump-to-captured t)
-	("j" "journal" entry
-	 (file "")
-	 (file "~/ruck/oo/org/templates/journal.org")
-	 :prepend t
-	 :jump-to-captured t
-	 :empty-lines-before 1
-	 :empty-lines-after 1)
-	("l" "log" entry
-	 (file "")
-	 (file "~/ruck/oo/org/templates/log.org")
-	 :prepend t
-	 :jump-to-captured t
-	 :empty-lines-after 1)
-	("n" "note" entry
-	 (file "")
-	 (file "~/ruck/oo/org/templates/note.org")
-	 :prepend t
-	 :jump-to-captured t
-	 :empty-lines-before 1
-	 :empty-lines-after 1)))
-
-(setq org-priority-faces
-      '((?1 . (:foreground "red" :weight 'bold))
-	(?2 . (:foreground "orange"))
-	(?3 . (:foreground "yellow"))
-	(?4 . (:foreground "green"))
-	(?5 . (:foreground "purple"))))
-(setq org-todo-keyword-faces
-      '(("QUEUED" . "red")
-	("IN-PROGRESS" . "limegreen")
-	("RECURRING" . "orange")
-	("WAITING" . "yellow")
-	("DONE" . "blue")
-	("DELEGATED" . "gray50")
-	("CANCELED" . "purple")
-	("SOMEDAY-MAYBE" . "orchid")
-	("AR" . "red")
-	("GOAL" . "springgreen")))
-
-(setq org-src-preserve-indentation t
-      org-src-tab-acts-natively t)
+(with-eval-after-load 'org-src
+  (setq org-src-preserve-indentation t
+	org-src-tab-acts-natively t))
 
 (with-eval-after-load 'prog-mode
   (add-hook 'prog-mode-hook 'flycheck-mode)
@@ -465,6 +478,7 @@
   (add-hook 'prog-mode-hook 'visual-line-mode)
   (font-lock-add-keywords 'prog-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
 					font-lock-warning-face t))))
+
 
 (with-eval-after-load 'pyim (pyim-basedict-enable))
 
@@ -492,6 +506,12 @@
 	    '(lambda () (set (make-local-variable 'company-backends)
 			     '((company-capf company-files))))))
 
+(with-eval-after-load 'tramp
+  (setq tramp-default-method "ssh"))
+
+(with-eval-after-load 'visual-line-mode
+  (add-hook 'visual-line-mode-hook 'visual-fill-column-mode))
+
 (with-eval-after-load 'web-mode
   (setq  web-mode-code-indent-offset 2
 	 web-mode-css-indent-offset 2
@@ -503,7 +523,8 @@
 			     '((company-web-html
 				company-capf
 				company-yasnippet
-				company-files))))))
+				company-files)))))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
 (with-eval-after-load 'yasnippet (define-key yas-keymap (kbd "<tab>") nil))
 
@@ -523,16 +544,6 @@
 	     (setq base16-distinct-fringe-background nil)
 	     (dwrz-remove-bars)))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'org-mode-hook 'flyspell-mode)
-
-(add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
-
-(add-hook 'org-babel-after-execute-hook
-	  (lambda () (when org-inline-image-overlays
-		       (org-redisplay-inline-images))))
-(add-hook 'org-mode-hook
-          '(lambda () (set (make-local-variable 'company-backends)
-			   '((company-capf company-yasnippet company-files)))))
 
 ;; PACKAGE ENABLE
 (auto-compression-mode t)
