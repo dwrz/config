@@ -201,11 +201,6 @@
 (setq auto-revert-verbose nil
       auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
       auto-save-visited-mode t
-      avy-all-windows 'all-frames
-      avy-background t
-      avy-case-fold-search nil
-      avy-keys '(?a ?o ?e ?u ?h ?t ?n ?s)
-      avy-style 'at-full
       backup-directory-alist `((".*" .,temporary-file-directory))
       bookmark-save-flag 1
       browse-url-browser-function 'eww-browse-url
@@ -213,74 +208,79 @@
       calendar-week-start-day 1
       confirm-kill-emacs 'y-or-n-p
       diary-file "~/ruck/oo/org/diary.org"
-      counsel-rg-base-command
-      "rg -S -M 80 --no-heading --line-number --color never %s ."
-      counsel-find-file-at-point t
-      dired-open-extensions
-      '(("mkv" . "mpv")
-	("mp4" . "mpv")
-	("avi" . "mpv"))
-      dired-dwim-target t
-      dired-listing-switches "-alh"
-      dired-omit-files (concat dired-omit-files "\\|^\\..+$")
-      dired-omit-verbose nil
-      dired-recursive-copies 'always
-      dired-clean-up-buffers-too t
-      doc-view-resolution 150
       emojify-emoji-styles '(unicode)
       git-commit-summary-max-length 50
       global-auto-revert-non-file-buffers t
       holiday-bahai-holidays nil
-      ispell-program-name "/usr/bin/aspell"
-      ispell-dictionary "en_US"
-      ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
-      ispell-list-command "--list"
-      ispell-dictionary-alist
-      '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
-	 t ("-d" "en_US") nil utf-8))
-      ivy-initial-inputs-alist nil
-      ivy-rich-path-style 'abbrev
-      ivy-wrap t
-      ivy-use-virtual-buffers t
       enable-recursive-minibuffers t
-      ivy-count-format "(%d/%d) "
-      js-indent-level 2
       locale-coding-system 'utf-8
       markdown-command "pandoc"
-      message-directory "drafts"
-      message-kill-buffer-on-exit t
-      message-sendmail-envelope-from 'header
-      message-sendmail-f-is-evil nil
-      web-mode-code-indent-offset 2
-      web-mode-css-indent-offset 2
-      web-mode-indent-style 1
-      web-mode-markup-indent-offset 2
       sh-basic-offset 2
       async-shell-command-buffer "new-buffer"
       backward-delete-char-untabify-method nil
       mail-user-agent 'message-user-agent
       shift-select-mode nil
-      super-save-auto-save-when-idle t
       split-window-preferred-function 'visual-fill-column-split-window-sensibly)
 
+(with-eval-after-load 'avy
+  (setq avy-all-windows 'all-frames
+	avy-background t
+	avy-case-fold-search nil
+	avy-keys '(?a ?o ?e ?u ?h ?t ?n ?s)
+	avy-style 'at-full))
+
 (with-eval-after-load 'company
+  (setq company-backends
+	'((company-yasnippet company-clang company-cmake
+			     company-capf company-files company-gtags
+			     company-etags company-keywords)
+	  (company-abbrev company-dabbrev company-dabbrev-code))
+	company-idle-delay 0
+	company-minimum-prefix-length 1
+	company-show-numbers t
+	company-tooltip-align-annotations t)
+  (add-hook 'company-mode-hook 'company-box-mode)
   (define-key company-active-map (kbd "<return>") nil)
   (define-key company-active-map (kbd "RET") nil)
   (define-key company-active-map (kbd "<tab>") 'company-complete-selection))
-(setq company-backends
-      '((company-yasnippet company-clang company-cmake
-			   company-capf company-files company-gtags
-			   company-etags company-keywords)
-	(company-abbrev company-dabbrev company-dabbrev-code))
-      company-idle-delay 0
-      company-minimum-prefix-length 1
-      company-show-numbers t
-      company-tooltip-align-annotations t)
 
-(put 'dired-find-alternate-file 'disabled nil)
+(with-eval-after-load 'conf-mode
+  (add-hook 'conf-space-mode-hook 'rainbow-mode))
+
+(with-eval-after-load 'counsel
+  (setq counsel-rg-base-command
+	"rg -S -M 80 --no-heading --line-number --color never %s ."
+	counsel-find-file-at-point t))
+
+(with-eval-after-load 'css-mode
+  (add-hook 'css-mode-hook 'web-mode))
+
+(with-eval-after-load 'doc-view
+  (setq doc-view-resolution 150))
+
+(with-eval-after-load 'dired
+  (setq dired-open-extensions
+	'(("mkv" . "mpv")
+	  ("mp4" . "mpv")
+	  ("avi" . "mpv"))
+	dired-dwim-target t
+	dired-listing-switches "-alh"
+	dired-omit-files (concat dired-omit-files "\\|^\\..+$")
+	dired-omit-verbose nil
+	dired-recursive-copies 'always
+	dired-clean-up-buffers-too t)
+  (put 'dired-find-alternate-file 'disabled nil))
 
 (with-eval-after-load 'dired-hide-dotfiles
   (define-key dired-mode-map (kbd ".") 'dired-hide-dotfiles-mode))
+
+(with-eval-after-load 'emacs-lisp-mode
+  (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+  (add-hook 'emacs-lisp-mode-hook
+            '(lambda () (set (make-local-variable 'company-backends)
+			     '((company-elisp company-capf company-files)))))
+  (font-lock-add-keywords 'emacs-lisp-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
+					      font-lock-warning-face t))))
 
 (with-eval-after-load 'erc
   (setq erc-nick "dwrz")
@@ -288,71 +288,118 @@
   (add-to-list 'erc-modules 'spelling))
 
 (with-eval-after-load 'go-mode
+  (setq go-tag-args (list "-transform" "camelcase"))
+  (add-hook 'go-mode-hook 'lsp)
+  (add-hook 'go-mode-hook
+	    '(lambda ()
+	       (set (make-local-variable 'company-backends)
+		    '((company-lsp company-files)))
+	       (set (make-local-variable 'before-save-hook)
+		    '(lsp-organize-imports
+		      lsp-format-buffer
+		      delete-trailing-whitespace))))
   (define-key go-mode-map (kbd "C-c C-b") 'pop-tag-mark)
   (define-key go-mode-map (kbd "C-c t") 'go-tag-add)
-  (define-key go-mode-map (kbd "C-c T") 'go-tag-remove))
+  (define-key go-mode-map (kbd "C-c T") 'go-tag-remove)
+  (font-lock-add-keywords 'go-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
+				      font-lock-warning-face t))))
 
-(setq go-playground-ask-file-name nil
-      go-playground-basedir "/home/dwrz/.go/src/playground/"
-      go-tag-args (list "-transform" "camelcase"))
+(with-eval-after-load 'go-playground
+  (setq go-playground-ask-file-name nil
+	go-playground-basedir "/home/dwrz/.go/src/playground/"
+	go-playground-go-command "GO111MODULE=on"
+	go-playground-init-command "go mod init"))
 
-(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+(with-eval-after-load 'js2-mode
+  (setq js-indent-level 2)
+  (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+  (add-hook 'js2-mode-hook 'lsp)
+  (add-hook 'js2-mode-hook
+	    '(lambda () (set (make-local-variable 'company-backends)
+			     '((company-lsp company-capf company-files))))))
 
-(eval-after-load "org-present"
-  '(progn (add-hook 'org-present-mode-hook
-		    (lambda ()
-		      (org-present-big)
-		      (org-display-inline-images)
-		      (org-present-read-only)))
-	  (add-hook 'org-present-mode-quit-hook
-		    (lambda ()
-		      (org-present-small)
-		      (org-present-read-write)))))
+(with-eval-after-load 'ivy
+  (setq ivy-initial-inputs-alist nil
+	ivy-rich-path-style 'abbrev
+	ivy-wrap t
+	ivy-use-virtual-buffers t
+	ivy-count-format "(%d/%d) ")
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 
-(setq notmuch-address-command  'internal
-      notmuch-address-internal-completion  '(sent nil)
-      notmuch-address-save-filename "~/ruck/social/notmuch-contacts"
-      notmuch-address-use-company t
-      notmuch-crypto-process-mime t
-      notmuch-fcc-dirs "sent"
-      notmuch-hello-hide-tags '("killed")
-      notmuch-search-oldest-first nil)
-;; Search tags
-(setq notmuch-saved-searches
-      '((:name "inbox" :query "tag:inbox" :key "i")
-	(:name "unread" :query "tag:unread" :key "u")
-	(:name "new" :query "tag:new" :key "n")
-	(:name "sent" :query "tag:sent" :key "e")
-	(:name "drafts" :query "tag:draft" :key "d")
-	(:name "all mail" :query "*" :key "a")
-	(:name "todo" :query "tag:todo" :key "t")))
-;; Keybindings
-(define-key notmuch-search-mode-map "S"
-  (lambda ()
-    "mark message as spam"
-    (interactive)
-    (notmuch-search-tag (list "-new" "-unread" "-inbox" "+spam"))
-    (forward-line)))
-(define-key notmuch-show-mode-map "S"
-  (lambda ()
-    "mark message as spam"
-    (interactive)
-    (notmuch-show-tag (list "-new" "-unread" "-inbox" "+spam"))))
-(define-key notmuch-search-mode-map "N"
-  (lambda ()
-    "unmark message as new and unread"
-    (interactive)
-    (notmuch-search-tag (list "-new" "-unread"))
-    (forward-line)))
-(define-key notmuch-show-mode-map "N"
-  (lambda ()
-    "unmark message as new and unread"
-    (interactive)
-    (notmuch-show-tag (list "-new" "-unread"))))
-(define-key notmuch-show-mode-map "r" 'notmuch-show-reply)
-(define-key notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
-(define-key notmuch-search-mode-map "r" 'notmuch-search-reply-to-thread)
-(define-key notmuch-search-mode-map "R" 'notmuch-search-reply-to-thread-sender)
+(with-eval-after-load 'ispell
+  (setq ispell-program-name "/usr/bin/aspell"
+	ispell-dictionary "en_US"
+	ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
+	ispell-list-command "--list"
+	ispell-dictionary-alist
+	'(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
+	   t ("-d" "en_US") nil utf-8))))
+
+(with-eval-after-load 'message
+  (setq message-directory "drafts"
+	message-kill-buffer-on-exit t
+	message-sendmail-envelope-from 'header
+	message-sendmail-f-is-evil nil)
+  (add-hook 'message-mode-hook
+	    'messages-are-flowing-use-and-mark-hard-newlines))
+
+(with-eval-after-load 'notmuch
+  (setq notmuch-address-command 'internal
+	notmuch-address-internal-completion '(sent nil)
+	notmuch-address-save-filename "~/ruck/social/notmuch-contacts"
+	notmuch-address-use-company t
+	notmuch-crypto-process-mime t
+	notmuch-fcc-dirs "sent"
+	notmuch-hello-hide-tags '("killed")
+	notmuch-search-oldest-first nil)
+  ;; Search tags
+  (setq notmuch-saved-searches
+	'((:name "inbox" :query "tag:inbox" :key "i")
+	  (:name "unread" :query "tag:unread" :key "u")
+	  (:name "new" :query "tag:new" :key "n")
+	  (:name "sent" :query "tag:sent" :key "e")
+	  (:name "drafts" :query "tag:draft" :key "d")
+	  (:name "all mail" :query "*" :key "a")
+	  (:name "todo" :query "tag:todo" :key "t")))
+  ;; Keybindings
+  (define-key notmuch-search-mode-map "S"
+    (lambda ()
+      "mark message as spam"
+      (interactive)
+      (notmuch-search-tag (list "-new" "-unread" "-inbox" "+spam"))
+      (forward-line)))
+  (define-key notmuch-show-mode-map "S"
+    (lambda ()
+      "mark message as spam"
+      (interactive)
+      (notmuch-show-tag (list "-new" "-unread" "-inbox" "+spam"))))
+  (define-key notmuch-search-mode-map "N"
+    (lambda ()
+      "unmark message as new and unread"
+      (interactive)
+      (notmuch-search-tag (list "-new" "-unread"))
+      (forward-line)))
+  (define-key notmuch-show-mode-map "N"
+    (lambda ()
+      "unmark message as new and unread"
+      (interactive)
+      (notmuch-show-tag (list "-new" "-unread"))))
+  (define-key notmuch-show-mode-map "r" 'notmuch-show-reply)
+  (define-key notmuch-show-mode-map "R" 'notmuch-show-reply-sender)
+  (define-key notmuch-search-mode-map "r" 'notmuch-search-reply-to-thread)
+  (define-key notmuch-search-mode-map "R"
+    'notmuch-search-reply-to-thread-sender))
+
+(with-eval-after-load "org-present"
+  (add-hook 'org-present-mode-hook
+	    (lambda ()
+	      (org-present-big)
+	      (org-display-inline-images)
+	      (org-present-read-only)))
+  (add-hook 'org-present-mode-quit-hook
+	    (lambda ()
+	      (org-present-small)
+	      (org-present-read-write))))
 
 (setq org-link-frame-setup
       '((vm . vm-visit-folder-other-frame)
@@ -464,17 +511,37 @@
 (setq org-src-preserve-indentation t
       org-src-tab-acts-natively t)
 
-(set-register ?j '(file . "~/ruck/oo/journal/2020.org"))
-(set-register ?i '(file . "~/ruck/oo/config/emacs/init.el"))
-(set-register ?g '(file . "~/ruck/oo/org/gtd.org"))
-(set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
-(set-register ?o '(file . "~/ruck/oo/org/dwrz.org"))
-
 (setq mail-specify-envelope-from t
       mail-envelope-from 'header
       mail-specify-envelope-from t
       send-mail-function 'sendmail-send-it
       sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh")
+
+(with-eval-after-load 'pyim
+  (pyim-basedict-enable))
+
+(with-eval-after-load 'register
+  (set-register ?j '(file . "~/ruck/oo/journal/2020.org"))
+  (set-register ?i '(file . "~/ruck/oo/config/emacs/init.el"))
+  (set-register ?g '(file . "~/ruck/oo/org/gtd.org"))
+  (set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
+  (set-register ?o '(file . "~/ruck/oo/org/dwrz.org")))
+
+(with-eval-after-load 'super-save
+  (setq super-save-auto-save-when-idle t))
+
+(with-eval-after-load 'web-mode
+  (setq  web-mode-code-indent-offset 2
+	 web-mode-css-indent-offset 2
+	 web-mode-indent-style 1
+	 web-mode-markup-indent-offset 2)
+  (add-hook 'web-mode-hook 'electric-pair-mode)
+  (add-hook 'web-mode-hook
+	    '(lambda () (set (make-local-variable 'company-backends)
+			     '((company-web-html
+				company-capf
+				company-yasnippet
+				company-files))))))
 
 (with-eval-after-load 'yasnippet (define-key yas-keymap (kbd "<tab>") nil))
 
@@ -486,23 +553,14 @@
 
 ;; HOOKS
 (add-hook 'after-init-hook 'doom-modeline-mode)
-(add-hook 'after-init-hook '(lambda ()
-			      (setq base16-theme-256-color-source 'colors)
-			      (load-theme 'base16-tomorrow t)
-			      (set-face-attribute
-			       'fringe t :background "#ffffff")
-			      (setq base16-distinct-fringe-background nil)
-			      (dwrz-remove-bars)))
+(add-hook 'after-init-hook
+	  '(lambda ()
+	     (setq base16-theme-256-color-source 'colors)
+	     (load-theme 'base16-tomorrow t)
+	     (set-face-attribute 'fringe t :background "#ffffff")
+	     (setq base16-distinct-fringe-background nil)
+	     (dwrz-remove-bars)))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'company-mode-hook 'company-box-mode)
-(add-hook 'conf-space-mode-hook 'rainbow-mode)
-(add-hook 'css-mode-hook 'html-mode 'web-mode)
-(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
-(add-hook 'emacs-lisp-mode-hook 'lsp)
-(add-hook 'go-mode-hook 'lsp)
-(add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
-(add-hook 'js2-mode-hook 'lsp)
-(add-hook 'message-mode-hook 'messages-are-flowing-use-and-mark-hard-newlines)
 (add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flycheck-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
@@ -512,41 +570,21 @@
 (add-hook 'text-mode-hook 'rainbow-mode)
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'visual-line-mode-hook 'visual-fill-column-mode)
-(add-hook 'web-mode-hook 'electric-pair-mode)
-(add-hook 'emacs-lisp-mode-hook
-          '(lambda () (set (make-local-variable 'company-backends)
-			   '((company-capf company-files)))))
-(add-hook 'go-mode-hook
-	  '(lambda ()
-	     (set (make-local-variable 'company-backends)
-		  '((company-lsp company-files)))
-	     (set (make-local-variable 'before-save-hook)
-		  '(lsp-organize-imports
-		    lsp-format-buffer
-		    delete-trailing-whitespace))))
+
 (add-hook 'ibuffer-mode-hook
 	  (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
-(add-hook 'js2-mode-hook
-	  '(lambda ()
-	     (set (make-local-variable 'company-backends)
-		  '((company-lsp company-capf company-files)))))
 (add-hook 'text-mode-hook
-          '(lambda ()
-	     (set (make-local-variable 'company-backends) '((company-capf company-files)))))
+	  '(lambda () (set (make-local-variable 'company-backends)
+			   '((company-capf company-files)))))
 (add-hook 'org-babel-after-execute-hook
 	  (lambda () (when org-inline-image-overlays
 		       (org-redisplay-inline-images))))
 (add-hook 'org-mode-hook
           '(lambda () (set (make-local-variable 'company-backends)
 			   '((company-capf company-yasnippet company-files)))))
-(add-hook 'web-mode-hook '(lambda () (set (make-local-variable 'company-backends) '((company-web-html company-capf company-yasnippet company-files)))))
 
 (font-lock-add-keywords 'prog-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
 				      font-lock-warning-face t)))
-(font-lock-add-keywords 'go-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
-				    font-lock-warning-face t)))
-(font-lock-add-keywords 'emacs-lisp-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
-					    font-lock-warning-face t)))
 
 ;; PACKAGE ENABLE
 (auto-compression-mode t)
@@ -563,7 +601,6 @@
 (ivy-rich-mode t)
 (keychain-refresh-environment)
 (pdf-loader-install)
-(pyim-basedict-enable)
 (show-paren-mode t)
 (size-indication-mode)
 (super-save-mode t)
@@ -660,12 +697,6 @@ _q_ quit    _h_ highlight   _p_ point
   ("p" hydra-point/body)
   ("r" hydra-region/body)
   ("w" hydra-windows/body))
-
-;; TODO: Hydra
-;; Help
-;; Execute (calendar, mail, terminal)
-;; Display (line numbers)
-;; Navigation (goto char, gotoline)
 
 ;; KEYBINDINGS
 (global-set-key [remap query-replace] 'anzu-query-replace)
