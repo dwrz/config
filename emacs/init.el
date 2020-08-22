@@ -1,21 +1,8 @@
-;;; -*- lexical-binding: t -*-
-
-(prefer-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(setenv "GOPATH" "/home/dwrz/.go/")
-(setenv "SHELL" (executable-find "bash"))
-
-(defalias 'yes-or-no-p 'y-or-n-p)
-
+;; C source code variables.
 (setq auto-save-interval 30
-      compilation-message-face 'default
-      custom-file "/tmp/custom.el"
-      disabled-command-function nil
-      display-time-mode nil
       delete-by-moving-to-trash t
       echo-keystrokes 0.1
+      enable-recursive-minibuffers t
       exec-path '("/home/dwrz/.cargo/bin/"
                   "/home/dwrz/.go/bin/"
                   "/home/dwrz/.local/bin/"
@@ -26,41 +13,29 @@
                   "/usr/bin/vendor_perl"
                   "/usr/local/bin")
       eww-search-prefix "https://www.ecosia.org/search/?q="
-      gnutls-verify-error t
-      inhibit-splash-screen t
-      inhibit-startup-message t
-      initial-major-mode 'org-mode
-      initial-scratch-message nil
+      locale-coding-system 'utf-8
       next-screen-context-lines 5
-      password-cache-expiry 3600
       ring-bell-function 'ignore
       scroll-conservatively 10000
-      sentence-end-double-space nil
-      split-height-threshold nil
-      split-width-threshold 160
       use-dialog-box nil
       user-full-name "David Wen Riccardi-Zhu"
-      user-mail-address "dwrz@dwrz.net"
-      select-enable-primary t
-      select-enable-clipboard t
       x-stretch-cursor t)
 
-(setq-default c-basic-offset 8
-              explicit-shell-file-name (getenv "SHELL")
-              fill-column 80
+(setq-default fill-column 80
               indent-tabs-mode t
               shell-file-name (getenv "SHELL")
               tab-width 8
               truncate-lines nil)
 
-(set-face-attribute
- 'default t
- :family "DejaVu Sans Mono"
- :foundry "PfEd"
- :slant 'normal
- :weight 'normal
- :height 140
- :width 'normal)
+;; Startup
+(setq inhibit-splash-screen t
+      inhibit-startup-message t
+      initial-major-mode 'org-mode
+      initial-scratch-message nil
+      user-mail-address "dwrz@dwrz.net")
+
+;; Custom
+(setq custom-file "/tmp/custom.el")
 
 ;; FUNCTIONS
 
@@ -140,29 +115,9 @@
 (require 'calfw-org)
 
 ;; PACKAGE CONFIGURATION
-(setq auto-revert-verbose nil
-      auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
-      auto-save-visited-mode t
-      backup-directory-alist `((".*" .,temporary-file-directory))
-      bookmark-save-flag 1
-      browse-url-browser-function 'eww-browse-url
-      calendar-chinese-all-holidays-flag t
-      calendar-week-start-day 1
-      confirm-kill-emacs 'y-or-n-p
-      diary-file "~/ruck/oo/org/diary.org"
-      emojify-emoji-styles '(unicode)
-      git-commit-summary-max-length 50
-      global-auto-revert-non-file-buffers t
-      holiday-bahai-holidays nil
-      enable-recursive-minibuffers t
-      locale-coding-system 'utf-8
-      markdown-command "pandoc"
-      sh-basic-offset 2
-      async-shell-command-buffer "new-buffer"
-      backward-delete-char-untabify-method nil
-      mail-user-agent 'message-user-agent
-      shift-select-mode nil
-      split-window-preferred-function 'visual-fill-column-split-window-sensibly)
+(with-eval-after-load 'auto-revert
+  (setq auto-revert-verbose nil
+	global-auto-revert-non-file-buffers t))
 
 (with-eval-after-load 'avy
   (setq avy-all-windows 'all-frames
@@ -170,6 +125,20 @@
         avy-case-fold-search nil
         avy-keys '(?a ?o ?e ?u ?h ?t ?n ?s)
         avy-style 'at-full))
+
+(with-eval-after-load 'bookmark
+  (setq bookmark-save-flag 1))
+
+(with-eval-after-load 'browse-url
+  (setq browse-url-browser-function 'eww-browse-url))
+
+(with-eval-after-load 'calendar
+  (setq calendar-chinese-all-holidays-flag t
+	calendar-week-start-day 1
+	diary-file "~/ruck/oo/org/diary.org"))
+
+(with-eval-after-load 'cc-vars
+  (setq-default c-basic-offset 8))
 
 (with-eval-after-load 'company
   (setq company-backends
@@ -188,6 +157,9 @@
 
 (with-eval-after-load 'company-quickhelp
   (setq company-quickhelp-delay 0.25))
+
+(with-eval-after-load 'compile
+  compilation-message-face 'default)
 
 (with-eval-after-load 'conf-mode
   (add-hook 'conf-space-mode-hook 'rainbow-mode))
@@ -233,10 +205,35 @@
   (font-lock-add-keywords 'emacs-lisp-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
                                               font-lock-warning-face t))))
 
+(with-eval-after-load 'emojify
+  (setq emojify-emoji-styles '(unicode)))
+
 (with-eval-after-load 'erc
   (setq erc-nick "dwrz")
   (add-to-list 'erc-modules 'notifications)
   (add-to-list 'erc-modules 'spelling))
+
+(with-eval-after-load 'faces
+  (set-face-attribute
+   'default t
+   :family "DejaVu Sans Mono"
+   :foundry "PfEd"
+   :slant 'normal
+   :weight 'normal
+   :height 140
+   :width 'normal))
+
+(with-eval-after-load 'files
+  (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
+	auto-save-visited-mode t
+	backup-directory-alist `((".*" .,temporary-file-directory))
+	confirm-kill-emacs 'y-or-n-p))
+
+(with-eval-after-load 'git-commit
+  (setq git-commit-summary-max-length 50))
+
+(with-eval-after-load 'gnutls
+  (setq gnutls-verify-error t))
 
 (with-eval-after-load 'go-mode
   (setq go-tag-args (list "-transform" "camelcase"))
@@ -261,13 +258,8 @@
         go-playground-go-command "GO111MODULE=on"
         go-playground-init-command "go mod init"))
 
-(with-eval-after-load 'js2-mode
-  (setq js-indent-level 2)
-  (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
-  (add-hook 'js2-mode-hook 'lsp)
-  (add-hook 'js2-mode-hook
-            '(lambda () (set (make-local-variable 'company-backends)
-                             '((company-capf company-files))))))
+(with-eval-after-load 'holiday
+  (setq holiday-bahai-holidays nil))
 
 (with-eval-after-load 'ivy
   (setq ivy-initial-inputs-alist nil
@@ -286,6 +278,17 @@
         '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
            t ("-d" "en_US") nil utf-8))))
 
+(with-eval-after-load 'js2-mode
+  (setq js-indent-level 2)
+  (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+  (add-hook 'js2-mode-hook 'lsp)
+  (add-hook 'js2-mode-hook
+            '(lambda () (set (make-local-variable 'company-backends)
+                             '((company-capf company-files))))))
+
+(with-eval-after-load 'markdown-mode
+  (setq markdown-command "pandoc"))
+
 (with-eval-after-load 'message
   (setq message-directory "drafts"
         message-kill-buffer-on-exit t
@@ -293,6 +296,10 @@
         message-sendmail-f-is-evil nil)
   (add-hook 'message-mode-hook
             'messages-are-flowing-use-and-mark-hard-newlines))
+
+(with-eval-after-load 'mule
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8))
 
 (with-eval-after-load 'notmuch
   (setq notmuch-address-command 'internal
@@ -341,6 +348,9 @@
   (define-key notmuch-search-mode-map "R"
     'notmuch-search-reply-to-thread-sender))
 
+(with-eval-after-load 'novice
+  (setq disabled-command-function nil))
+
 (with-eval-after-load 'ol
   (setq org-link-frame-setup
         '((vm . vm-visit-folder-other-frame)
@@ -372,7 +382,7 @@
         org-image-actual-width '(800)
         org-list-demote-modify-bullet nil
         org-log-into-drawer t
-        org-lowest-priority ?5
+        org-lowest-priority ?3
         org-refile-targets '((nil :maxlevel . 8))
         org-src-fontify-natively t
         org-tags-column 0
@@ -453,10 +463,8 @@
 (with-eval-after-load 'org-faces
   (setq org-priority-faces
         '((?1 . (:foreground "red" :weight 'bold))
-          (?2 . (:foreground "orange"))
-          (?3 . (:foreground "yellow"))
-          (?4 . (:foreground "green"))
-          (?5 . (:foreground "purple"))))
+          (?2 . (:foreground "yellow"))
+          (?3 . (:foreground "green"))))
   (setq org-todo-keyword-faces
         '(("QUEUED" . "red")
           ("IN-PROGRESS" . "limegreen")
@@ -473,6 +481,12 @@
   (setq org-src-preserve-indentation t
         org-src-tab-acts-natively t))
 
+(with-eval-after-load 'paragraphs
+  (setq sentence-end-double-space nil))
+
+(with-eval-after-load 'password-cache
+  (setq password-cache-expiry 3600))
+
 (with-eval-after-load 'prog-mode
   (add-hook 'prog-mode-hook 'flycheck-mode)
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
@@ -480,7 +494,6 @@
   (add-hook 'prog-mode-hook 'visual-line-mode)
   (font-lock-add-keywords 'prog-mode '(("\\<\\(FIX\\|TODO\\|NB\\)" 1
                                         font-lock-warning-face t))))
-
 
 (with-eval-after-load 'pyim (pyim-basedict-enable))
 
@@ -491,6 +504,10 @@
   (set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
   (set-register ?o '(file . "~/ruck/oo/org/dwrz.org")))
 
+(with-eval-after-load 'select
+  (setq select-enable-primary t
+	select-enable-clipboard t))
+
 (with-eval-after-load 'sendmail
   (setq mail-specify-envelope-from t
         mail-envelope-from 'header
@@ -498,7 +515,22 @@
         send-mail-function 'sendmail-send-it
         sendmail-program "~/.msmtpqueue/msmtp-enqueue.sh"))
 
+(with-eval-after-load 'shell
+  (setq-default explicit-shell-file-name (getenv "SHELL")))
+
+(with-eval-after-load 'sh-mode
+  (setq sh-basic-offset 2))
+
+(with-eval-after-load 'simple
+  (setq async-shell-command-buffer "new-buffer"
+	backward-delete-char-untabify-method nil
+	mail-user-agent 'message-user-agent
+	shift-select-mode nil))
+
 (with-eval-after-load 'super-save (setq super-save-auto-save-when-idle t))
+
+(with-eval-after-load 'subr-x
+  (defalias 'yes-or-no-p 'y-or-n-p))
 
 (with-eval-after-load 'text-mode
   (add-hook 'text-mode-hook 'flyspell-mode)
@@ -507,6 +539,9 @@
   (add-hook 'text-mode-hook
             '(lambda () (set (make-local-variable 'company-backends)
                              '((company-capf company-files))))))
+
+(with-eval-after-load 'time
+  (setq display-time-mode nil))
 
 (with-eval-after-load 'tramp
   (setq tramp-default-method "ssh"))
@@ -527,6 +562,11 @@
                                 company-yasnippet
                                 company-files)))))
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+
+(with-eval-after-load 'window
+  (setq split-height-threshold nil
+	split-width-threshold 160
+	split-window-preferred-function 'visual-fill-column-split-window-sensibly))
 
 (with-eval-after-load 'yasnippet (define-key yas-keymap (kbd "<tab>") nil))
 
@@ -702,6 +742,3 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "C-x t") 'dwrz-terminal)
 (global-set-key (kbd "M-x") 'counsel-M-x)
 (global-set-key (kbd "M-n") 'hydra-meta-hydra/body)
-
-;; Load custom.el.
-(when (file-exists-p custom-file) (load custom-file))
