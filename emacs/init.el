@@ -263,11 +263,13 @@
 
 (with-eval-after-load 'ivy
   (setq ivy-initial-inputs-alist nil
-        ivy-rich-path-style 'abbrev
         ivy-wrap t
         ivy-use-virtual-buffers t
         ivy-count-format "(%d/%d) ")
   (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
+
+(with-eval-after-load 'ivy-rich
+  (setq ivy-rich-path-style 'abbrev))
 
 (with-eval-after-load 'ispell
   (setq ispell-program-name "/usr/bin/aspell"
@@ -525,7 +527,8 @@
   (setq async-shell-command-buffer "new-buffer"
 	backward-delete-char-untabify-method nil
 	mail-user-agent 'message-user-agent
-	shift-select-mode nil))
+	shift-select-mode nil)
+  (add-hook 'visual-line-mode-hook 'visual-fill-column-mode))
 
 (with-eval-after-load 'super-save (setq super-save-auto-save-when-idle t))
 
@@ -546,8 +549,9 @@
 (with-eval-after-load 'tramp
   (setq tramp-default-method "ssh"))
 
-(with-eval-after-load 'visual-line-mode
-  (add-hook 'visual-line-mode-hook 'visual-fill-column-mode))
+(with-eval-after-load 'visual-fill-column
+  (setq split-window-preferred-function
+	'visual-fill-column-split-window-sensibly))
 
 (with-eval-after-load 'web-mode
   (setq  web-mode-code-indent-offset 2
@@ -565,8 +569,7 @@
 
 (with-eval-after-load 'window
   (setq split-height-threshold nil
-	split-width-threshold 160
-	split-window-preferred-function 'visual-fill-column-split-window-sensibly))
+	split-width-threshold 160))
 
 (with-eval-after-load 'yasnippet (define-key yas-keymap (kbd "<tab>") nil))
 
