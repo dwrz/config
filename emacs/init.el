@@ -236,6 +236,7 @@
   (setq gnutls-verify-error t))
 
 (with-eval-after-load 'go-mode
+  (setenv "GOPATH" "/home/dwrz/.go")
   (setq go-tag-args (list "-transform" "camelcase"))
   (add-hook 'go-mode-hook 'lsp)
   (add-hook 'go-mode-hook
@@ -255,7 +256,7 @@
 (with-eval-after-load 'go-playground
   (setq go-playground-ask-file-name nil
         go-playground-basedir "/home/dwrz/.go/src/playground/"
-        go-playground-go-command "GO111MODULE=on"
+        go-playground-go-command "GO111MODULE=on go"
         go-playground-init-command "go mod init"))
 
 (with-eval-after-load 'holiday
