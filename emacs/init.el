@@ -115,7 +115,7 @@
 (require 'calfw-org)
 
 ;; PACKAGE CONFIGURATION
-(with-eval-after-load 'auto-revert
+(with-eval-after-load 'autorevert
   (setq auto-revert-verbose nil
 	global-auto-revert-non-file-buffers t))
 
@@ -355,6 +355,7 @@
   (setq disabled-command-function nil))
 
 (with-eval-after-load 'ol
+  (require 'ol-notmuch)
   (setq org-link-frame-setup
         '((vm . vm-visit-folder-other-frame)
           (vm-imap . vm-visit-imap-folder-other-frame)
