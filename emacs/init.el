@@ -522,7 +522,7 @@
 (with-eval-after-load 'shell
   (setq-default explicit-shell-file-name (getenv "SHELL")))
 
-(with-eval-after-load 'sh-mode
+(with-eval-after-load 'sh-script
   (setq sh-basic-offset 2))
 
 (with-eval-after-load 'simple
@@ -714,7 +714,7 @@ _q_ quit    _h_ highlight   _p_ point
 (global-set-key (kbd "C-c e") 'counsel-M-x)
 (global-set-key (kbd "C-c f") 'counsel-find-file)
 (global-set-key (kbd "C-c g") 'avy-goto-line)
-(global-set-key (kbd "C-c h") nil)
+(global-set-key (kbd "C-c h") 'hippie-expand)
 (global-set-key (kbd "C-c i") nil)
 (global-set-key (kbd "C-c j") 'jump-to-register)
 (global-set-key (kbd "C-c k") nil)
