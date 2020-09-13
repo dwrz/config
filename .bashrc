@@ -232,16 +232,18 @@ fix-ddns() {
   domains=(
     "dwrz.net"
     "www.dwrz.net"
-    "faustoholban.com"
-    "www.faustoholban.com"
-    "luisabertani.com"
-    "www.luisabertani.com"
   )
-  user="$(pass noip/user)"
-  password="$(pass noip/pw)"
+  ip="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+  hz="$(pass aws/route53/hosted-zones/dwrznet)"
+  update='{ "Comment": "DDNS", "Changes": [ { "Action": "UPSERT", "ResourceRecordSet": { "Name": "dwrz.net", "Type": "A", "TTL": 300, "ResourceRecords": [ { "Value": "'"$ip"'" } ] } } ] }'
+
+  printf "ip is %s" "$ip\n"
+
   for d in "${domains[@]}"; do
     printf "requesting update for %s\n" "$d"
-    noip -domain "$d" -user "$user" -password "$password"
+    aws route53 change-resource-record-sets \
+	--hosted-zone-id "$hz" \
+	--change-batch "$update"
   done
 }
 
