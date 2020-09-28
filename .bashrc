@@ -37,7 +37,6 @@ alias cp="cp -i"
 alias cpwd="pwd | tr -d '\n' | xclip"
 alias d2u="find . -type f -print0 | xargs -0 -n 1 -P 4 dos2unix"
 alias df="df -h"
-alias dict="sdcv"
 alias diff="diff --color=auto"
 alias dirdu="du -cksh * | sort -hr"
 alias docker="sudo docker"
@@ -207,6 +206,12 @@ d() {
     "u2h" ) date -d "@$2";;
     *) date "$@"
   esac
+}
+
+dict() {
+  sdcv --non-interactive --utf8-output --color "$@" 2>&1 | \
+    fold --width=80 --spaces | \
+    less -FRX
 }
 
 emacstest() {
