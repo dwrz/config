@@ -379,14 +379,14 @@
         org-export-backends '(ascii html icalendar latex md odt)
         org-catch-invisible-edits 'show
         org-fontify-done-headline t
-        org-default-priority ?1
+        org-default-priority 1
         org-enforce-todo-dependencies t
         org-hide-emphasis-markers t
-        org-highest-priority ?1
+        org-highest-priority 1
         org-image-actual-width '(800)
         org-list-demote-modify-bullet nil
         org-log-into-drawer t
-        org-lowest-priority ?3
+        org-lowest-priority 3
         org-refile-targets '((nil :maxlevel . 8))
         org-src-fontify-natively t
         org-tags-column 0
@@ -399,6 +399,7 @@
   (add-hook 'org-babel-after-execute-hook
             (lambda () (when org-inline-image-overlays
                          (org-redisplay-inline-images))))
+  (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'org-mode-hook
             '(lambda () (set (make-local-variable 'company-backends)
@@ -567,7 +568,8 @@
                                 company-capf
                                 company-yasnippet
                                 company-files)))))
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.gohtml\\'" . web-mode)))
 
 (with-eval-after-load 'window
   (setq split-height-threshold nil
