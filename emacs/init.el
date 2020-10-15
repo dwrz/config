@@ -3,15 +3,15 @@
       delete-by-moving-to-trash t
       echo-keystrokes 0.1
       enable-recursive-minibuffers t
-      exec-path '("/home/dwrz/.cargo/bin/"
-                  "/home/dwrz/.go/bin/"
-                  "/home/dwrz/.local/bin/"
-                  "/home/dwrz/.node_modules/bin/"
-                  "/usr/bin"
-                  "/usr/bin/core_perl"
-                  "/usr/bin/site_perl"
-                  "/usr/bin/vendor_perl"
-                  "/usr/local/bin")
+      exec-path (append exec-path '("/home/dwrz/.cargo/bin/"
+				    "/home/dwrz/.go/bin/"
+				    "/home/dwrz/.local/bin/"
+				    "/home/dwrz/.node_modules/bin/"
+				    "/usr/bin"
+				    "/usr/bin/core_perl"
+				    "/usr/bin/site_perl"
+				    "/usr/bin/vendor_perl"
+				    "/usr/local/bin"))
       eww-search-prefix "https://www.ecosia.org/search/?q="
       locale-coding-system 'utf-8
       next-screen-context-lines 5
@@ -578,7 +578,6 @@
 (with-eval-after-load 'yasnippet (define-key yas-keymap (kbd "<tab>") nil))
 
 ;; CUSTOMIZE
-(customize-set-variable 'epg-gpg-program "/usr/bin/gpg2")
 (customize-set-variable 'face-font-family-alternatives
                         '(("hans" "adobe-source-han-sans-cn-font")))
 (customize-set-variable 'mouse-wheel-scroll-amount '(1 ((shift) .1)))
