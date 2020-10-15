@@ -402,7 +402,7 @@ search() {
     echo "firefox not installed" >&2
     return 1
   fi
-  if ! [[ -n "$(pgrep --exact firefox)" ]]; then
+  if ! [[ -n "$(pgrep --exact firefox\|MainThread)" ]]; then
     echo "firefox not running" >&2
     return 2
   fi
