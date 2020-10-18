@@ -1,0 +1,25 @@
+IMAPAccount gmail
+Host imap.gmail.com
+User dwrz@dwrz.net
+PassCmd "pass google/gmail-app-pw"
+AuthMechs LOGIN
+SSLType IMAPS
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+Subfolders Verbatim
+Path /home/dwrz/.email/gmail/
+Inbox /home/dwrz/.email/gmail/Inbox
+
+Channel gmail
+Master :gmail-remote:
+Slave :gmail-local:
+Patterns * ![Gmail]* "[Gmail]/All Mail"
+Create Both
+Expunge Master
+# Propagate new messages and flags from master.
+# Push everything -- including deletions -- from slave.
+Sync PullNew PullFlags Push
+SyncState *
