@@ -279,14 +279,18 @@ gps() {
 }
 
 mfa() {
+  local code;
+
   case "$1" in
-    "aws") oathtool -b --totp "$(pass amazon/mfa)" | xclip ;;
-    "g") oathtool -b --totp "$(pass google/mfa/dwrz@dwrz.net)" | xclip ;;
-    "gmail") oathtool -b --totp "$(pass google/mfa/dwriccardizhu@gmail.com)" \
-	       | xclip ;;
-    "ms") oathtool -b --totp "$(pass microsoft/mfa)" | xclip ;;
+    "aws") code=$(oathtool -b --totp "$(pass amazon/mfa)") ;;
+    "g") code=$(oathtool -b --totp "$(pass google/mfa/dwrz@dwrz.net)") ;;
+    "gmail") code=$(oathtool -b --totp \
+		 "$(pass google/mfa/dwriccardizhu@gmail.com)") ;;
+    "ms") code=$(oathtool -b --totp "$(pass microsoft/mfa)") ;;
     *) printf "unrecognized service: %s\n" "$1" >&2
   esac
+
+  echo "$code" | tee /dev/tty | xclip
 }
 
 mobile-backup() {
