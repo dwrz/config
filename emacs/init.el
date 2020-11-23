@@ -559,7 +559,7 @@
 (with-eval-after-load 'web-mode
   (setq  web-mode-code-indent-offset 2
          web-mode-css-indent-offset 2
-         web-mode-indent-style 1
+         web-mode-indent-style 2
          web-mode-markup-indent-offset 2)
   (add-hook 'web-mode-hook 'electric-pair-mode)
   (add-hook 'web-mode-hook
