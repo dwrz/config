@@ -61,10 +61,10 @@ bindsym $mod+t focus left
 bindsym $mod+u fullscreen toggle
 bindsym $mod+v scratchpad show; [floating] resize set 1200 800; move position center; sticky enable
 bindsym $mod+z move scratchpad
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% && paplay /usr/share/sounds/woodenbeaver/stereo/audio-volume-change.ogg
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle
 bindsym XF86AudioPlay exec playerctl play
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5%
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% && paplay /usr/share/sounds/woodenbeaver/stereo/audio-volume-change.ogg
 bindsym XF86MonBrightnessDown exec light -U 5
 bindsym XF86MonBrightnessUp exec light -A 5
 
