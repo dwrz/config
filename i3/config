@@ -49,10 +49,13 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+Shift+t move left
 bindsym $mod+Shift+x exec "i3-nagbar -t warning -m 'Exit?' -b 'Yes.' 'i3-msg exit'"
 bindsym $mod+a focus parent
+bindsym $mod+c split v
 bindsym $mod+comma layout tabbed
 bindsym $mod+e exec rofi -show combi
+bindsym $mod+l split h
 bindsym $mod+minus exec i3lock -c ffffff -f
 bindsym $mod+n focus down
+bindsym $mod+o focus child
 bindsym $mod+period layout toggle split
 bindsym $mod+r focus up
 bindsym $mod+s focus right
