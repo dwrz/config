@@ -281,13 +281,15 @@
         '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['‘’]"
            t ("-d" "en_US") nil utf-8))))
 
-(with-eval-after-load 'js2-mode
+(with-eval-after-load 'js-mode
   (setq js-indent-level 2)
-  (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
-  (add-hook 'js2-mode-hook 'lsp)
-  (add-hook 'js2-mode-hook
+  (add-hook 'js-mode-hook 'lsp)
+  (add-hook 'js-mode-hook
             '(lambda () (set (make-local-variable 'company-backends)
                              '((company-capf company-files))))))
+
+(with-eval-after-load 'lsp
+  (setq lsp-headerline-breadcrumb-mode nil))
 
 (with-eval-after-load 'markdown-mode
   (setq markdown-command "pandoc"))
