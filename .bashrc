@@ -65,6 +65,7 @@ alias me="xrandr --output eDP-1 --off --output HDMI-2 --auto --brightness 0.8"
 alias mkdir="mkdir -p"
 alias ml="xrandr --output eDP-1 --auto --output HDMI-2 --off"
 alias mobile="ssh dwrz@mobile"
+alias mute="pactl set-sink-mute 0 toggle"
 alias mv="mv -i"
 alias my_ip="curl ifconfig.io"
 alias open="xdg-open"
@@ -445,6 +446,11 @@ upsys() {
   fi
   sudo reflector --verbose --latest 25 --protocol https --sort rate \
        --save /etc/pacman.d/mirrorlist && pacman -Syu
+}
+
+volume() {
+  pactl set-sink-volume 0 "$1%"
+  paplay /usr/share/sounds/woodenbeaver/stereo/audio-volume-change.ogg
 }
 
 weather() {
