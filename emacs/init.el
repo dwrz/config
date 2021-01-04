@@ -505,7 +505,7 @@
 (with-eval-after-load 'pyim (pyim-basedict-enable))
 
 (with-eval-after-load 'register
-  (set-register ?j '(file . "~/ruck/oo/journal/2020.org"))
+  (set-register ?j '(file . "~/ruck/oo/journal/2021.org"))
   (set-register ?i '(file . "~/ruck/oo/config/emacs/init.el"))
   (set-register ?g '(file . "~/ruck/oo/org/gtd.org"))
   (set-register ?m '(file . "~/ruck/oo/org/mindsweep-trigger-list.org"))
