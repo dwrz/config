@@ -307,14 +307,14 @@
   (prefer-coding-system 'utf-8))
 
 (with-eval-after-load 'notmuch
+  (customize-set-variable 'notmuch-search-oldest-first nil)
   (setq notmuch-address-command 'internal
         notmuch-address-internal-completion '(sent nil)
         notmuch-address-save-filename "~/ruck/social/notmuch-contacts"
         notmuch-address-use-company t
         notmuch-crypto-process-mime t
         notmuch-fcc-dirs "sent"
-        notmuch-hello-hide-tags '("killed")
-        notmuch-search-oldest-first nil)
+        notmuch-hello-hide-tags '("killed"))
   ;; Search tags
   (setq notmuch-saved-searches
         '((:name "inbox" :query "tag:inbox" :key "i")
