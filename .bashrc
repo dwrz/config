@@ -148,12 +148,17 @@ change-bg-map() {
 	echo "geo not installed" >&2
 	return 1
       fi
-      local coordinates;
+
+      local coordinates dimensions height width;
       coordinates="$(geo)"
+      dimensions="$(xrandr --current | grep '*' | uniq | awk '{print $1}')"
+      height="$(echo $dimensions | cut -d 'x' -f2)"
+      width="$(echo $dimensions | cut -d 'x' -f1)"
+
       create-static-map \
-	--width 1920 --height 1080 \
+	--width "$width" --height "$height" \
 	-o /tmp/local-map.png \
-	-c "$coordinates" -z 15 && \
+	-c "$coordinates" -z 16 && \
 	feh --bg-fill "/tmp/local-map.png"
       ;;
 
